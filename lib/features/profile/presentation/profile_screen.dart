@@ -16,19 +16,19 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Profile Saya',
-          style: textTheme.titleMedium!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: TColors.primaryColor,
-        foregroundColor: Colors.white,
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      //   title: Text(
+      //     'Profile Saya',
+      //     style: textTheme.titleMedium!.copyWith(
+      //       color: Colors.white,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   backgroundColor: TColors.primaryColor,
+      //   foregroundColor: Colors.white,
+      // ),
 
       /*
       ==========================================
@@ -36,7 +36,10 @@ class ProfileScreen extends StatelessWidget {
       ==========================================
       */
       body: Padding(
-        padding: const EdgeInsetsGeometry.all(24.0),
+        padding: const EdgeInsetsGeometry.symmetric(
+          vertical: 48,
+          horizontal: 24,
+        ),
         child: Column(
           children: [
             const AvatarImage(
@@ -46,14 +49,14 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
-              'Banyu bin Wangi',
+              'User',
               textAlign: TextAlign.center,
               style: textTheme.headlineSmall!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'banyubinwangi01@gmail.com',
+              'user01@gmail.com',
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium!.copyWith(
                 color: Colors.grey.shade600,

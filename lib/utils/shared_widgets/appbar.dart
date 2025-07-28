@@ -1,31 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import '../constant/colors.dart';
+import 'package:new_empowerme/utils/constant/colors.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar({super.key, required this.title, required this.imageUrl});
-
-  final String title;
-  final String imageUrl;
+  const MyAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return AppBar(
-      foregroundColor: Colors.white,
-      backgroundColor: TColors.primaryColor,
+      foregroundColor: TColors.primaryColor,
+      backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: textTheme.titleMedium!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Halo,',
+                style: textTheme.titleMedium!.copyWith(
+                  color: TColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'User',
+                style: textTheme.titleLarge!.copyWith(
+                  color: TColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           Container(
             width: 45,
@@ -33,7 +41,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               borderRadius: BorderRadiusGeometry.circular(50),
             ),
             clipBehavior: Clip.antiAlias,
-            child: CachedNetworkImage(imageUrl: imageUrl),
+            child: CachedNetworkImage(
+              imageUrl:
+                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+            ),
           ),
         ],
       ),
@@ -42,5 +53,5 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight * 1.1);
 }

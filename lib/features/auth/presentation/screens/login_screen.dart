@@ -66,7 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Container(
-          margin: const EdgeInsetsGeometry.symmetric(horizontal: 12),
+          margin: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

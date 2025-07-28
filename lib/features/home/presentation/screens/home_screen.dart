@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/features/home/presentation/screens/widgets/information_slider.dart';
-import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
+import '../../../../utils/shared_widgets/appbar.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -14,55 +14,22 @@ class HomeScreen extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: TColors.backgroundColor,
 
       /*
       ==========================================
       Appbar
       ==========================================
        */
-      appBar: const MyAppBar(
-        title: 'Home',
-        imageUrl:
-            'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-      ),
+      appBar: const MyAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*
-                ==========================================
-                Halo nama user
-                ==========================================
-                */
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Halo',
-                            style: Theme.of(context).textTheme.titleLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: TColors.secondaryText,
-                                ),
-                          ),
-                          Text(
-                            'Banyu bin Wangi',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
+                // const SizedBox(height: TSizes.spaceBtwSections),
                 /*
                 ==========================================
                 Container Cek Kesehatan
