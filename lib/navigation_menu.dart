@@ -43,7 +43,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
         },
         shape: const CircleBorder(),
         backgroundColor: TColors.primaryColor,
-        child: const FaIcon(FontAwesomeIcons.stethoscope, color: Colors.white),
+        child: const FaIcon(FontAwesomeIcons.userDoctor, color: Colors.white),
       ),
 
       // 2. Lokasi FAB di tengah dan "menempel"

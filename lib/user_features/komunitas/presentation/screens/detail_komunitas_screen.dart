@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/comment_sheet.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 
@@ -213,7 +214,9 @@ class DetailKomunitasScreen extends StatelessWidget {
                         ),
                         const Text('50'),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _showCommentModal(context);
+                          },
                           icon: const FaIcon(
                             FontAwesomeIcons.comment,
                             size: 18,
@@ -230,6 +233,19 @@ class DetailKomunitasScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showCommentModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return const CommentSheet();
+      },
     );
   }
 }
