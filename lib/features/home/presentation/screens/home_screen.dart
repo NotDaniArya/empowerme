@@ -182,6 +182,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: TSizes.smallSpace),
                 const InformationSlider(),
+                const SizedBox(height: TSizes.largeSpace),
               ],
             ),
           ),
