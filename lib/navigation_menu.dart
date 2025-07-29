@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_empowerme/features/edukasi/presentation/screen/edukasi_screen.dart';
-import 'package:new_empowerme/features/profile/presentation/profile_screen.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/screen/edukasi_screen.dart';
+import 'package:new_empowerme/user_features/home/presentation/screens/home_screen.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/screens/komunitas_screen.dart';
+import 'package:new_empowerme/user_features/profile/presentation/profile_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
-
-import 'features/home/presentation/screens/home_screen.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -20,7 +20,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     // const HomeScreen(),
     const HomeScreen(),
     const EdukasiScreen(),
-    Container(),
+    const KomunitasScreen(),
     const ProfileScreen(),
   ];
 

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/features/edukasi/presentation/screen/detail_edukasi_screen.dart';
 
+import '../../user_features/edukasi/presentation/screen/detail_edukasi_screen.dart';
 import '../constant/sizes.dart';
 
 class ItemCard extends StatelessWidget {

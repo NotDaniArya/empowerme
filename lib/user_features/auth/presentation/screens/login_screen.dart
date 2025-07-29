@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_empowerme/features/auth/presentation/screens/register_screen.dart';
+import 'package:new_empowerme/user_features/auth/presentation/screens/register_screen.dart';
 
 import '../../../../navigation_menu.dart';
 import '../../../../utils/constant/colors.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/features/home/presentation/screens/widgets/information_slider.dart';
+import 'package:new_empowerme/user_features/home/presentation/screens/widgets/information_slider.dart';
 
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';

@@ -13,6 +13,7 @@ class DetailEdukasiScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: TColors.backgroundColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

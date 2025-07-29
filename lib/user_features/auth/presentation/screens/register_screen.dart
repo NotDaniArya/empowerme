@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_empowerme/features/auth/presentation/screens/login_screen.dart';
 
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
@@ -9,6 +8,7 @@ import '../../../../utils/shared_widgets/button.dart';
 import '../../../../utils/shared_widgets/input_text_field.dart';
 import '../../../../utils/shared_widgets/or_divider.dart';
 import '../../../../utils/shared_widgets/text_button.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
