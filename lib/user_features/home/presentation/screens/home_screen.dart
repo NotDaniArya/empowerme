@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/widgets/information_slider.dart';
 
 import '../../../../utils/constant/colors.dart';
@@ -30,58 +29,65 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     Column(
+                //       children: [
+                //         InkWell(
+                //           borderRadius: BorderRadius.circular(50),
+                //           onTap: () {},
+                //           child: Container(
+                //             width: 55,
+                //             height: 55,
+                //             decoration: BoxDecoration(
+                //               color: TColors.primaryColor,
+                //               borderRadius: BorderRadiusGeometry.circular(50),
+                //             ),
+                //             clipBehavior: Clip.antiAlias,
+                //             child: Image.asset(
+                //               'assets/icons/konsultasi_konselor.png',
+                //               fit: BoxFit.cover,
+                //             ),
+                //           ),
+                //         ),
+                //         const SizedBox(height: TSizes.smallSpace),
+                //         Text('Chat Konselor', style: textTheme.bodySmall),
+                //       ],
+                //     ),
+                //     Column(
+                //       children: [
+                //         InkWell(
+                //           borderRadius: BorderRadius.circular(50),
+                //           onTap: () {},
+                //           child: Container(
+                //             width: 55,
+                //             height: 55,
+                //             decoration: BoxDecoration(
+                //               color: TColors.primaryColor,
+                //               borderRadius: BorderRadiusGeometry.circular(50),
+                //             ),
+                //             clipBehavior: Clip.antiAlias,
+                //             child: Image.asset(
+                //               'assets/icons/konsultasi_pendamping.png',
+                //               fit: BoxFit.cover,
+                //             ),
+                //           ),
+                //         ),
+                //         const SizedBox(height: TSizes.smallSpace),
+                //         Text('Chat Pendamping', style: textTheme.bodySmall),
+                //       ],
+                //     ),
+                //   ],
+                // ),
                 // const SizedBox(height: TSizes.spaceBtwSections),
                 /*
                 ==========================================
-                Container Cek Kesehatan
+                Container jadwal terapi
                 ==========================================
                 */
                 Text(
-                  'Cek Kesehatanmu Sekarang',
-                  style: textTheme.bodyLarge!.copyWith(
-                    // color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: TSizes.smallSpace),
-                Card(
-                  elevation: 0,
-                  color: TColors.primaryColor.withOpacity(
-                    0.1,
-                  ), // Warna lebih lembut
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      'Sudahkah kamu cek kesehatanmu?',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: TColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'Cek kesehatanmu sekarang juga!',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    leading: const FaIcon(
-                      FontAwesomeIcons.stethoscope,
-                      color: TColors.primaryColor,
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: TColors.primaryColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
-                /*
-                ==========================================
-                Container history cek kesehatan
-                ==========================================
-                */
-                Text(
-                  'Riwayat Cek Kesahatan',
+                  'Jadwal Terapi',
                   style: textTheme.bodyLarge!.copyWith(
                     // color: TColors.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -89,14 +95,10 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: TSizes.smallSpace),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8).copyWith(top: 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border: BoxBorder.all(
-                      color: TColors.primaryColor,
-                      width: 0.8,
-                    ),
-                    color: Colors.white,
+                    color: TColors.primaryColor.withOpacity(0.1),
                     // REKOMENDASI 4: Tambahkan shadow untuk efek kedalaman
                     boxShadow: [
                       BoxShadow(
@@ -110,31 +112,8 @@ class HomeScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // REKOMENDASI 5: Gunakan Chip widget
-                          Wrap(
-                            spacing: 8.0,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  '18-03-2025',
-                                  style: textTheme.bodySmall,
-                                ),
-                                padding: EdgeInsets.zero,
-                              ),
-                              Chip(
-                                label: Text(
-                                  'Sehat',
-                                  style: textTheme.bodySmall!.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                backgroundColor: TColors.primaryColor,
-                                padding: EdgeInsets.zero,
-                              ),
-                            ],
-                          ),
                           TextButton(
                             onPressed: () {},
                             style: TextButton.styleFrom(
@@ -148,7 +127,6 @@ class HomeScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: TSizes.smallSpace),
                       const Divider(
                         color: TColors.primaryColor,
                         thickness: 0.8,
@@ -157,11 +135,117 @@ class HomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Rumah sakit Faizal',
-                            style: Theme.of(context).textTheme.titleMedium,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Rumah sakit Faizal',
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Senin, 26 Juli 2025',
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(color: Colors.black87),
+                              ),
+                              Text(
+                                '18.00 WITA',
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(color: Colors.black87),
+                              ),
+                            ],
                           ),
-                          Image.asset('assets/images/checkup.png', height: 60),
+                          Image.asset(
+                            'assets/icons/jadwal_terapi.png',
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections),
+
+                /*
+                ==========================================
+                Container jadwal terapi
+                ==========================================
+                */
+                Text(
+                  'Jadwal Ambil Obat',
+                  style: textTheme.bodyLarge!.copyWith(
+                    // color: TColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: TSizes.smallSpace),
+                Container(
+                  padding: const EdgeInsets.all(8).copyWith(top: 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: TColors.primaryColor.withOpacity(0.1),
+                    // REKOMENDASI 4: Tambahkan shadow untuk efek kedalaman
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Text(
+                              'Lihat Selengkapnya',
+                              style: Theme.of(context).textTheme.labelLarge!
+                                  .copyWith(color: TColors.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: TColors.primaryColor,
+                        thickness: 0.8,
+                      ),
+                      const SizedBox(height: TSizes.smallSpace),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Rumah sakit Faizal',
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Senin, 26 Juli 2025',
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(color: Colors.black87),
+                              ),
+                              Text(
+                                '18.00 WITA',
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                          Image.asset(
+                            'assets/icons/jadwal_terapi.png',
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
                         ],
                       ),
                     ],
@@ -183,7 +267,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: TSizes.smallSpace),
                 const InformationSlider(),
-                const SizedBox(height: TSizes.largeSpace),
+                const SizedBox(height: TSizes.mediumSpace),
               ],
             ),
           ),

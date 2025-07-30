@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/chat/presentation/screens/chat_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/constant/sizes.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
@@ -16,38 +19,54 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                'Halo,',
-                style: textTheme.titleMedium!.copyWith(
-                  color: TColors.primaryColor,
-                  fontWeight: FontWeight.bold,
+              Container(
+                width: 45,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusGeometry.circular(50),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
                 ),
               ),
-              Text(
-                'User',
-                style: textTheme.titleLarge!.copyWith(
-                  color: TColors.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              const SizedBox(width: TSizes.mediumSpace),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Halo,',
+                    style: textTheme.titleMedium!.copyWith(
+                      color: TColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'User',
+                    style: textTheme.titleLarge!.copyWith(
+                      color: TColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          Container(
-            width: 45,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadiusGeometry.circular(50),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: CachedNetworkImage(
-              imageUrl:
-                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-            ),
-          ),
         ],
       ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
+            );
+          },
+          icon: const FaIcon(FontAwesomeIcons.comment),
+        ),
+      ],
     );
   }
 
