@@ -1,16 +1,17 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/data/datasource/berita_remote_datasource.dart';
 import 'package:new_empowerme/user_features/edukasi/data/repositories/berita_repository_impl.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/berita.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/repositories/berita_repository.dart';
 
+import '../../../../../utils/shared_providers/provider.dart';
+
 class BeritaState {
   final List<Berita>? berita;
   final bool isLoading;
   final String? error;
 
-  BeritaState({this.berita, this.isLoading = false, this.error});
+  BeritaState({this.berita = const [], this.isLoading = false, this.error});
 
   BeritaState copyWith({
     List<Berita>? berita,
@@ -25,8 +26,6 @@ class BeritaState {
     );
   }
 }
-
-final dioProvider = Provider<Dio>((ref) => Dio());
 
 final beritaRemoteDataSourceProvider = Provider<BeritaRemoteDataSource>(
   (ref) => BeritaRemoteDataSourceImpl(ref.watch(dioProvider)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/list_panduan.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
@@ -63,36 +64,7 @@ class _EdukasiScreenState extends State<EdukasiScreen>
                 ),
               ),
             ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-
-            /*
-            ==========================================
-            Search box
-            ==========================================
-            */
-            Container(
-              margin: const EdgeInsetsGeometry.symmetric(horizontal: 24),
-              width: double.infinity,
-              child: TextField(
-                controller: _searchController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  isDense: true,
-                  fillColor: TColors.secondaryColor,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  labelText: 'Cari sesuatu...',
-                  hintText: 'Ketik judul...',
-                  prefixIcon: const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Icon(Icons.search),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            const SizedBox(height: TSizes.mediumSpace),
 
             /*
             ==========================================
@@ -123,14 +95,7 @@ class _EdukasiScreenState extends State<EdukasiScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  const ItemCard(
-                    itemCount: 5,
-                    imageUrl:
-                        'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
-                    title:
-                        'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
-                    publisherName: 'detikJogja.com',
-                  ),
+                  const ListPanduan(),
                   const ListBerita(),
                   const ItemCard(
                     itemCount: 5,
