@@ -12,11 +12,11 @@ class BeritaModel extends Berita {
 
   factory BeritaModel.fromJson(Map<String, dynamic> json) {
     return BeritaModel(
-      title: json['title'],
-      author: json['author'],
-      urlToImage: json['urlToImage'],
-      publishedAt: json['publishedAt'],
-      description: json['description'],
+      title: json['title'] ?? 'Judul tidak tersedia',
+      author: json['author'] ?? 'Sumber tidak diketahui',
+      urlToImage: json['urlToImage'] ?? '',
+      publishedAt: json['publishedAt'] ?? '',
+      description: json['description'] ?? 'Deskripsi tidak tersedia',
       url: json['url'],
     );
   }

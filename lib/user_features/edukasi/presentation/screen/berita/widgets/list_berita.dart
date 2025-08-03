@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/providers/berita_provider.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/screen/berita/detail_berita_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 
@@ -52,12 +53,12 @@ class ListBerita extends ConsumerWidget {
           ).copyWith(bottom: TSizes.spaceBtwSections),
           child: InkWell(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const DetailEdukasiScreen(),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailBeritaScreen(berita: berita),
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
@@ -69,6 +70,14 @@ class ListBerita extends ConsumerWidget {
                     height: 150,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
+                        ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                   Positioned(
                     bottom: 0,
@@ -89,7 +98,7 @@ class ListBerita extends ConsumerWidget {
                       child: Column(
                         children: [
                           Text(
-                            berita.title ?? 'Judul tidak diketahui',
+                            berita.title,
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             style: textTheme.bodyMedium!.copyWith(
@@ -99,7 +108,7 @@ class ListBerita extends ConsumerWidget {
                           ),
                           const SizedBox(height: TSizes.smallSpace / 2),
                           Text(
-                            berita.author ?? 'Author tidak diketahui',
+                            berita.author,
                             textAlign: TextAlign.center,
                             style: textTheme.labelMedium!.copyWith(
                               color: Colors.white,

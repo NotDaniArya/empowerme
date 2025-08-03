@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/user_features/edukasi/presentation/screen/widgets/list_berita.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 import 'package:new_empowerme/utils/shared_widgets/item_card.dart';
+
+import 'berita/widgets/list_berita.dart';
 
 class EdukasiScreen extends StatefulWidget {
   const EdukasiScreen({super.key});
