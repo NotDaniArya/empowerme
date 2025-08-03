@@ -4,7 +4,7 @@ import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 import 'package:new_empowerme/utils/shared_widgets/item_card.dart';
 
-import 'berita/widgets/list_berita.dart';
+import '../berita/widgets/list_berita.dart';
 
 class EdukasiScreen extends StatefulWidget {
   const EdukasiScreen({super.key});

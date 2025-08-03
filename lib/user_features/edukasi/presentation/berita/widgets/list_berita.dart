@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/user_features/edukasi/presentation/providers/berita_provider.dart';
-import 'package:new_empowerme/user_features/edukasi/presentation/screen/berita/detail_berita_screen.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/berita/providers/berita_provider.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
+
+import '../detail_berita_screen.dart';
 
 class ListBerita extends ConsumerWidget {
   const ListBerita({super.key});
@@ -109,6 +110,7 @@ class ListBerita extends ConsumerWidget {
                           const SizedBox(height: TSizes.smallSpace / 2),
                           Text(
                             berita.author,
+                            maxLines: 1,
                             textAlign: TextAlign.center,
                             style: textTheme.labelMedium!.copyWith(
                               color: Colors.white,
