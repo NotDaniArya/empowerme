@@ -22,7 +22,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               Container(
-                width: 45,
+                width: 35,
+                height: 35,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadiusGeometry.circular(50),
                 ),
@@ -45,7 +46,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   Text(
                     'User',
-                    style: textTheme.titleLarge!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       color: TColors.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
@@ -64,7 +65,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               MaterialPageRoute(builder: (context) => const ChatScreen()),
             );
           },
-          icon: const FaIcon(FontAwesomeIcons.comment),
+          icon: const FaIcon(FontAwesomeIcons.paperPlane),
         ),
       ],
     );
