@@ -4,8 +4,8 @@ import '../../utils/constant/colors.dart';
 import '../../utils/constant/sizes.dart';
 import '../../utils/shared_widgets/button.dart';
 import '../../utils/shared_widgets/or_divider.dart';
-import '../auth/presentation/screens/login_screen.dart';
-import '../auth/presentation/screens/register_screen.dart';
+import '../auth/presentation/screens/login/login_screen.dart';
+import '../auth/presentation/screens/register/register_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

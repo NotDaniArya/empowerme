@@ -5,12 +5,12 @@ class MyTextButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.buttonText,
-    required this.route,
+    this.route,
   });
 
   final Widget text;
   final Widget buttonText;
-  final Widget route;
+  final Widget? route;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +22,12 @@ class MyTextButton extends StatelessWidget {
         const SizedBox(width: 5),
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => route),
-            );
+            route == null
+                ? null
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => route!),
+                  );
           },
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,

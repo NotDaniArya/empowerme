@@ -5,7 +5,7 @@ import '../../../utils/constant/colors.dart';
 import '../../../utils/constant/sizes.dart';
 import '../../../utils/shared_widgets/avatar_image.dart';
 import '../../../utils/shared_widgets/menu_item.dart';
-import '../../auth/presentation/screens/login_screen.dart';
+import '../../auth/presentation/screens/login/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
