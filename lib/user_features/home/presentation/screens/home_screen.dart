@@ -29,58 +29,6 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     Column(
-                //       children: [
-                //         InkWell(
-                //           borderRadius: BorderRadius.circular(50),
-                //           onTap: () {},
-                //           child: Container(
-                //             width: 55,
-                //             height: 55,
-                //             decoration: BoxDecoration(
-                //               color: TColors.primaryColor,
-                //               borderRadius: BorderRadiusGeometry.circular(50),
-                //             ),
-                //             clipBehavior: Clip.antiAlias,
-                //             child: Image.asset(
-                //               'assets/icons/konsultasi_konselor.png',
-                //               fit: BoxFit.cover,
-                //             ),
-                //           ),
-                //         ),
-                //         const SizedBox(height: TSizes.smallSpace),
-                //         Text('Chat Konselor', style: textTheme.bodySmall),
-                //       ],
-                //     ),
-                //     Column(
-                //       children: [
-                //         InkWell(
-                //           borderRadius: BorderRadius.circular(50),
-                //           onTap: () {},
-                //           child: Container(
-                //             width: 55,
-                //             height: 55,
-                //             decoration: BoxDecoration(
-                //               color: TColors.primaryColor,
-                //               borderRadius: BorderRadiusGeometry.circular(50),
-                //             ),
-                //             clipBehavior: Clip.antiAlias,
-                //             child: Image.asset(
-                //               'assets/icons/konsultasi_pendamping.png',
-                //               fit: BoxFit.cover,
-                //             ),
-                //           ),
-                //         ),
-                //         const SizedBox(height: TSizes.smallSpace),
-                //         Text('Chat Pendamping', style: textTheme.bodySmall),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // const SizedBox(height: TSizes.spaceBtwSections),
                 /*
                 ==========================================
                 Container jadwal terapi

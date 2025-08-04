@@ -1,7 +1,8 @@
 import 'package:new_empowerme/core/failure.dart';
-import 'package:new_empowerme/user_features/edukasi/data/datasource/berita_remote_datasource.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/berita.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/repositories/berita_repository.dart';
+
+import '../datasources/berita_remote_datasource.dart';
 
 class BeritaRepositoryImpl implements BeritaRepository {
   final BeritaRemoteDataSource remoteDataSource;

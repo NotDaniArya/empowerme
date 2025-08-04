@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/user_features/edukasi/data/datasource/berita_remote_datasource.dart';
 import 'package:new_empowerme/user_features/edukasi/data/repositories/berita_repository_impl.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/berita.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/repositories/berita_repository.dart';
 
 import '../../../../../utils/shared_providers/provider.dart';
+import '../../../data/datasources/berita_remote_datasource.dart';
 
 class BeritaState {
   final List<Berita>? berita;

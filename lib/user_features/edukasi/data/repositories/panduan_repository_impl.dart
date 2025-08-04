@@ -1,7 +1,8 @@
 import 'package:new_empowerme/core/failure.dart';
-import 'package:new_empowerme/user_features/edukasi/data/datasource/panduan_remote_datasource.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/panduan.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/repositories/panduan_repository.dart';
+
+import '../datasources/panduan_remote_datasource.dart';
 
 class PanduanRepositoryImpl implements PanduanRepository {
   final PanduanRemoteDataSource remoteDataSource;
