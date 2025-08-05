@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum UserRole { user, konselor, pendamping, unknown }
+enum UserRole { pasien, konselor, pendamping, unknown }
 
 class Auth extends Equatable {
   final String token;

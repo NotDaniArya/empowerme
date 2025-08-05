@@ -6,14 +6,14 @@ class AuthModel extends Auth {
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>;
 
-    return AuthModel(token: data['token'], role: data['role']);
+    return AuthModel(token: data['token'], role: _parseRole(data['role']));
   }
 
   // function untuk mengubah string role menjadi Enum
   static UserRole _parseRole(String role) {
     switch (role.toLowerCase()) {
-      case 'user':
-        return UserRole.user;
+      case 'pasien':
+        return UserRole.pasien;
       case 'konselor':
         return UserRole.konselor;
       case 'pendamping':

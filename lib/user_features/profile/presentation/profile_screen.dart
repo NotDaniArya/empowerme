@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 
 import '../../../utils/constant/colors.dart';
 import '../../../utils/constant/sizes.dart';
 import '../../../utils/shared_widgets/avatar_image.dart';
 import '../../../utils/shared_widgets/menu_item.dart';
-import '../../auth/presentation/screens/login/login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -102,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => _showLogoutConfirmationDialog(context),
+                onPressed: () => _showLogoutConfirmationDialog(context, ref),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   shape: RoundedRectangleBorder(
@@ -124,7 +125,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // method untuk tampilkan dialog konfirmasi logout
-  void _showLogoutConfirmationDialog(BuildContext context) {
+  void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -141,11 +142,11 @@ class ProfileScreen extends StatelessWidget {
             TextButton(
               child: const Text('Logout', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                // Navigasi ke halaman login dan hapus semua rute sebelumnya
-                Navigator.of(ctx).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  (Route<dynamic> route) => false,
-                );
+                ref.watch(authNotifierProvider.notifier).logout();
+
+                if (Navigator.canPop(ctx)) {
+                  Navigator.of(ctx).pop();
+                }
               },
             ),
           ],

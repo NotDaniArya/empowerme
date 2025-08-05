@@ -81,8 +81,8 @@ class AuthRepositoryImpl extends AuthRepository {
   // function untuk mengubah string role menjadi Enum
   UserRole _parseRole(String role) {
     switch (role.toLowerCase()) {
-      case 'user':
-        return UserRole.user;
+      case 'pasien':
+        return UserRole.pasien;
       case 'konselor':
         return UserRole.konselor;
       case 'pendamping':

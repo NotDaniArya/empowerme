@@ -6,7 +6,7 @@ class MyButton extends StatelessWidget {
   const MyButton({super.key, required this.text, required this.onPressed});
 
   final Widget text;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {

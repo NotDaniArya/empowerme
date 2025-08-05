@@ -33,7 +33,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return AuthModel.fromJson(response.data);
     } on DioException catch (e) {
-      String errorMessage = 'Gagal saat loin';
+      String errorMessage = 'Gagal saat login';
       if (e.response != null) {
         errorMessage =
             'Gagal saat login: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';

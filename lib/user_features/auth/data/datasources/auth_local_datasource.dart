@@ -8,14 +8,14 @@ abstract class AuthLocalDataSource {
 
   Future<String?> getRole();
 
-  Future<void> clearAuthRole();
+  Future<void> clearAuthData();
 }
 
-class AuthLocalDataSource implements AuthLocalDataSource {
+class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
 
-  const AuthLocalDataSource(this.secureStorage, this.sharedPreferences);
+  const AuthLocalDataSourceImpl(this.secureStorage, this.sharedPreferences);
 
   @override
   Future<void> saveAuthData(String token, String role) async {
