@@ -12,22 +12,35 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<(Auth?, Failure?)> register({
+  Future<(void, Failure?)> register({
     required String name,
     required String email,
     required String password,
     required String passwordConfirm,
   }) async {
     try {
-      final authModel = await remoteDataSource.register(
+      await remoteDataSource.register(
         name: name,
         email: email,
         password: password,
         passwordConfirm: passwordConfirm,
       );
-      return (authModel, null);
+      return (null, null);
     } catch (e) {
       return (null, Failure('Register gagal: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<(void, Failure?)> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      await remoteDataSource.verifyOtp(email: email, otp: otp);
+      return (null, null);
+    } catch (e) {
+      return (null, Failure('Verifikasi OTP gagal: ${e.toString()}'));
     }
   }
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/verify_email.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../../utils/constant/colors.dart';
 import '../../../../../utils/constant/sizes.dart';
@@ -20,47 +22,85 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _form = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
   String _enteredFullName = '';
   String _enteredEmail = '';
-  String _enteredPass = '';
-  String _enteredConfrimPass = '';
   bool _isPasswordVisible = false;
 
   void _submitSignUp() {
-    // final isValid = _form.currentState!.validate();
-    //
-    // if (!isValid) {
-    //   return;
-    // }
-    //
-    // _form.currentState!.save();
-    //
-    // ref
-    //     .read(authViewModelProvider.notifier)
-    //     .signUp(
-    //       email: _enteredEmail.trim(),
-    //       password: _enteredPass.trim(),
-    //       fullName: _enteredFullName.trim(),
-    //       phoneNumber: _enteredPhoneNumber.trim(),
-    //       onSuccess: () {
-    //         MyHelperFunction.toastNotification(
-    //           'Berhasil mendaftar. Silahkan login!',
-    //           true,
-    //           context,
-    //         );
-    //       },
-    //       onError: (error) =>
-    //           MyHelperFunction.toastNotification(error, false, context),
-    //     );
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const VerifyEmailScreen()),
-    );
+    final isValid = _form.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
+
+    _form.currentState!.save();
+
+    ref
+        .read(authNotifierProvider.notifier)
+        .register(
+          name: _enteredFullName,
+          email: _enteredEmail,
+          password: _passwordController.text,
+          passwordConfirm: _passwordController.text,
+        );
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState is AsyncLoading;
+
+    ref.listen(authNotifierProvider, (previous, next) {
+      toastification.dismissAll();
+      if (next is AsyncError) {
+        toastification.show(
+          context: context,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            'Register Gagal',
+            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+          ),
+          description: Text(
+            'Email yang anda gunakan mungkin saja sudah terdaftar atau terjadi kesalahan saat melakukan pendaftaran',
+            style: textTheme.bodySmall,
+          ),
+          alignment: Alignment.bottomRight,
+          autoCloseDuration: const Duration(seconds: 4),
+          icon: const Icon(Icons.error),
+        );
+      }
+
+      if (next is AsyncData) {
+        toastification.show(
+          context: context,
+          type: ToastificationType.success,
+          style: ToastificationStyle.flatColored,
+          title: const Text('Kode OTP Terkirim!'),
+          description: const Text(
+            'Masukkan Kode OTP yang dikirim Ke Email anda',
+          ),
+          alignment: Alignment.bottomRight,
+          autoCloseDuration: const Duration(seconds: 4),
+          icon: const Icon(Icons.check_circle),
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyEmailScreen(email: _enteredEmail),
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -106,6 +146,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),
                     TextFormField(
+                      controller: _passwordController,
                       obscureText: !_isPasswordVisible,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
@@ -133,14 +174,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
-                            value.trim().length < 4) {
-                          return 'Panjang input minimal 4 karakter';
+                            value.trim().length < 8) {
+                          return 'Panjang input minimal 8 karakter';
                         }
-
                         return null;
-                      },
-                      onSaved: (value) {
-                        _enteredPass = value!;
                       },
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),
@@ -170,28 +207,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       maxLength: 15,
                       autocorrect: false,
                       validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.trim().length < 4 ||
-                            value.trim() != _enteredPass) {
+                        if (value != _passwordController.text) {
                           return 'Password anda tidak sama';
                         }
 
                         return null;
                       },
-                      onSaved: (value) {
-                        _enteredConfrimPass = value!;
-                      },
                     ),
                     const SizedBox(height: TSizes.spaceBtwSections),
                     MyButton(
-                      text: Text(
-                        'Daftar',
-                        style: textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onPressed: _submitSignUp,
+                      text: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: TColors.primaryColor,
+                              ),
+                            )
+                          : Text(
+                              'Daftar',
+                              style: textTheme.bodyMedium!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                      onPressed: isLoading ? null : _submitSignUp,
                     ),
                     const SizedBox(height: TSizes.mediumSpace),
                     const OrDivider(),

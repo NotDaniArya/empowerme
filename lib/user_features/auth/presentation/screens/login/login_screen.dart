@@ -47,6 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = authState is AsyncLoading;
 
     ref.listen(authNotifierProvider, (previous, next) {
+      toastification.dismissAll();
       if (next is AsyncError) {
         toastification.show(
           context: context,

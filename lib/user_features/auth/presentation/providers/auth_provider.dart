@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:new_empowerme/user_features/auth/data/datasources/auth_local_datasource.dart';
@@ -68,24 +66,39 @@ class AuthNotifier extends StateNotifier<AsyncValue<Auth?>> {
     required String email,
     required String password,
     required String passwordConfirm,
-    required VoidCallback onSuccess,
-    required Function(String) onError,
   }) async {
     state = const AsyncValue.loading();
 
     final repository = _ref.read(authRepositoryProvider);
 
-    final (user, failure) = await repository.register(
+    final (_, failure) = await repository.register(
       name: name,
       email: email,
       password: password,
       passwordConfirm: passwordConfirm,
     );
 
-    if (failure != null) {
-      state = AsyncValue.error(failure, StackTrace.current);
-    } else {
-      state = AsyncValue.data(user);
+    if (mounted) {
+      if (failure != null) {
+        state = AsyncValue.error(failure, StackTrace.current);
+      } else {
+        state = const AsyncValue.data(null);
+      }
+    }
+  }
+
+  Future<void> verifyOtp({required String email, required String otp}) async {
+    state = const AsyncValue.loading();
+    final repository = _ref.read(authRepositoryProvider);
+
+    final (_, failure) = await repository.verifyOtp(email: email, otp: otp);
+
+    if (mounted) {
+      if (failure != null) {
+        state = AsyncValue.error(failure, StackTrace.current);
+      } else {
+        state = const AsyncValue.data(null);
+      }
     }
   }
 
