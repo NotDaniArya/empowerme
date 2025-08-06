@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
+import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
 
 import '../../../utils/constant/colors.dart';
 import '../../../utils/constant/sizes.dart';
@@ -17,20 +18,6 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   automaticallyImplyLeading: false,
-      //   title: Text(
-      //     'Profile Saya',
-      //     style: textTheme.titleMedium!.copyWith(
-      //       color: Colors.white,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   backgroundColor: TColors.primaryColor,
-      //   foregroundColor: Colors.white,
-      // ),
-
       /*
       ==========================================
       Foto Profil
@@ -143,6 +130,14 @@ class ProfileScreen extends ConsumerWidget {
               child: const Text('Logout', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 ref.watch(authNotifierProvider.notifier).logout();
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OnboardingScreen(),
+                  ),
+                  (route) => false,
+                );
 
                 if (Navigator.canPop(ctx)) {
                   Navigator.of(ctx).pop();

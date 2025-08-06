@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/verify_email.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../../utils/constant/colors.dart';
@@ -59,38 +60,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final isLoading = authState is AsyncLoading;
 
     ref.listen(authNotifierProvider, (previous, next) {
-      toastification.dismissAll();
       if (next is AsyncError) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.flatColored,
-          title: Text(
-            'Register Gagal',
-            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
-          ),
-          description: Text(
-            'Email yang anda gunakan mungkin saja sudah terdaftar atau terjadi kesalahan saat melakukan pendaftaran',
-            style: textTheme.bodySmall,
-          ),
-          alignment: Alignment.bottomRight,
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.error),
+        MyHelperFunction.showToast(
+          context,
+          'Register Gagal',
+          'Email yang anda gunakan mungkin saja sudah terdaftar atau terjadi kesalahan saat melakukan pendaftaran',
+          ToastificationType.error,
         );
       }
 
       if (next is AsyncData) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.success,
-          style: ToastificationStyle.flatColored,
-          title: const Text('Kode OTP Terkirim!'),
-          description: const Text(
-            'Masukkan Kode OTP yang dikirim Ke Email anda',
-          ),
-          alignment: Alignment.bottomRight,
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.check_circle),
+        MyHelperFunction.showToast(
+          context,
+          'Kode OTP Terkirim!',
+          'Masukkan Kode OTP yang dikirim Ke Email anda',
+          ToastificationType.success,
         );
 
         Navigator.push(

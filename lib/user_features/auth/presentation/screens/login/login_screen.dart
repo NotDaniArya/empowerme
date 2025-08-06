@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/register_screen.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../../navigation_menu.dart';
@@ -47,41 +48,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = authState is AsyncLoading;
 
     ref.listen(authNotifierProvider, (previous, next) {
-      toastification.dismissAll();
       if (next is AsyncError) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.flatColored,
-          title: Text(
-            'Login Gagal',
-            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
-          ),
-          description: Text(
-            'Email atau password anda mungkin saja salah atau belum terdaftar',
-            style: textTheme.bodySmall,
-          ),
-          alignment: Alignment.bottomRight,
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.error),
+        MyHelperFunction.showToast(
+          context,
+          'Login Gagal',
+          'Email atau password anda mungkin saja salah atau belum terdaftar',
+          ToastificationType.error,
         );
       }
 
       if (next is AsyncData && next.value != null) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.success,
-          style: ToastificationStyle.flatColored,
-          title: const Text('Login Berhasil!'),
-          description: const Text('Selamat datang kembali.'),
-          alignment: Alignment.bottomRight,
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.check_circle),
+        MyHelperFunction.showToast(
+          context,
+          'Login Berhasil!',
+          'Selamat datang kembali.',
+          ToastificationType.success,
         );
 
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const NavigationMenu()),
+          (route) => false,
         );
       }
     });

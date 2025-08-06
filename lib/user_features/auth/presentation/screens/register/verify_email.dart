@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/login/login_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:toastification/toastification.dart';
@@ -23,13 +24,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
   void _submitOtp() {
     if (_enteredOtp.length < 6) {
-      toastification.dismissAll();
-      toastification.show(
-        context: context,
-        type: ToastificationType.warning,
-        title: const Text('OTP Tidak Lengkap'),
-        description: const Text('Mohon masukkan 6 digit kode OTP.'),
-        autoCloseDuration: const Duration(seconds: 4),
+      MyHelperFunction.showToast(
+        context,
+        'OTP Tidak Lengkap',
+        'Mohon masukkan 6 digit kode OTP.',
+        ToastificationType.warning,
       );
       return;
     }
@@ -47,41 +46,26 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
     ref.listen(authNotifierProvider, (previous, next) {
       if (next is AsyncError) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.flatColored,
-          alignment: Alignment.bottomRight,
-          title: Text(
-            'Verifikasi Gagal!',
-            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
-          ),
-          description: Text(
-            'Kode OTP yang anda masukkan tidak sesuai',
-            style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
-          ),
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.error),
+        MyHelperFunction.showToast(
+          context,
+          'Verifikasi Gagal!',
+          'Kode OTP yang anda masukkan tidak sesuai',
+          ToastificationType.error,
         );
       }
 
-      toastification.dismissAll();
       if (next is AsyncData) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.success,
-          style: ToastificationStyle.flatColored,
-          alignment: Alignment.bottomRight,
-          title: const Text('Verifikasi Berhasil!'),
-          description: const Text(
-            'Akun Anda telah diaktifkan. Silahkan melakukan login',
-          ),
-          autoCloseDuration: const Duration(seconds: 4),
-          icon: const Icon(Icons.check_circle),
+        MyHelperFunction.showToast(
+          context,
+          'Verifikasi Berhasil!',
+          'Akun Anda telah diaktifkan. Silahkan melakukan login',
+          ToastificationType.success,
         );
-        Navigator.pushReplacement(
+
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
         );
       }
     });
