@@ -3,25 +3,24 @@ import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
-import 'package:new_empowerme/utils/shared_widgets/item_card.dart';
 
-import '../berita/widgets/list_berita.dart';
+import '../../../../user_features/edukasi/presentation/berita/widgets/list_berita.dart';
 
-class EdukasiScreen extends StatefulWidget {
-  const EdukasiScreen({super.key});
+class JadwalPasienScreen extends StatefulWidget {
+  const JadwalPasienScreen({super.key});
 
   @override
-  State<EdukasiScreen> createState() => _EdukasiScreenState();
+  State<JadwalPasienScreen> createState() => _JadwalPasienScreenState();
 }
 
-class _EdukasiScreenState extends State<EdukasiScreen>
+class _JadwalPasienScreenState extends State<JadwalPasienScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -54,7 +53,7 @@ class _EdukasiScreenState extends State<EdukasiScreen>
               ==========================================
               */
               child: Text(
-                'Panduan & Edukasi Seputar HIV/AIDS',
+                'Jadwal Terapi & Jadwal Ambil Obat Pasien',
                 textAlign: TextAlign.center,
                 style: textTheme.titleLarge!.copyWith(
                   color: TColors.primaryColor,
@@ -76,10 +75,8 @@ class _EdukasiScreenState extends State<EdukasiScreen>
               labelColor: Colors.black,
               labelPadding: const EdgeInsetsGeometry.symmetric(horizontal: 8),
               tabs: const [
-                Tab(text: 'Panduan'),
-                Tab(text: 'Berita'),
-                Tab(text: 'Makanan'),
-                Tab(text: 'Obat'),
+                Tab(text: 'Jadwal Terapi'),
+                Tab(text: 'Jadwal Ambil Obat'),
               ],
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
@@ -92,26 +89,7 @@ class _EdukasiScreenState extends State<EdukasiScreen>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [
-                  const ListPanduan(),
-                  const ListBerita(),
-                  const ItemCard(
-                    itemCount: 5,
-                    imageUrl:
-                        'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
-                    title:
-                        'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
-                    publisherName: 'detikJogja.com',
-                  ),
-                  const ItemCard(
-                    itemCount: 5,
-                    imageUrl:
-                        'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
-                    title:
-                        'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
-                    publisherName: 'detikJogja.com',
-                  ),
-                ],
+                children: [const ListPanduan(), const ListBerita()],
               ),
             ),
           ],

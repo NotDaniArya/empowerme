@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/main.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/register_screen.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:toastification/toastification.dart';
 
-import '../../../../../navigation_menu.dart';
 import '../../../../../utils/constant/colors.dart';
 import '../../../../../utils/constant/sizes.dart';
 import '../../../../../utils/shared_widgets/button.dart';
@@ -67,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const NavigationMenu()),
+          MaterialPageRoute(builder: (context) => const AuthGate()),
           (route) => false,
         );
       }
