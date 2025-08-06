@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:new_empowerme/navigation_menu.dart';
+import 'package:new_empowerme/splash_screen.dart';
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/shared_providers/provider.dart';
 
 final theme = ThemeData().copyWith(
   colorScheme: ColorScheme.fromSeed(
@@ -43,44 +45,43 @@ class AuthGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final splashState = ref.watch(splashDelayProvider);
     final authState = ref.watch(authNotifierProvider);
 
-    return authState.when(
-      data: (user) {
-        if (user != null) {
-          print(
-            'AUTHGATE: User ditemukan! Role: ${user.role}. Menampilkan NavigationMenu...',
-          );
-          switch (user.role) {
-            case UserRole.pasien:
-              print('Navigasi ke Beranda Pasien');
-              return const NavigationMenu();
+    return splashState.when(
+      loading: () => const SplashScreen(),
 
-            case UserRole.konselor:
-              print('Navigasi ke Beranda Konselor');
-              return const Scaffold(
-                body: Center(child: Text('Beranda Konselor')),
-              );
+      error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
 
-            case UserRole.pendamping:
-              print('Navigasi ke Beranda Pendamping');
-              return const Scaffold(
-                body: Center(child: Text('Beranda Pendamping')),
-              );
+      data: (_) {
+        return authState.when(
+          loading: () => const SplashScreen(),
 
-            default:
-              print('Role tidak dikenali, arahkan ke onboarding');
+          error: (error, stackTrace) =>
+              Scaffold(body: Center(child: Text('Terjadi kesalahan: $error'))),
+
+          data: (user) {
+            if (user != null) {
+              switch (user.role) {
+                case UserRole.pasien:
+                  return const NavigationMenu();
+                case UserRole.konselor:
+                  return const Scaffold(
+                    body: Center(child: Text('Beranda Konselor')),
+                  );
+                case UserRole.pendamping:
+                  return const Scaffold(
+                    body: Center(child: Text('Beranda Pendamping')),
+                  );
+                default:
+                  return const OnboardingScreen();
+              }
+            } else {
               return const OnboardingScreen();
-          }
-        } else {
-          print('AUTHGATE: User null. Menampilkan Onboarding/Login...');
-          return const OnboardingScreen();
-        }
+            }
+          },
+        );
       },
-      error: (error, stackTrace) =>
-          Scaffold(body: Center(child: Text('Terjadi kesalahan: $error'))),
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }
 }
