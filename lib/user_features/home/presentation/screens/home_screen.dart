@@ -47,7 +47,6 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: TColors.primaryColor.withOpacity(0.1),
-                    // REKOMENDASI 4: Tambahkan shadow untuk efek kedalaman
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.1),
@@ -83,26 +82,34 @@ class HomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Rumah sakit Faizal',
-                                style: Theme.of(context).textTheme.bodyLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'Senin, 26 Juli 2025',
-                                style: Theme.of(context).textTheme.bodySmall!
-                                    .copyWith(color: Colors.black87),
-                              ),
-                              Text(
-                                '18.00 WITA',
-                                style: Theme.of(context).textTheme.bodySmall!
-                                    .copyWith(color: Colors.black87),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Rumah sakit Faizal',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Senin, 26 Juli 2025',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                                Text(
+                                  '18.00 WITA',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                                Text(
+                                  'Bertemu dengan dr. Wahidin Soedirohusodo',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: TSizes.spaceBtwItems),
                           Image.asset(
                             'assets/icons/jadwal_terapi.png',
                             height: 100,
@@ -117,7 +124,7 @@ class HomeScreen extends ConsumerWidget {
 
                 /*
                 ==========================================
-                Container jadwal terapi
+                Container jadwal ambil obat
                 ==========================================
                 */
                 Text(
@@ -169,26 +176,34 @@ class HomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Rumah sakit Faizal',
-                                style: Theme.of(context).textTheme.bodyLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'Senin, 26 Juli 2025',
-                                style: Theme.of(context).textTheme.bodySmall!
-                                    .copyWith(color: Colors.black87),
-                              ),
-                              Text(
-                                '18.00 WITA',
-                                style: Theme.of(context).textTheme.bodySmall!
-                                    .copyWith(color: Colors.black87),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Rumah sakit Faizal',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Senin, 26 Juli 2025',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                                Text(
+                                  '18.00 WITA',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                                Text(
+                                  'Bertemu dengan dr. Wahidin Soedirohusodo',
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(color: Colors.black87),
+                                ),
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: TSizes.spaceBtwItems),
                           Image.asset(
                             'assets/icons/jadwal_terapi.png',
                             height: 100,
