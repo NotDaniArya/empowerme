@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/daftar_pasien_screen.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/jadwal_pasien_screen.dart';
-import 'package:new_empowerme/user_features/komunitas/presentation/screens/komunitas_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/profile_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 
@@ -20,7 +20,7 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
     // const HomeScreen(),
     Container(color: Colors.cyan),
     const JadwalPasienScreen(),
-    const KomunitasScreen(),
+    const DaftarPasienScreen(),
     const ProfileScreen(),
   ];
 
@@ -76,8 +76,8 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
 
               // Item Navigasi di Kanan
               _buildNavItem(
-                icon: FontAwesomeIcons.peopleGroup,
-                label: 'Komunitas',
+                icon: FontAwesomeIcons.addressBook,
+                label: 'Daftar Pasien',
                 index: 2,
               ),
               _buildNavItem(
