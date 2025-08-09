@@ -20,6 +20,26 @@ class JadwalPasien extends Equatable {
     required this.pasien,
   });
 
+  JadwalPasien copyWith({
+    int? idJadwal,
+    String? date,
+    String? time,
+    String? location,
+    String? meetWith,
+    String? status,
+    Pasien? pasien,
+  }) {
+    return JadwalPasien(
+      idJadwal: idJadwal ?? this.idJadwal,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      location: location ?? this.location,
+      meetWith: meetWith ?? this.meetWith,
+      status: status ?? this.status,
+      pasien: pasien ?? this.pasien,
+    );
+  }
+
   @override
   // TODO: implement props
   List<Object?> get props => [

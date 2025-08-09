@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/datasources/jadwal_pasien_remote_datasource.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/repositories/jadwal_pasien_repository_impl.dart';
@@ -44,18 +46,14 @@ final jadwalPasienRepositoryProvider = Provider<JadwalPasienRepository>(
 class JadwalPasienViewModel extends FamilyNotifier<JadwalPasienState, String> {
   @override
   JadwalPasienState build(String category) {
-    Future.microtask(() => fetchJadwalPasienList(category));
+    _fetchJadwalPasienList();
     return JadwalPasienState(isLoading: true);
   }
 
-  JadwalPasienRepository get _repository =>
-      ref.read(jadwalPasienRepositoryProvider);
-
-  Future<void> fetchJadwalPasienList(String category) async {
-    state = state.copyWith(isLoading: true, clearError: true);
-    final (jadwalPasien, failure) = await _repository.getAllJadwalPasien(
-      category: category,
-    );
+  Future<void> _fetchJadwalPasienList() async {
+    final (jadwalPasien, failure) = await ref
+        .read(jadwalPasienRepositoryProvider)
+        .getAllJadwalPasien(category: arg);
 
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
@@ -69,3 +67,35 @@ final jadwalPasienViewModel =
     NotifierProvider.family<JadwalPasienViewModel, JadwalPasienState, String>(
       () => JadwalPasienViewModel(),
     );
+
+class JadwalPasienUpdater extends Notifier<void> {
+  @override
+  void build() {}
+
+  JadwalPasienRepository get _repository =>
+      ref.read(jadwalPasienRepositoryProvider);
+
+  Future<void> updateStatus({
+    required int idJadwal,
+    required String status,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.updateStatusTerapi(
+      status: status,
+      idJadwal: idJadwal,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(jadwalPasienViewModel);
+
+      onSuccess();
+    }
+  }
+}
+
+final jadwalPasienUpdaterProvider = NotifierProvider<JadwalPasienUpdater, void>(
+  () => JadwalPasienUpdater(),
+);

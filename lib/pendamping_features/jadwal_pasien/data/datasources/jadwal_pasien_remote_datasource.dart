@@ -8,6 +8,11 @@ abstract class JadwalPasienRemoteDataSource {
   Future<List<JadwalPasienModel>> getAllJadwalPasien({
     required String category,
   });
+
+  Future<void> updateStatusTerapi({
+    required String status,
+    required int idJadwal,
+  });
 }
 
 class JadwalPasienRemoteDataSourceImpl implements JadwalPasienRemoteDataSource {
@@ -39,6 +44,28 @@ class JadwalPasienRemoteDataSourceImpl implements JadwalPasienRemoteDataSource {
       if (e.response != null) {
         errorMessage =
             'Gagal mengambil data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> updateStatusTerapi({
+    required String status,
+    required int idJadwal,
+  }) async {
+    try {
+      final response = await dio.put(
+        '${TTexts.baseUrl}/therapy/update/status?id=$idJadwal',
+        data: {'status': status},
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal saat mengubah status terapi';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal saat mengubah status terapi: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }

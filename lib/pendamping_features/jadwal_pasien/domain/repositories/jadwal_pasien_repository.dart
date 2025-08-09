@@ -5,4 +5,9 @@ abstract class JadwalPasienRepository {
   Future<(List<JadwalPasien>?, Failure?)> getAllJadwalPasien({
     required String category,
   });
+
+  Future<(void, Failure?)> updateStatusTerapi({
+    required String status,
+    required int idJadwal,
+  });
 }

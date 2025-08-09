@@ -23,4 +23,22 @@ class JadwalPasienRepositoryImpl implements JadwalPasienRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> updateStatusTerapi({
+    required String status,
+    required int idJadwal,
+  }) async {
+    try {
+      await remoteDataSource.updateStatusTerapi(
+        status: status,
+        idJadwal: idJadwal,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }
