@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/list_panduan.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_pasien.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
@@ -89,7 +89,7 @@ class _JadwalPasienScreenState extends State<JadwalPasienScreen>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [const ListPanduan(), const ListBerita()],
+                children: [const ListJadwalPasien(), const ListBerita()],
               ),
             ),
           ],
