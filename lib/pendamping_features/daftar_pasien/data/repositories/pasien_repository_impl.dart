@@ -1,7 +1,8 @@
 import 'package:new_empowerme/core/failure.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/datasources/pasien_remote_datasource.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/pasien.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/repositories/pasien_repository.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/pasien.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/repositories/pasien_repository.dart';
+
+import '../datasources/pasien_remote_datasource.dart';
 
 class PasienRepositoryImpl implements PasienRepository {
   final PasienRemoteDataSource remoteDataSource;

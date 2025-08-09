@@ -1,4 +1,4 @@
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/pasien.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/pasien.dart';
 
 class PasienModel extends Pasien {
   const PasienModel({

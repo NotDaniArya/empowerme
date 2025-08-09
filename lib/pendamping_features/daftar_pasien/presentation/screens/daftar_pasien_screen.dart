@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/providers/pasien_provider.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 
 import '../../../../utils/constant/sizes.dart';
+import '../providers/pasien_provider.dart';
 
 class DaftarPasienScreen extends ConsumerStatefulWidget {
   const DaftarPasienScreen({super.key});
@@ -53,26 +53,22 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
         itemBuilder: (context, index) {
           final pasien = state.pasien![index];
 
-          return Card(
-            elevation: 3,
-            color: TColors.secondaryColor,
-            margin: const EdgeInsets.symmetric(vertical: 6),
-            child: ListTile(
-              contentPadding: const EdgeInsetsGeometry.symmetric(
-                horizontal: 16,
+          return ListTile(
+            contentPadding: const EdgeInsetsGeometry.symmetric(
+              horizontal: 16,
+              vertical: 4,
+            ),
+            leading: const FaIcon(FontAwesomeIcons.solidUser),
+            title: Text(pasien.name, style: textTheme.bodyLarge),
+            subtitle: Text(
+              pasien.email,
+              style: textTheme.bodySmall!.copyWith(
+                color: TColors.secondaryText,
               ),
-              leading: const FaIcon(FontAwesomeIcons.solidUser),
-              title: Text(pasien.name, style: textTheme.bodyLarge),
-              subtitle: Text(
-                pasien.email,
-                style: textTheme.bodySmall!.copyWith(
-                  color: TColors.secondaryText,
-                ),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                color: TColors.primaryColor,
-              ),
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios,
+              color: TColors.primaryColor,
             ),
           );
         },

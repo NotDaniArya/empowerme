@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/datasources/pasien_remote_datasource.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/repositories/pasien_repository_impl.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/pasien.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/repositories/pasien_repository.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
+
+import '../../data/datasources/pasien_remote_datasource.dart';
+import '../../data/repositories/pasien_repository_impl.dart';
+import '../../domain/entities/pasien.dart';
+import '../../domain/repositories/pasien_repository.dart';
 
 class PasienState {
   final List<Pasien>? pasien;
