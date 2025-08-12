@@ -9,6 +9,56 @@ class JadwalPasienRepositoryImpl implements JadwalPasienRepository {
   const JadwalPasienRepositoryImpl(this.remoteDataSource);
 
   @override
+  Future<(void, Failure?)> addJadwalTerapi({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+  }) async {
+    try {
+      await remoteDataSource.addJadwalTerapi(
+        id: id,
+        date: date,
+        time: time,
+        location: location,
+        meetWith: meetWith,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(void, Failure?)> addJadwalAmbilObat({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+    required String typeDrug,
+  }) async {
+    try {
+      await remoteDataSource.addJadwalAmbilObat(
+        id: id,
+        date: date,
+        time: time,
+        location: location,
+        meetWith: meetWith,
+        typeDrug: typeDrug,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
   Future<(List<JadwalPasien>?, Failure?)> getAllJadwalTerapiPasien({
     required String category,
   }) async {

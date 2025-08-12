@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/tambah_jadwal_screen.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_ambil_obat_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_terapi_pasien.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -90,9 +92,23 @@ class _JadwalPasienScreenState extends State<JadwalPasienScreen>
             child: FloatingActionButton(
               onPressed: () {
                 if (_tabController.index == 0) {
-                  print('Navigasi ke halaman Buat Jadwal Terapi...');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TambahJadwalScreen(
+                        jadwalType: TipeJadwal.terapi,
+                      ),
+                    ),
+                  );
                 } else {
-                  print('Navigasi ke halaman Buat Jadwal Ambil Obat...');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TambahJadwalScreen(
+                        jadwalType: TipeJadwal.ambilObat,
+                      ),
+                    ),
+                  );
                 }
               },
               shape: RoundedRectangleBorder(

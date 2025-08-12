@@ -5,6 +5,23 @@ import 'package:new_empowerme/utils/constant/texts.dart';
 import '../../../../core/failure.dart';
 
 abstract class JadwalPasienRemoteDataSource {
+  Future<void> addJadwalTerapi({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+  });
+
+  Future<void> addJadwalAmbilObat({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+    required String typeDrug,
+  });
+
   Future<List<JadwalPasienModel>> getAllJadwalTerapiPasien({
     required String category,
   });
@@ -28,6 +45,70 @@ class JadwalPasienRemoteDataSourceImpl implements JadwalPasienRemoteDataSource {
   final Dio dio;
 
   const JadwalPasienRemoteDataSourceImpl(this.dio);
+
+  @override
+  Future<void> addJadwalTerapi({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+  }) async {
+    try {
+      final response = await dio.post(
+        '${TTexts.baseUrl}/saved/therapy',
+        data: {
+          "idUser": id,
+          "date": date,
+          "time": time,
+          "location": location,
+          "meetWith": meetWith,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal saat menambahkan jadwal terapi';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal saat menambahkan jadwal terapi: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> addJadwalAmbilObat({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+    required String typeDrug,
+  }) async {
+    try {
+      final response = await dio.post(
+        '${TTexts.baseUrl}/saved/therapy',
+        data: {
+          "idUser": id,
+          "date": date,
+          "time": time,
+          "location": location,
+          "meetWith": meetWith,
+          "typeDrug": typeDrug,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal saat menambahkan jadwal ambil obat';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal saat menambahkan jadwal ambil obat: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
 
   @override
   Future<List<JadwalPasienModel>> getAllJadwalTerapiPasien({

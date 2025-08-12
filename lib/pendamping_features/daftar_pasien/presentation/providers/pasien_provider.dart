@@ -56,6 +56,18 @@ class PasienViewModel extends Notifier<PasienState> {
   }
 }
 
+final allPasienProvider = FutureProvider<List<Pasien>>((ref) async {
+  final repository = ref.watch(pasienRepositoryProvider);
+
+  final (pasienList, failure) = await repository.getAllPasien();
+
+  if (failure != null) {
+    throw failure.message;
+  }
+
+  return pasienList ?? [];
+});
+
 final pasienViewModel = NotifierProvider<PasienViewModel, PasienState>(
   () => PasienViewModel(),
 );

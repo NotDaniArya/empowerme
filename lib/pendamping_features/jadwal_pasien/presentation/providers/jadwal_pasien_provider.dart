@@ -114,6 +114,60 @@ class JadwalPasienUpdater extends Notifier<void> {
   JadwalPasienRepository get _repository =>
       ref.read(jadwalPasienRepositoryProvider);
 
+  Future<void> addJadwalTerapi({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.addJadwalTerapi(
+      id: id,
+      date: date,
+      time: time,
+      location: location,
+      meetWith: meetWith,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(jadwalTerapiPasienViewModel);
+
+      onSuccess();
+    }
+  }
+
+  Future<void> addJadwalAmbilObat({
+    required String id,
+    required String date,
+    required String time,
+    required String location,
+    required String meetWith,
+    required String typeDrug,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.addJadwalAmbilObat(
+      id: id,
+      date: date,
+      time: time,
+      location: location,
+      meetWith: meetWith,
+      typeDrug: typeDrug,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(jadwalAmbilObatPasienViewModel);
+
+      onSuccess();
+    }
+  }
+
   Future<void> updateStatusTerapi({
     required int idJadwal,
     required String status,
