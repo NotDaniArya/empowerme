@@ -44,23 +44,22 @@ class _ListJadwalTerapiPasienState
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildCategoryDropdown(),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            _buildBody(context, jadwalState),
-            const SizedBox(height: TSizes.mediumSpace),
-          ],
-        ),
+      body: Column(
+        children: [
+          _buildCategoryDropdown(),
+          const SizedBox(height: TSizes.spaceBtwItems),
+          Expanded(child: _buildBody(context, jadwalState)),
+        ],
       ),
     );
   }
 
   Widget _buildCategoryDropdown() {
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -77,6 +76,7 @@ class _ListJadwalTerapiPasienState
         child: DropdownButton<String>(
           value: _selectedCategory,
           isExpanded: true,
+          style: textTheme.bodyMedium,
           icon: const Icon(Icons.arrow_drop_down, color: TColors.primaryColor),
           onChanged: (String? newValue) {
             if (newValue != null) {
@@ -128,128 +128,119 @@ class _ListJadwalTerapiPasienState
       );
     }
 
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: Text(
-            'Jumlah jadwal ditemukan: ${state.jadwalPasien!.length}',
-            textAlign: TextAlign.end,
-            style: textTheme.labelMedium,
-          ),
-        ),
-        const SizedBox(height: TSizes.spaceBtwItems),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.jadwalPasien!.length,
-          itemBuilder: (context, index) {
-            final jadwal = state.jadwalPasien![index];
+    return RefreshIndicator(
+      displacement: 10,
+      onRefresh: () async {
+        ref.invalidate(jadwalTerapiPasienViewModel);
+      },
+      child: ListView.builder(
+        itemCount: state.jadwalPasien!.length,
+        itemBuilder: (context, index) {
+          final jadwal = state.jadwalPasien![index];
 
-            return Card(
-              elevation: 2,
-              margin: const EdgeInsets.only(bottom: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailJadwalPasienScreen(
-                        tipeJadwal: TipeJadwal.terapi,
-                        jadwal: jadwal,
-                        category: selectedApiKey,
-                      ),
+          return Card(
+            elevation: 2,
+            margin: const EdgeInsets.only(bottom: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailJadwalPasienScreen(
+                      tipeJadwal: TipeJadwal.terapi,
+                      jadwal: jadwal,
+                      category: selectedApiKey,
                     ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Chip(
-                            label: Text(
-                              jadwal.status[0].toUpperCase() +
-                                  jadwal.status.substring(1).toLowerCase(),
-                              style: textTheme.labelMedium!.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            backgroundColor: TColors.primaryColor,
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                          ),
-                          Text(
-                            'Lihat Selengkapnya',
-                            style: Theme.of(context).textTheme.labelLarge!
-                                .copyWith(color: TColors.primaryColor),
-                          ),
-                        ],
-                      ),
-                      const Divider(height: 24),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  jadwal.pasien.name,
-                                  style: Theme.of(context).textTheme.titleLarge!
-                                      .copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 12),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.calendar_today,
-                                  text: jadwal.date,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.access_time,
-                                  text: jadwal.time,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.location_on,
-                                  text: jadwal.location,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.person,
-                                  text: 'Bertemu dengan ${jadwal.meetWith}',
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Image.asset(
-                            'assets/icons/jadwal_terapi.png',
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
+                );
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Chip(
+                          label: Text(
+                            jadwal.status[0].toUpperCase() +
+                                jadwal.status.substring(1).toLowerCase(),
+                            style: textTheme.labelMedium!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          backgroundColor: TColors.primaryColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                        ),
+                        Text(
+                          'Lihat Selengkapnya',
+                          style: Theme.of(context).textTheme.labelLarge!
+                              .copyWith(color: TColors.primaryColor),
+                        ),
+                      ],
+                    ),
+                    const Divider(height: 24),
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                jadwal.pasien.name,
+                                style: Theme.of(context).textTheme.titleLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 12),
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.calendar_today,
+                                text: jadwal.date,
+                              ),
+                              const SizedBox(height: 8),
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.access_time,
+                                text: jadwal.time,
+                              ),
+                              const SizedBox(height: 8),
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.location_on,
+                                text: jadwal.location,
+                              ),
+                              const SizedBox(height: 8),
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.person,
+                                text: 'Bertemu dengan ${jadwal.meetWith}',
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Image.asset(
+                          'assets/icons/jadwal_terapi.png',
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+          );
+        },
+      ),
     );
   }
 
