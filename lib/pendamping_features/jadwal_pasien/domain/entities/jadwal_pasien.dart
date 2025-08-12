@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/pasien.dart';
 
+enum TipeJadwal { terapi, ambilObat }
+
 class JadwalPasien extends Equatable {
   final int idJadwal;
   final String date;

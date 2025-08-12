@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/detail_jadwal_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/detail_jadwal_pasien_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 
 import '../../../../utils/constant/sizes.dart';
 import '../providers/jadwal_pasien_provider.dart';
 
-class ListJadwalPasien extends ConsumerStatefulWidget {
-  const ListJadwalPasien({super.key});
+class ListJadwalAmbilObatPasien extends ConsumerStatefulWidget {
+  const ListJadwalAmbilObatPasien({super.key});
 
   @override
-  ConsumerState<ListJadwalPasien> createState() => _ListJadwalPasienState();
+  ConsumerState<ListJadwalAmbilObatPasien> createState() =>
+      _ListJadwalAmbilObatPasienState();
 }
 
-class _ListJadwalPasienState extends ConsumerState<ListJadwalPasien> {
+class _ListJadwalAmbilObatPasienState
+    extends ConsumerState<ListJadwalAmbilObatPasien> {
   final Map<String, String> _categoryMap = {
     'Semua': 'all',
     'Selesai': 'done',
@@ -37,7 +40,9 @@ class _ListJadwalPasienState extends ConsumerState<ListJadwalPasien> {
   @override
   Widget build(BuildContext context) {
     final selectedApiKey = _categoryMap[_selectedCategory]!;
-    final jadwalState = ref.watch(jadwalPasienViewModel(selectedApiKey));
+    final jadwalState = ref.watch(
+      jadwalAmbilObatPasienViewModel(selectedApiKey),
+    );
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
@@ -155,6 +160,7 @@ class _ListJadwalPasienState extends ConsumerState<ListJadwalPasien> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DetailJadwalPasienScreen(
+                        tipeJadwal: TipeJadwal.ambilObat,
                         jadwal: jadwal,
                         category: selectedApiKey,
                       ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_ambil_obat_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_terapi_pasien.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
-
-import '../../../../user_features/edukasi/presentation/berita/widgets/list_berita.dart';
 
 class JadwalPasienScreen extends StatefulWidget {
   const JadwalPasienScreen({super.key});
@@ -89,7 +88,10 @@ class _JadwalPasienScreenState extends State<JadwalPasienScreen>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [const ListJadwalPasien(), const ListBerita()],
+                children: [
+                  const ListJadwalTerapiPasien(),
+                  const ListJadwalAmbilObatPasien(),
+                ],
               ),
             ),
           ],

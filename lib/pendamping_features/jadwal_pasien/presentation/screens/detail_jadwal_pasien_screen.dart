@@ -12,10 +12,12 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
     super.key,
     required this.jadwal,
     required this.category,
+    required this.tipeJadwal,
   });
 
   final JadwalPasien jadwal;
   final String category;
+  final TipeJadwal tipeJadwal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,32 +98,10 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        ref
-                            .read(jadwalPasienUpdaterProvider.notifier)
-                            .updateStatus(
-                              idJadwal: jadwal.idJadwal,
-                              status: 'SELESAI',
-                              onSuccess: () {
-                                MyHelperFunction.showToast(
-                                  context,
-                                  'Jadwal berhasil ditandai selesai',
-                                  'Status jadwal terapi pada pasien ini telah selesai',
-                                  ToastificationType.success,
-                                );
-                                Navigator.pop(context);
-                              },
-                              onError: (error) {
-                                MyHelperFunction.showToast(
-                                  context,
-                                  'Jadwal gagal ditandai selesai',
-                                  'Status jadwal terapi pada pasien ini gagal di perbarui',
-                                  ToastificationType.error,
-                                );
-                              },
-                            );
+                        _updateStatus(ref, context, 'SELESAI');
                       },
                       icon: const Icon(Icons.check_circle, color: Colors.white),
-                      label: const Text('Selesaikan'),
+                      label: const Text('Selesai'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -132,29 +112,7 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        ref
-                            .read(jadwalPasienUpdaterProvider.notifier)
-                            .updateStatus(
-                              idJadwal: jadwal.idJadwal,
-                              status: 'DIBATALKAN',
-                              onSuccess: () {
-                                MyHelperFunction.showToast(
-                                  context,
-                                  'Jadwal berhasil dibatalkan',
-                                  'Status jadwal terapi pada pasien ini telah dibatalkan',
-                                  ToastificationType.success,
-                                );
-                                Navigator.pop(context);
-                              },
-                              onError: (error) {
-                                MyHelperFunction.showToast(
-                                  context,
-                                  'Jadwal gagal dibatalkan',
-                                  'Status jadwal terapi pada pasien ini gagal di perbarui',
-                                  ToastificationType.error,
-                                );
-                              },
-                            );
+                        _updateStatus(ref, context, 'DIBATALKAN');
                       },
                       icon: const Icon(Icons.cancel, color: Colors.white),
                       label: const Text('Batalkan'),
@@ -264,6 +222,36 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
       ),
       backgroundColor: backgroundColor,
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    );
+  }
+
+  void _updateStatus(WidgetRef ref, BuildContext context, String newStatus) {
+    final updateFunction = tipeJadwal == TipeJadwal.terapi
+        ? ref.read(jadwalPasienUpdaterProvider.notifier).updateStatusTerapi
+        : ref.read(jadwalPasienUpdaterProvider.notifier).updateStatusAmbilObat;
+
+    updateFunction(
+      idJadwal: jadwal.idJadwal, // Konversi ke int
+      status: newStatus,
+      onSuccess: () {
+        if (!context.mounted) return;
+        MyHelperFunction.showToast(
+          context,
+          'Jadwal berhasil diupdate',
+          'Status jadwal telah diubah menjadi $newStatus',
+          ToastificationType.success,
+        );
+        Navigator.pop(context);
+      },
+      onError: (error) {
+        if (!context.mounted) return;
+        MyHelperFunction.showToast(
+          context,
+          'Gagal mengupdate jadwal',
+          'Status jadwal gagal diubah menjadi $newStatus',
+          ToastificationType.error,
+        );
+      },
     );
   }
 }

@@ -9,13 +9,28 @@ class JadwalPasienRepositoryImpl implements JadwalPasienRepository {
   const JadwalPasienRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<(List<JadwalPasien>?, Failure?)> getAllJadwalPasien({
+  Future<(List<JadwalPasien>?, Failure?)> getAllJadwalTerapiPasien({
     required String category,
   }) async {
     try {
-      final jadwalPasienList = await remoteDataSource.getAllJadwalPasien(
+      final jadwalPasienList = await remoteDataSource.getAllJadwalTerapiPasien(
         category: category,
       );
+      return (jadwalPasienList, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(List<JadwalPasien>?, Failure?)> getAllJadwalAmbilObatPasien({
+    required String category,
+  }) async {
+    try {
+      final jadwalPasienList = await remoteDataSource
+          .getAllJadwalAmbilObatPasien(category: category);
       return (jadwalPasienList, null);
     } on Failure catch (f) {
       return (null, f);
@@ -31,6 +46,24 @@ class JadwalPasienRepositoryImpl implements JadwalPasienRepository {
   }) async {
     try {
       await remoteDataSource.updateStatusTerapi(
+        status: status,
+        idJadwal: idJadwal,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(void, Failure?)> updateStatusAmbilObat({
+    required String status,
+    required int idJadwal,
+  }) async {
+    try {
+      await remoteDataSource.updateStatusAmbilObat(
         status: status,
         idJadwal: idJadwal,
       );

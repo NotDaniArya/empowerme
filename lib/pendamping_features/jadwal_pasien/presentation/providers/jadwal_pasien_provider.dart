@@ -43,7 +43,12 @@ final jadwalPasienRepositoryProvider = Provider<JadwalPasienRepository>(
   ),
 );
 
-class JadwalPasienViewModel extends FamilyNotifier<JadwalPasienState, String> {
+// ======================================
+// INI JADWAL TERAPI PASIEN
+// ======================================
+
+class JadwalTerapiPasienViewModel
+    extends FamilyNotifier<JadwalPasienState, String> {
   @override
   JadwalPasienState build(String category) {
     _fetchJadwalPasienList();
@@ -53,7 +58,7 @@ class JadwalPasienViewModel extends FamilyNotifier<JadwalPasienState, String> {
   Future<void> _fetchJadwalPasienList() async {
     final (jadwalPasien, failure) = await ref
         .read(jadwalPasienRepositoryProvider)
-        .getAllJadwalPasien(category: arg);
+        .getAllJadwalTerapiPasien(category: arg);
 
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
@@ -63,10 +68,44 @@ class JadwalPasienViewModel extends FamilyNotifier<JadwalPasienState, String> {
   }
 }
 
-final jadwalPasienViewModel =
-    NotifierProvider.family<JadwalPasienViewModel, JadwalPasienState, String>(
-      () => JadwalPasienViewModel(),
-    );
+final jadwalTerapiPasienViewModel =
+    NotifierProvider.family<
+      JadwalTerapiPasienViewModel,
+      JadwalPasienState,
+      String
+    >(() => JadwalTerapiPasienViewModel());
+
+// ======================================
+// INI JADWAL AMBIL OBAT PASIEN
+// ======================================
+
+class JadwalAmbilObatPasienViewModel
+    extends FamilyNotifier<JadwalPasienState, String> {
+  @override
+  JadwalPasienState build(String category) {
+    _fetchJadwalPasienList();
+    return JadwalPasienState(isLoading: true);
+  }
+
+  Future<void> _fetchJadwalPasienList() async {
+    final (jadwalPasien, failure) = await ref
+        .read(jadwalPasienRepositoryProvider)
+        .getAllJadwalAmbilObatPasien(category: arg);
+
+    if (failure != null) {
+      state = state.copyWith(isLoading: false, error: failure.message);
+    } else {
+      state = state.copyWith(jadwalPasien: jadwalPasien, isLoading: false);
+    }
+  }
+}
+
+final jadwalAmbilObatPasienViewModel =
+    NotifierProvider.family<
+      JadwalAmbilObatPasienViewModel,
+      JadwalPasienState,
+      String
+    >(() => JadwalAmbilObatPasienViewModel());
 
 class JadwalPasienUpdater extends Notifier<void> {
   @override
@@ -75,7 +114,7 @@ class JadwalPasienUpdater extends Notifier<void> {
   JadwalPasienRepository get _repository =>
       ref.read(jadwalPasienRepositoryProvider);
 
-  Future<void> updateStatus({
+  Future<void> updateStatusTerapi({
     required int idJadwal,
     required String status,
     required VoidCallback onSuccess,
@@ -89,7 +128,27 @@ class JadwalPasienUpdater extends Notifier<void> {
     if (failure != null) {
       onError(failure.message);
     } else {
-      ref.invalidate(jadwalPasienViewModel);
+      ref.invalidate(jadwalTerapiPasienViewModel);
+
+      onSuccess();
+    }
+  }
+
+  Future<void> updateStatusAmbilObat({
+    required int idJadwal,
+    required String status,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.updateStatusAmbilObat(
+      status: status,
+      idJadwal: idJadwal,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(jadwalAmbilObatPasienViewModel);
 
       onSuccess();
     }
