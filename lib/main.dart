@@ -52,14 +52,19 @@ class AuthGate extends ConsumerWidget {
     return splashState.when(
       loading: () => const SplashScreen(),
 
-      error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
+      error: (err, stack) => Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        body: Center(child: Text('Error: $err')),
+      ),
 
       data: (_) {
         return authState.when(
           loading: () => const SplashScreen(),
 
-          error: (error, stackTrace) =>
-              Scaffold(body: Center(child: Text('Terjadi kesalahan: $error'))),
+          error: (error, stackTrace) => Scaffold(
+            backgroundColor: TColors.backgroundColor,
+            body: Center(child: Text('Terjadi kesalahan: $error')),
+          ),
 
           data: (user) {
             if (user != null) {

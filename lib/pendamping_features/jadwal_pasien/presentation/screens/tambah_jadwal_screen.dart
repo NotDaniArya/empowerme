@@ -6,6 +6,7 @@ import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/pro
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/providers/jadwal_pasien_provider.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/sheet_cari_pasien.dart';
+import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
@@ -158,6 +159,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
     final title = isTerapi ? 'Jadwal Terapi Baru' : 'Jadwal Ambil Obat Baru';
 
     return Scaffold(
+      backgroundColor: TColors.backgroundColor,
       appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(TSizes.scaffoldPadding),

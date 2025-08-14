@@ -87,7 +87,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: TColors.backgroundColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

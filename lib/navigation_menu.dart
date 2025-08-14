@@ -33,6 +33,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TColors.backgroundColor,
       extendBody: true, // Membuat body bisa berada di belakang navbar
       body: _listMenu[_selectedIndex],
 

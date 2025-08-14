@@ -76,6 +76,7 @@ class _ListJadwalAmbilObatPasienState
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          dropdownColor: TColors.backgroundColor,
           value: _selectedCategory,
           style: textTheme.bodyMedium,
           isExpanded: true,
@@ -119,12 +120,27 @@ class _ListJadwalAmbilObatPasienState
     }
 
     if (state.jadwalPasien == null || state.jadwalPasien!.isEmpty) {
-      return SizedBox(
-        height: 150,
-        child: Center(
-          child: Text(
-            'Tidak ada jadwal pasien yang ditemukan.',
-            style: textTheme.titleMedium,
+      return Center(
+        child: SizedBox(
+          height: 150,
+          child: Column(
+            children: [
+              Text(
+                'Tidak ada jadwal pasien yang ditemukan.',
+                style: textTheme.titleMedium,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              IconButton(
+                onPressed: () {
+                  ref.invalidate(jadwalAmbilObatPasienViewModel);
+                },
+                icon: const Icon(Icons.refresh),
+                style: IconButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -229,10 +245,10 @@ class _ListJadwalAmbilObatPasienState
                         ),
                         const SizedBox(width: 16),
                         Image.asset(
-                          'assets/icons/jadwal_terapi.png',
+                          'assets/icons/jadwal_obat.png',
                           height: 100,
                           width: 100,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                         ),
                       ],
                     ),

@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: TColors.backgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Container(

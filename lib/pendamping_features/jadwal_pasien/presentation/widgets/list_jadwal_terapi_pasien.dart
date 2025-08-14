@@ -74,6 +74,7 @@ class _ListJadwalTerapiPasienState
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          dropdownColor: TColors.backgroundColor,
           value: _selectedCategory,
           isExpanded: true,
           style: textTheme.bodyMedium,
@@ -108,21 +109,51 @@ class _ListJadwalTerapiPasienState
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-          child: Text(
-            'Terjadi kesalahan: ${state.error}',
-            textAlign: TextAlign.center,
+          child: Column(
+            children: [
+              Text(
+                'Terjadi kesalahan: ${state.error}',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              IconButton(
+                onPressed: () {
+                  ref.invalidate(jadwalTerapiPasienViewModel);
+                },
+                icon: const Icon(Icons.refresh),
+                style: IconButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
 
     if (state.jadwalPasien == null || state.jadwalPasien!.isEmpty) {
-      return SizedBox(
-        height: 150,
-        child: Center(
-          child: Text(
-            'Tidak ada jadwal pasien yang ditemukan.',
-            style: textTheme.titleMedium,
+      return Center(
+        child: SizedBox(
+          height: 150,
+          child: Column(
+            children: [
+              Text(
+                'Tidak ada jadwal pasien yang ditemukan.',
+                style: textTheme.titleMedium,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              IconButton(
+                onPressed: () {
+                  ref.invalidate(jadwalTerapiPasienViewModel);
+                },
+                icon: const Icon(Icons.refresh),
+                style: IconButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       );

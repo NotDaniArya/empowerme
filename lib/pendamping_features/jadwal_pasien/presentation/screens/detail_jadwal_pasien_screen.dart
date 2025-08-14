@@ -24,6 +24,7 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: TColors.backgroundColor,
       appBar: AppBar(title: Text('Detail Jadwal', style: textTheme.titleLarge)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(TSizes.scaffoldPadding),
