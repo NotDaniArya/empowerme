@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/providers/jadwal_pasien_provider.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -65,7 +66,10 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
                       context,
                       icon: Icons.calendar_today,
                       title: 'Tanggal',
-                      value: jadwal.date,
+                      value: DateFormat(
+                        'EEEE, d MMMM yyyy',
+                        'id_ID',
+                      ).format(jadwal.date),
                     ),
                     _buildInfoRow(
                       context,

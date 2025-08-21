@@ -34,7 +34,7 @@ class Berita extends Equatable {
 
     try {
       final dateTime = DateTime.parse(publishedAt);
-      return DateFormat('d MMMM yyyy', 'id_ID').format(dateTime);
+      return DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(dateTime);
     } catch (e) {
       return publishedAt;
     }

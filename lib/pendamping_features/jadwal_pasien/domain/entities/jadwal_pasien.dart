@@ -5,7 +5,7 @@ enum TipeJadwal { terapi, ambilObat }
 
 class JadwalPasien extends Equatable {
   final int idJadwal;
-  final String date;
+  final DateTime date;
   final String time;
   final String location;
   final String meetWith;
@@ -24,7 +24,7 @@ class JadwalPasien extends Equatable {
 
   JadwalPasien copyWith({
     int? idJadwal,
-    String? date,
+    DateTime? date,
     String? time,
     String? location,
     String? meetWith,

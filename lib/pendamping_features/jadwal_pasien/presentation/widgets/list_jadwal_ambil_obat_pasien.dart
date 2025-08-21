@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/detail_jadwal_pasien_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -220,7 +221,10 @@ class _ListJadwalAmbilObatPasienState
                               _buildInfoRow(
                                 context,
                                 icon: Icons.calendar_today,
-                                text: jadwal.date,
+                                text: DateFormat(
+                                  'EEEE, d MMMM yyyy',
+                                  'id_ID',
+                                ).format(jadwal.date),
                               ),
                               const SizedBox(height: 8),
                               _buildInfoRow(
@@ -246,8 +250,8 @@ class _ListJadwalAmbilObatPasienState
                         const SizedBox(width: 16),
                         Image.asset(
                           'assets/icons/jadwal_obat.png',
-                          height: 100,
-                          width: 100,
+                          height: 80,
+                          width: 80,
                           fit: BoxFit.fitWidth,
                         ),
                       ],

@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/user_features/chat/konselor/presentation/screens/chat_konselor_screen.dart';
-import 'package:new_empowerme/user_features/chat/pendamping/chat_pendamping_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
+
+import '../../konselor/presentation/screens/chat_konselor_screen.dart';
+import '../../pendamping/chat_pendamping_screen.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});

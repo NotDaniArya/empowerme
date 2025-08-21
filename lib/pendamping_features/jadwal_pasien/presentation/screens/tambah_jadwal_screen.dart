@@ -86,7 +86,10 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
       _selectedTime!.minute,
     ).toIso8601String();
 
-    final dateOnly = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+    final dateOnly = DateFormat(
+      'EEEE, d MMMM yyyy',
+      'id_ID',
+    ).format(_selectedDate!);
     final timeOnly =
         '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}:00';
 
@@ -209,7 +212,10 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
                       label: Text(
                         _selectedDate == null
                             ? 'Pilih Tanggal'
-                            : DateFormat('dd MMM yyyy').format(_selectedDate!),
+                            : DateFormat(
+                                'EEEE, d MMMM yyyy',
+                                'id_ID',
+                              ).format(_selectedDate!),
                       ),
                     ),
                   ),

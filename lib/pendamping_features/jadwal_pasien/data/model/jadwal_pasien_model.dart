@@ -21,7 +21,7 @@ class JadwalPasienModel extends JadwalPasien {
 
     return JadwalPasienModel(
       idJadwal: json['id'],
-      date: json['date'],
+      date: DateTime.parse(json['date']),
       time: json['time'],
       location: json['location'],
       meetWith: json['meetWith'],
