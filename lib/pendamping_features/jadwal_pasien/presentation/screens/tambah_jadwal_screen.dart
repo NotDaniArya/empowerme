@@ -78,18 +78,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
     }
     _formKey.currentState!.save();
 
-    final finalDateTime = DateTime(
-      _selectedDate!.year,
-      _selectedDate!.month,
-      _selectedDate!.day,
-      _selectedTime!.hour,
-      _selectedTime!.minute,
-    ).toIso8601String();
-
-    final dateOnly = DateFormat(
-      'EEEE, d MMMM yyyy',
-      'id_ID',
-    ).format(_selectedDate!);
+    final dateOnly = DateFormat('yyyy-MM-d', 'id_ID').format(_selectedDate!);
     final timeOnly =
         '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}:00';
 
@@ -98,7 +87,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
           .read(jadwalPasienUpdaterProvider.notifier)
           .addJadwalTerapi(
             id: _selectedPasien!.id,
-            date: dateOnly,
+            date: dateOnly.toString(),
             time: timeOnly,
             location: _locationController.text,
             meetWith: _meetWithController.text,
@@ -213,28 +202,26 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
                         _selectedDate == null
                             ? 'Pilih Tanggal'
                             : DateFormat(
-                                'EEEE, d MMMM yyyy',
+                                'd-MM-yyyy',
                                 'id_ID',
                               ).format(_selectedDate!),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        if (time != null) setState(() => _selectedTime = time);
-                      },
-                      icon: const Icon(Icons.access_time),
-                      label: Text(
-                        _selectedTime == null
-                            ? 'Pilih Waktu'
-                            : _selectedTime!.format(context),
-                      ),
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (time != null) setState(() => _selectedTime = time);
+                    },
+                    icon: const Icon(Icons.access_time),
+                    label: Text(
+                      _selectedTime == null
+                          ? 'Pilih Waktu'
+                          : '${_selectedTime!.format(context)} WITA',
                     ),
                   ),
                 ],

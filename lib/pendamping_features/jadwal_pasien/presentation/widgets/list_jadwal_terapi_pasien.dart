@@ -243,7 +243,7 @@ class _ListJadwalTerapiPasienState
                               _buildInfoRow(
                                 context,
                                 icon: Icons.access_time,
-                                text: jadwal.time,
+                                text: '${jadwal.time} WITA',
                               ),
                               const SizedBox(height: 8),
                               _buildInfoRow(
