@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 
@@ -34,10 +35,10 @@ class SplashScreen extends StatelessWidget {
                   color: TColors.secondaryText,
                 ),
               ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.mediumSpace),
               const SizedBox(
                 width: 150,
-                child: LinearProgressIndicator(color: TColors.primaryColor),
+                child: SpinKitThreeInOut(size: 30, color: TColors.primaryColor),
               ),
             ],
           ),
