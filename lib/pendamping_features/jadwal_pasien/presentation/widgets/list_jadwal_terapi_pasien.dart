@@ -117,14 +117,16 @@ class _ListJadwalTerapiPasienState
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              IconButton(
+              ElevatedButton(
                 onPressed: () {
                   ref.invalidate(jadwalTerapiPasienViewModel);
                 },
-                icon: const Icon(Icons.refresh),
-                style: IconButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: TColors.primaryColor,
-                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -144,14 +146,16 @@ class _ListJadwalTerapiPasienState
                 style: textTheme.titleMedium,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              IconButton(
+              ElevatedButton(
                 onPressed: () {
                   ref.invalidate(jadwalTerapiPasienViewModel);
                 },
-                icon: const Icon(Icons.refresh),
-                style: IconButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: TColors.primaryColor,
-                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],

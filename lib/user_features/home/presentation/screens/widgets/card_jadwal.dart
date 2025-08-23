@@ -56,16 +56,18 @@ class CardJadwal extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: TSizes.spaceBtwItems),
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       tipeJadwal == TipeJadwal.terapi
                           ? ref.invalidate(userJadwalTerapiViewModel)
                           : ref.invalidate(userJadwalAmbilObatViewModel);
                     },
-                    icon: const Icon(Icons.refresh),
-                    style: IconButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: TColors.primaryColor,
-                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      'Refresh',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -96,16 +98,18 @@ class CardJadwal extends ConsumerWidget {
                   style: textTheme.titleMedium,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
-                IconButton(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColors.primaryColor,
+                  ),
                   onPressed: () {
                     tipeJadwal == TipeJadwal.terapi
                         ? ref.invalidate(userJadwalTerapiViewModel)
                         : ref.invalidate(userJadwalAmbilObatViewModel);
                   },
-                  icon: const Icon(Icons.refresh),
-                  style: IconButton.styleFrom(
-                    backgroundColor: TColors.primaryColor,
-                    foregroundColor: Colors.white,
+                  child: const Text(
+                    'Refresh',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

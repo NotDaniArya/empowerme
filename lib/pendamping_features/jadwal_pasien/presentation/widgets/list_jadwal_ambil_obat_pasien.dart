@@ -131,14 +131,16 @@ class _ListJadwalAmbilObatPasienState
                 style: textTheme.titleMedium,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              IconButton(
+              ElevatedButton(
                 onPressed: () {
                   ref.invalidate(jadwalAmbilObatPasienViewModel);
                 },
-                icon: const Icon(Icons.refresh),
-                style: IconButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: TColors.primaryColor,
-                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
