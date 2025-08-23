@@ -21,8 +21,8 @@ class DetailPanduanScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
+            backgroundColor: TColors.primaryColor,
+            foregroundColor: Colors.white,
             expandedHeight: 300.0,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(

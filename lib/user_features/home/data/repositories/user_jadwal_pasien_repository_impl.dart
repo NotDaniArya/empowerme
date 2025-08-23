@@ -10,10 +10,13 @@ class UserJadwalPasienRepositoryImpl implements UserJadwalPasienRepository {
   const UserJadwalPasienRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<(List<UserJadwalPasien>?, Failure?)> getAllJadwalTerapiPasien() async {
+  Future<(List<UserJadwalPasien>?, Failure?)> getAllJadwalTerapiPasien({
+    required String id,
+  }) async {
     try {
-      final jadwalPasienList = await remoteDataSource
-          .getAllJadwalTerapiPasien();
+      final jadwalPasienList = await remoteDataSource.getAllJadwalTerapiPasien(
+        id: id,
+      );
       return (jadwalPasienList, null);
     } on Failure catch (f) {
       return (null, f);
@@ -23,11 +26,12 @@ class UserJadwalPasienRepositoryImpl implements UserJadwalPasienRepository {
   }
 
   @override
-  Future<(List<UserJadwalPasien>?, Failure?)>
-  getAllJadwalAmbilObatPasien() async {
+  Future<(List<UserJadwalPasien>?, Failure?)> getAllJadwalAmbilObatPasien({
+    required String id,
+  }) async {
     try {
       final jadwalPasienList = await remoteDataSource
-          .getAllJadwalAmbilObatPasien();
+          .getAllJadwalAmbilObatPasien(id: id);
       return (jadwalPasienList, null);
     } on Failure catch (f) {
       return (null, f);

@@ -26,7 +26,14 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(title: Text('Detail Jadwal', style: textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text(
+          'Detail Jadwal',
+          style: textTheme.titleMedium!.copyWith(color: Colors.white),
+        ),
+        backgroundColor: TColors.primaryColor,
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(TSizes.scaffoldPadding),
         child: Column(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/widgets/card_jadwal.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/widgets/information_slider.dart';
 
+import '../../../../pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
 import '../../../../utils/shared_widgets/appbar.dart';
@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: TSizes.smallSpace),
-                const CardJadwal(tipeJadwal: TipeJadwal.terapi),
+                const CardJadwal(tipeJadwal: TipeJadwal.terapi, id: '000002'),
                 const SizedBox(height: TSizes.spaceBtwSections),
 
                 /*
@@ -59,7 +59,10 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: TSizes.smallSpace),
-                const CardJadwal(tipeJadwal: TipeJadwal.ambilObat),
+                const CardJadwal(
+                  tipeJadwal: TipeJadwal.ambilObat,
+                  id: '000002',
+                ),
                 const SizedBox(height: TSizes.spaceBtwSections),
 
                 /*

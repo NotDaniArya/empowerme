@@ -8,16 +8,17 @@ import '../../../../../utils/constant/sizes.dart';
 import '../../providers/user_jadwal_pasien_provider.dart';
 
 class CardJadwal extends ConsumerWidget {
-  const CardJadwal({super.key, required this.tipeJadwal});
+  const CardJadwal({super.key, required this.tipeJadwal, required this.id});
 
   final TipeJadwal tipeJadwal;
+  final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final userJadwalState = tipeJadwal == TipeJadwal.terapi
-        ? ref.watch(userJadwalTerapiViewModel)
-        : ref.watch(userJadwalAmbilObatViewModel);
+        ? ref.watch(userJadwalTerapiViewModel('000002'))
+        : ref.watch(userJadwalAmbilObatViewModel('000002'));
 
     if (userJadwalState.isLoading) {
       return SizedBox(
@@ -124,8 +125,11 @@ class CardJadwal extends ConsumerWidget {
             context,
             MaterialPageRoute(
               builder: (context) => tipeJadwal == TipeJadwal.terapi
-                  ? const HistoryJadwalScreen(tipeJadwal: TipeJadwal.terapi)
-                  : const HistoryJadwalScreen(tipeJadwal: TipeJadwal.ambilObat),
+                  ? HistoryJadwalScreen(tipeJadwal: TipeJadwal.terapi, id: id)
+                  : HistoryJadwalScreen(
+                      tipeJadwal: TipeJadwal.ambilObat,
+                      id: id,
+                    ),
             ),
           );
         },

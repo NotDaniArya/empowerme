@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/detail_pasien_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
 import '../../../../utils/constant/sizes.dart';
 import '../providers/pasien_provider.dart';
@@ -38,7 +40,7 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(title: const Text('Daftar Pasien')),
+      appBar: const MyAppBar(),
       body: Column(
         children: [
           Padding(
@@ -111,7 +113,14 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPasienScreen(pasien: pasien),
+                ),
+              );
+            },
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 8,

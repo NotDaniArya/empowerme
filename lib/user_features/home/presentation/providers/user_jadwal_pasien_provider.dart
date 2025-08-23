@@ -46,9 +46,10 @@ final userJadwalPasienRepositoryProvider = Provider<UserJadwalPasienRepository>(
 // INI JADWAL TERAPI
 // ==============================
 
-class UserJadwalTerapiPasienViewModel extends Notifier<UserJadwalPasienState> {
+class UserJadwalTerapiPasienViewModel
+    extends FamilyNotifier<UserJadwalPasienState, String> {
   @override
-  UserJadwalPasienState build() {
+  UserJadwalPasienState build(String id) {
     Future.microtask(fetchUserJadwalTerapiPasien);
     return UserJadwalPasienState(isLoading: true);
   }
@@ -58,8 +59,9 @@ class UserJadwalTerapiPasienViewModel extends Notifier<UserJadwalPasienState> {
 
   Future<void> fetchUserJadwalTerapiPasien() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final (jadwalPasien, failure) = await _repository
-        .getAllJadwalTerapiPasien();
+    final (jadwalPasien, failure) = await _repository.getAllJadwalTerapiPasien(
+      id: arg,
+    );
 
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
@@ -70,18 +72,20 @@ class UserJadwalTerapiPasienViewModel extends Notifier<UserJadwalPasienState> {
 }
 
 final userJadwalTerapiViewModel =
-    NotifierProvider<UserJadwalTerapiPasienViewModel, UserJadwalPasienState>(
-      () => UserJadwalTerapiPasienViewModel(),
-    );
+    NotifierProvider.family<
+      UserJadwalTerapiPasienViewModel,
+      UserJadwalPasienState,
+      String
+    >(() => UserJadwalTerapiPasienViewModel());
 
 // ==============================
 // INI JADWAL AMBIL OBAT
 // ==============================
 
 class UserJadwalAmbilObatPasienViewModel
-    extends Notifier<UserJadwalPasienState> {
+    extends FamilyNotifier<UserJadwalPasienState, String> {
   @override
-  UserJadwalPasienState build() {
+  UserJadwalPasienState build(String id) {
     Future.microtask(fetchUserJadwalAmbilObatPasien);
     return UserJadwalPasienState(isLoading: true);
   }
@@ -92,7 +96,7 @@ class UserJadwalAmbilObatPasienViewModel
   Future<void> fetchUserJadwalAmbilObatPasien() async {
     state = state.copyWith(isLoading: true, clearError: true);
     final (jadwalPasien, failure) = await _repository
-        .getAllJadwalAmbilObatPasien();
+        .getAllJadwalAmbilObatPasien(id: arg);
 
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
@@ -103,6 +107,8 @@ class UserJadwalAmbilObatPasienViewModel
 }
 
 final userJadwalAmbilObatViewModel =
-    NotifierProvider<UserJadwalAmbilObatPasienViewModel, UserJadwalPasienState>(
-      () => UserJadwalAmbilObatPasienViewModel(),
-    );
+    NotifierProvider.family<
+      UserJadwalAmbilObatPasienViewModel,
+      UserJadwalPasienState,
+      String
+    >(() => UserJadwalAmbilObatPasienViewModel());

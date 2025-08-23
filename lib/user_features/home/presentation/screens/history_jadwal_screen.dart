@@ -7,16 +7,21 @@ import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
 
 class HistoryJadwalScreen extends ConsumerWidget {
-  const HistoryJadwalScreen({super.key, required this.tipeJadwal});
+  const HistoryJadwalScreen({
+    super.key,
+    required this.tipeJadwal,
+    required this.id,
+  });
 
   final TipeJadwal tipeJadwal;
+  final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final userJadwalState = tipeJadwal == TipeJadwal.terapi
-        ? ref.watch(userJadwalTerapiViewModel)
-        : ref.watch(userJadwalAmbilObatViewModel);
+        ? ref.watch(userJadwalTerapiViewModel(id))
+        : ref.watch(userJadwalAmbilObatViewModel(id));
 
     if (userJadwalState.isLoading) {
       return const Scaffold(

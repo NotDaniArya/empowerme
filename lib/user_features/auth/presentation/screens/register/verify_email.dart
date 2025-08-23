@@ -97,7 +97,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: TColors.primaryColor,
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(TSizes.scaffoldPadding),

@@ -146,13 +146,20 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final allPasienAsync = ref.watch(allPasienProvider);
+    final textTheme = Theme.of(context).textTheme;
     final isTerapi = widget.jadwalType == TipeJadwal.terapi;
     final title = isTerapi ? 'Jadwal Terapi Baru' : 'Jadwal Ambil Obat Baru';
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: textTheme.titleMedium!.copyWith(color: Colors.white),
+        ),
+        backgroundColor: TColors.primaryColor,
+        foregroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(TSizes.scaffoldPadding),
         child: Form(

@@ -5,9 +5,13 @@ import '../../../../core/failure.dart';
 import '../model/user_jadwal_pasien_model.dart';
 
 abstract class UserJadwalPasienRemoteDataSource {
-  Future<List<UserJadwalPasienModel>> getAllJadwalTerapiPasien();
+  Future<List<UserJadwalPasienModel>> getAllJadwalTerapiPasien({
+    required String id,
+  });
 
-  Future<List<UserJadwalPasienModel>> getAllJadwalAmbilObatPasien();
+  Future<List<UserJadwalPasienModel>> getAllJadwalAmbilObatPasien({
+    required String id,
+  });
 }
 
 class UserJadwalPasienRemoteDataSourceImpl
@@ -17,10 +21,12 @@ class UserJadwalPasienRemoteDataSourceImpl
   const UserJadwalPasienRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<UserJadwalPasienModel>> getAllJadwalTerapiPasien() async {
+  Future<List<UserJadwalPasienModel>> getAllJadwalTerapiPasien({
+    required String id,
+  }) async {
     try {
       final response = await dio.get(
-        '${TTexts.baseUrl}/histories/therapy?idUser=000002',
+        '${TTexts.baseUrl}/histories/therapy?idUser=$id',
       );
 
       final Map<String, dynamic> dataJson = response.data['data'];
@@ -39,10 +45,12 @@ class UserJadwalPasienRemoteDataSourceImpl
   }
 
   @override
-  Future<List<UserJadwalPasienModel>> getAllJadwalAmbilObatPasien() async {
+  Future<List<UserJadwalPasienModel>> getAllJadwalAmbilObatPasien({
+    required String id,
+  }) async {
     try {
       final response = await dio.get(
-        '${TTexts.baseUrl}/histories/medication?idUser=000002',
+        '${TTexts.baseUrl}/histories/medication?idUser=$id',
       );
 
       final Map<String, dynamic> dataJson = response.data['data'];
