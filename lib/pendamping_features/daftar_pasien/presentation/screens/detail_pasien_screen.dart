@@ -55,7 +55,9 @@ class DetailPasienScreen extends ConsumerWidget {
                         _buildInfoTile(
                           icon: Icons.info_outline,
                           title: 'Status',
-                          value: 'Pasien Baru',
+                          value:
+                              pasien.status[0].toUpperCase() +
+                              pasien.status.substring(1).toLowerCase(),
                           valueColor: TColors.primaryColor,
                         ),
                       ],

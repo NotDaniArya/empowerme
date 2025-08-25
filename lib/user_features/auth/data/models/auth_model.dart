@@ -1,12 +1,20 @@
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
 
 class AuthModel extends Auth {
-  const AuthModel({required super.token, required super.role});
+  const AuthModel({
+    required super.token,
+    required super.role,
+    required super.id,
+  });
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>;
 
-    return AuthModel(token: data['token'], role: _parseRole(data['role']));
+    return AuthModel(
+      token: data['token'],
+      role: _parseRole(data['role']),
+      id: data['id'],
+    );
   }
 
   // function untuk mengubah string role menjadi Enum

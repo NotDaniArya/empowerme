@@ -55,7 +55,11 @@ class AuthRepositoryImpl extends AuthRepository {
         password: password,
       );
 
-      await localDataSource.saveAuthData(authModel.token, authModel.role.name);
+      await localDataSource.saveAuthData(
+        authModel.token,
+        authModel.role.name,
+        authModel.id,
+      );
 
       return (authModel, null);
     } catch (e) {
@@ -68,9 +72,10 @@ class AuthRepositoryImpl extends AuthRepository {
     try {
       final token = await localDataSource.getToken();
       final role = await localDataSource.getRole();
+      final id = await localDataSource.getId();
 
-      if (token != null && role != null) {
-        final entity = Auth(token: token, role: _parseRole(role));
+      if (token != null && role != null && id != null) {
+        final entity = Auth(token: token, role: _parseRole(role), id: id);
 
         return (entity, null);
       } else {

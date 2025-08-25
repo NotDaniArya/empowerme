@@ -6,14 +6,16 @@ class PasienModel extends Pasien {
     required super.email,
     required super.name,
     required super.picture,
+    required super.status,
   });
 
   factory PasienModel.fromJson(Map<String, dynamic> json) {
     return PasienModel(
-      id: json['id'],
+      id: json['id'] ?? 'id kosong',
       email: json['email'],
       name: json['name'],
       picture: json['picture'],
+      status: json['status'] ?? 'status tidak ada',
     );
   }
 }

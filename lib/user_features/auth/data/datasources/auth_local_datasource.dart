@@ -2,11 +2,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
-  Future<void> saveAuthData(String token, String role);
+  Future<void> saveAuthData(String token, String role, String id);
 
   Future<String?> getToken();
 
   Future<String?> getRole();
+
+  Future<String?> getId();
 
   Future<void> clearAuthData();
 }
@@ -18,8 +20,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   const AuthLocalDataSourceImpl(this.secureStorage, this.sharedPreferences);
 
   @override
-  Future<void> saveAuthData(String token, String role) async {
+  Future<void> saveAuthData(String token, String role, String id) async {
     await secureStorage.write(key: 'auth_token', value: token);
+    await secureStorage.write(key: 'userId', value: id);
     await sharedPreferences.setString('role', role);
   }
 
@@ -34,8 +37,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
+  Future<String?> getId() async {
+    return sharedPreferences.getString('userId');
+  }
+
+  @override
   Future<void> clearAuthData() async {
     await secureStorage.delete(key: 'auth_token');
+    await secureStorage.delete(key: 'userId');
     await sharedPreferences.remove('role');
   }
 }

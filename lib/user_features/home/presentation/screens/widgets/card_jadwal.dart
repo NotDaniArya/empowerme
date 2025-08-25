@@ -17,8 +17,8 @@ class CardJadwal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final userJadwalState = tipeJadwal == TipeJadwal.terapi
-        ? ref.watch(userJadwalTerapiViewModel('000002'))
-        : ref.watch(userJadwalAmbilObatViewModel('000002'));
+        ? ref.watch(userJadwalTerapiViewModel(id))
+        : ref.watch(userJadwalAmbilObatViewModel(id));
 
     if (userJadwalState.isLoading) {
       return SizedBox(
