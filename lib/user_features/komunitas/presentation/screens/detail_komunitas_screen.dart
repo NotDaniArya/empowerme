@@ -1,15 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/komunitas/domain/entities/komunitas.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/comment_sheet.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 
-class DetailKomunitasScreen extends StatelessWidget {
-  const DetailKomunitasScreen({super.key});
+class DetailKomunitasScreen extends ConsumerWidget {
+  const DetailKomunitasScreen({super.key, required this.komunitas});
+
+  final Komunitas komunitas;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -57,7 +61,12 @@ class DetailKomunitasScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: TSizes.mediumSpace),
-                  Expanded(child: Text('User', style: textTheme.labelLarge)),
+                  Expanded(
+                    child: Text(
+                      komunitas.pasien!.name,
+                      style: textTheme.labelLarge,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
@@ -68,7 +77,7 @@ class DetailKomunitasScreen extends StatelessWidget {
               ==========================================
               */
               Text(
-                'ODHIV Bisa Hidup Normal? Jawabannya di Sini!',
+                komunitas.title,
                 textAlign: TextAlign.start,
                 style: textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
@@ -81,10 +90,7 @@ class DetailKomunitasScreen extends StatelessWidget {
               isi threads
               ==========================================
               */
-              Text(
-                'Saat pertama kali Dika menerima hasil tesnya, dunia seakan runtuh. Ia tak pernah menyangka bahwa tiga huruf kecil—HIV—bisa begitu mengubah hidupnya. Malam itu, ia duduk termenung, mencari jawaban di internet. Apa artinya ini? Apakah hidupnya sudah berakhir? Tapi hari-hari berlalu, dan Dika mulai belajar. Ia menemukan komunitas yang mendukung, dokter yang membimbing, dan orang-orang yang berbagi pengalaman serupa. HIV bukanlah hukuman mati. Dengan terapi ARV yang rutin dan gaya hidup sehat, ia tetap bisa bekerja, berolahraga, dan bahkan menjalin hubungan seperti orang lain. Hari ini, Dika berdiri di depan cermin, tersenyum. Ia telah membuktikan bahwa HIV tidak mendefinisikan siapa dirinya. Ia tetaplah Dika—seorang sahabat, pekerja keras, dan manusia yang berhak atas kehidupan yang penuh makna. Jawabannya? Ya, ODHIV bisa hidup normal. Dan Dika adalah buktinya. 💙',
-                style: textTheme.bodyMedium,
-              ),
+              Text(komunitas.content, style: textTheme.bodyMedium),
               const SizedBox(height: TSizes.smallSpace),
 
               /*
@@ -100,7 +106,7 @@ class DetailKomunitasScreen extends StatelessWidget {
                         onPressed: () {},
                         icon: const FaIcon(FontAwesomeIcons.heart, size: 18),
                       ),
-                      const Text('50'),
+                      Text(komunitas.like.toString()),
                     ],
                   ),
                   Row(
@@ -109,7 +115,7 @@ class DetailKomunitasScreen extends StatelessWidget {
                         onPressed: () {},
                         icon: const FaIcon(FontAwesomeIcons.comment, size: 18),
                       ),
-                      const Text('50'),
+                      Text('50'),
                     ],
                   ),
                   Row(
@@ -118,7 +124,7 @@ class DetailKomunitasScreen extends StatelessWidget {
                         onPressed: () {},
                         icon: const FaIcon(FontAwesomeIcons.share, size: 18),
                       ),
-                      const Text('30'),
+                      Text(komunitas.share.toString()),
                     ],
                   ),
                 ],

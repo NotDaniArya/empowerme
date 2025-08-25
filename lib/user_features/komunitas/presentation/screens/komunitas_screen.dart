@@ -1,18 +1,97 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_empowerme/user_features/komunitas/presentation/screens/detail_komunitas_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
-class KomunitasScreen extends StatelessWidget {
+import 'detail_komunitas_screen.dart';
+
+class KomunitasScreen extends ConsumerWidget {
   const KomunitasScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final komunitasState = ref.watch(komunitasViewModel);
 
+    if (komunitasState.isLoading) {
+      return const Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        appBar: MyAppBar(),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (komunitasState.error != null) {
+      return Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        appBar: const MyAppBar(),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Terjadi kesalahan: ${komunitasState.error}',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColors.primaryColor,
+                  ),
+                  onPressed: () {
+                    ref.invalidate(komunitasViewModel);
+                  },
+                  child: const Text(
+                    'Refresh',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (komunitasState.communityPosts == null ||
+        komunitasState.communityPosts!.isEmpty) {
+      return Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        appBar: const MyAppBar(),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Tidak ada postingan komunitas yang ditemukan.',
+                style: textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(komunitasViewModel);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
 
@@ -30,14 +109,17 @@ class KomunitasScreen extends StatelessWidget {
         */
         child: ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: TSizes.scaffoldPadding),
-          itemCount: 5,
+          itemCount: komunitasState.communityPosts!.length,
           itemBuilder: (context, index) {
+            final postingan = komunitasState.communityPosts![index];
+
             return InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DetailKomunitasScreen(),
+                    builder: (context) =>
+                        DetailKomunitasScreen(komunitas: postingan),
                   ),
                 );
               },
@@ -82,7 +164,7 @@ class KomunitasScreen extends StatelessWidget {
                               const SizedBox(width: TSizes.smallSpace),
                               Expanded(
                                 child: Text(
-                                  'User',
+                                  postingan.pasien!.name,
                                   style: textTheme.labelLarge,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
@@ -93,7 +175,10 @@ class KomunitasScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: TSizes.spaceBtwSections),
                         Text(
-                          '29 Juli 2025',
+                          DateFormat(
+                            'd MMMM yyyy, HH:mm',
+                            'id_ID',
+                          ).format(postingan.createdAt),
                           style: textTheme.labelMedium!.copyWith(
                             color: TColors.secondaryText,
                           ),
@@ -107,12 +192,26 @@ class KomunitasScreen extends StatelessWidget {
                     judul threads
                     ==========================================
                     */
-                    Text(
-                      'Kenapa Stigma tentang HIV Masih Kuat? Ayo Diskusi!',
-                      textAlign: TextAlign.start,
-                      maxLines: 5,
-                      style: textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        postingan.title,
+                        textAlign: TextAlign.start,
+                        maxLines: 2,
+                        style: textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: TSizes.smallSpace),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        postingan.content,
+                        textAlign: TextAlign.start,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.bodyMedium,
                       ),
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),
@@ -128,11 +227,9 @@ class KomunitasScreen extends StatelessWidget {
                           onPressed: () {},
                           icon: const FaIcon(FontAwesomeIcons.heart),
                         ),
-                        const Text('50'),
+                        Text(postingan.like.toString()),
                         const SizedBox(width: TSizes.mediumSpace),
                         const FaIcon(FontAwesomeIcons.comment),
-                        const SizedBox(width: TSizes.mediumSpace),
-                        const Text('100'),
                       ],
                     ),
                   ],

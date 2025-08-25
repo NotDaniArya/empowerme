@@ -1,0 +1,128 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/user_features/komunitas/data/datasources/komunitas_remote_datasource.dart';
+import 'package:new_empowerme/user_features/komunitas/data/repositories/komunitas_repository_impl.dart';
+import 'package:new_empowerme/user_features/komunitas/domain/entities/comment.dart';
+import 'package:new_empowerme/user_features/komunitas/domain/entities/komunitas.dart';
+import 'package:new_empowerme/user_features/komunitas/domain/repositories/komunitas_repository.dart';
+import 'package:new_empowerme/utils/shared_providers/provider.dart';
+
+// ===================================
+// State Postingan Komunitas
+// ===================================
+
+class KomunitasState {
+  final List<Komunitas>? communityPosts;
+  final bool isLoading;
+  final String? error;
+
+  KomunitasState({
+    this.communityPosts = const [],
+    this.isLoading = false,
+    this.error,
+  });
+
+  KomunitasState copyWith({
+    List<Komunitas>? communityPosts,
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
+  }) {
+    return KomunitasState(
+      communityPosts: communityPosts ?? this.communityPosts,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+
+final komunitasRemoteDataSourceProvider = Provider<KomunitasRemoteDataSource>(
+  (ref) => KomunitasRemoteDataSourceImpl(ref.watch(dioProvider)),
+);
+
+final komunitasRepositoryProvider = Provider<KomunitasRepository>(
+  (ref) =>
+      KomunitasRepositoryImpl(ref.watch(komunitasRemoteDataSourceProvider)),
+);
+
+class KomunitasViewModel extends Notifier<KomunitasState> {
+  @override
+  KomunitasState build() {
+    Future.microtask(fetchPostinganKomunitas);
+    return KomunitasState(isLoading: true);
+  }
+
+  KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
+
+  Future<void> fetchPostinganKomunitas() async {
+    state = state.copyWith(isLoading: false, clearError: true);
+    final (postinganKomunitas, failure) = await _repository.getCommunityPosts();
+
+    if (failure != null) {
+      state = state.copyWith(isLoading: false, error: failure.message);
+    } else {
+      state = state.copyWith(
+        communityPosts: postinganKomunitas,
+        isLoading: false,
+      );
+    }
+  }
+}
+
+final komunitasViewModel = NotifierProvider<KomunitasViewModel, KomunitasState>(
+  () => KomunitasViewModel(),
+);
+
+// ===================================
+// State Postingan Komunitas
+// ===================================
+
+class CommentState {
+  final List<Comment>? commentCommunity;
+  final bool isLoading;
+  final String? error;
+
+  CommentState({
+    this.commentCommunity = const [],
+    this.isLoading = false,
+    this.error,
+  });
+
+  CommentState copyWith({
+    List<Comment>? commentCommunity,
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
+  }) {
+    return CommentState(
+      commentCommunity: commentCommunity ?? this.commentCommunity,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+
+class CommentViewModel extends FamilyNotifier<CommentState, String> {
+  @override
+  CommentState build(String id) {
+    fetchCommentKomunitas();
+    return CommentState(isLoading: true);
+  }
+
+  KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
+
+  Future<void> fetchCommentKomunitas() async {
+    state = state.copyWith(isLoading: false, clearError: true);
+    final (commentKomunitas, failure) = await _repository.getCommunityComment(
+      id: arg,
+    );
+
+    if (failure != null) {
+      state = state.copyWith(isLoading: false, error: failure.message);
+    } else {
+      state = state.copyWith(
+        commentCommunity: commentKomunitas,
+        isLoading: false,
+      );
+    }
+  }
+}
