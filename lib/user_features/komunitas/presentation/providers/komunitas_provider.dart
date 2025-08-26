@@ -104,17 +104,14 @@ class CommentState {
 class CommentViewModel extends FamilyNotifier<CommentState, String> {
   @override
   CommentState build(String id) {
-    fetchCommentKomunitas();
+    _fetchCommentKomunitas();
     return CommentState(isLoading: true);
   }
 
-  KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
-
-  Future<void> fetchCommentKomunitas() async {
-    state = state.copyWith(isLoading: false, clearError: true);
-    final (commentKomunitas, failure) = await _repository.getCommunityComment(
-      id: arg,
-    );
+  Future<void> _fetchCommentKomunitas() async {
+    final (commentKomunitas, failure) = await ref
+        .read(komunitasRepositoryProvider)
+        .getCommunityComment(id: arg);
 
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
@@ -126,3 +123,8 @@ class CommentViewModel extends FamilyNotifier<CommentState, String> {
     }
   }
 }
+
+final commentViewModel =
+    NotifierProvider.family<CommentViewModel, CommentState, String>(
+      () => CommentViewModel(),
+    );

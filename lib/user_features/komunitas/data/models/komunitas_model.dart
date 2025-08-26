@@ -17,8 +17,10 @@ class KomunitasModel extends Komunitas {
   });
 
   factory KomunitasModel.fromJson(Map<String, dynamic> json) {
+    // Ambil list 'comments' dari JSON
     final List<dynamic> commentsJson = json['comments'] ?? [];
 
+    // Map setiap item di list menjadi objek CommentModel
     final List<Comment> commentsList = commentsJson
         .map((comment) => CommentModel.fromJson(comment))
         .toList();
@@ -31,7 +33,7 @@ class KomunitasModel extends Komunitas {
       like: json['like'],
       share: json['share'],
       pasien: PasienModel.fromJson(json['user']),
-      comments: commentsList,
+      comments: commentsList, // Berikan list yang sudah di-parsing
     );
   }
 }

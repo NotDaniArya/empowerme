@@ -12,15 +12,13 @@ class CommentModel extends Comment {
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     final List<dynamic> repliesJson = json['replayComments'] ?? [];
-
-    // Map setiap item menjadi objek ReplyCommentModel
     final List<ReplyComment> repliesList = repliesJson
         .map((reply) => ReplyCommentModel.fromJson(reply))
         .toList();
 
     return CommentModel(
-      comment: json['comment'],
-      like: json['like'],
+      comment: json['comment'] ?? '',
+      like: json['like'] ?? 0,
       pasien: PasienModel.fromJson(json['user']),
       id: json['id'],
       replyComment: repliesList,

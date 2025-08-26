@@ -41,11 +41,13 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
   @override
   Future<List<CommentModel>> getCommunityComment({required String id}) async {
     try {
-      final response = await dio.get(
+      Response<dynamic> response = await dio.get(
         '${TTexts.baseUrl}/community/comment?id=$id',
       );
 
-      final List<dynamic> listCommunityComment = response.data['data'];
+      final Map<String, dynamic> dataJson = response.data['data'];
+
+      final List<dynamic> listCommunityComment = dataJson['comments'] ?? [];
 
       return listCommunityComment
           .map((comments) => CommentModel.fromJson(comments))
