@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:new_empowerme/user_features/komunitas/domain/entities/comment.dart';
 import 'package:new_empowerme/user_features/komunitas/domain/entities/komunitas.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/comment_sheet.dart';
@@ -142,7 +143,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         onPressed: () {},
                         icon: const FaIcon(FontAwesomeIcons.comment, size: 18),
                       ),
-                      const Text('ini belum'),
+                      Text('0'),
                     ],
                   ),
                   Row(
@@ -174,7 +175,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
     );
   }
 
-  void _showCommentModal(BuildContext context) {
+  void _showCommentModal(BuildContext context, Comment comment) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -182,7 +183,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return const CommentSheet();
+        return CommentSheet(comment: comment);
       },
     );
   }
@@ -215,14 +216,11 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
           height: 150,
           child: Column(
             children: [
-              Text(
-                'Tidak ada jadwal pasien yang ditemukan.',
-                style: textTheme.titleMedium,
-              ),
+              Text('Belum ada komentar.', style: textTheme.titleMedium),
               const SizedBox(height: TSizes.spaceBtwItems),
               ElevatedButton(
                 onPressed: () {
-                  // ref.invalidate(jadwalAmbilObatPasienViewModel);
+                  ref.invalidate(commentViewModel);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: TColors.primaryColor,
@@ -317,7 +315,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                 Text(comment.like.toString()),
                 IconButton(
                   onPressed: () {
-                    _showCommentModal(context);
+                    _showCommentModal(context, comment);
                   },
                   icon: const FaIcon(FontAwesomeIcons.comment, size: 18),
                 ),
