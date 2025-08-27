@@ -74,23 +74,32 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
             Expanded(
               child: replies.isEmpty
                   ? const Center(child: Text('Belum ada balasan.'))
-                  : ListView.builder(
-                      itemCount: replies.length,
-                      itemBuilder: (context, index) {
-                        final reply = replies[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                              reply.pasien.picture,
-                            ),
-                          ),
-                          title: Text(
-                            reply.pasien.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(reply.comment),
-                        );
+                  : RefreshIndicator(
+                      displacement: 10,
+                      onRefresh: () async {
+                        ref.invalidate(komunitasViewModel);
+                        ref.invalidate(commentViewModel);
                       },
+                      child: ListView.builder(
+                        itemCount: replies.length,
+                        itemBuilder: (context, index) {
+                          final reply = replies[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                reply.pasien.picture,
+                              ),
+                            ),
+                            title: Text(
+                              reply.pasien.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(reply.comment),
+                          );
+                        },
+                      ),
                     ),
             ),
 

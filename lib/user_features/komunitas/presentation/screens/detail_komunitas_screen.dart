@@ -53,137 +53,144 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
-              child: Column(
-                children: [
-                  /*
-                  ==========================================
-                  profile user
-                  ==========================================
-                  */
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadiusGeometry.circular(50),
+            child: RefreshIndicator(
+              displacement: 10,
+              onRefresh: () async {
+                ref.invalidate(komunitasViewModel);
+                ref.invalidate(commentViewModel);
+              },
+              child: SingleChildScrollView(
+                padding: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
+                child: Column(
+                  children: [
+                    /*
+                    ==========================================
+                    profile user
+                    ==========================================
+                    */
+                    Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadiusGeometry.circular(50),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        clipBehavior: Clip.antiAlias,
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                          fit: BoxFit.cover,
+                        const SizedBox(width: TSizes.mediumSpace),
+                        Expanded(
+                          child: Text(
+                            widget.komunitas.pasien!.name,
+                            style: textTheme.labelLarge,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: TSizes.mediumSpace),
-                      Expanded(
-                        child: Text(
-                          widget.komunitas.pasien!.name,
-                          style: textTheme.labelLarge,
+                        Text(
+                          DateFormat(
+                            'd MMMM yyyy, HH:mm',
+                            'id_ID',
+                          ).format(widget.komunitas.createdAt),
+                          style: textTheme.labelMedium!.copyWith(
+                            color: TColors.secondaryText,
+                          ),
                         ),
-                      ),
-                      Text(
-                        DateFormat(
-                          'd MMMM yyyy, HH:mm',
-                          'id_ID',
-                        ).format(widget.komunitas.createdAt),
-                        style: textTheme.labelMedium!.copyWith(
-                          color: TColors.secondaryText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
+                      ],
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwSections),
 
-                  /*
-                  ==========================================
-                  judul threads
-                  ==========================================
-                  */
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      widget.komunitas.title,
-                      textAlign: TextAlign.start,
-                      style: textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
+                    /*
+                    ==========================================
+                    judul threads
+                    ==========================================
+                    */
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        widget.komunitas.title,
+                        textAlign: TextAlign.start,
+                        style: textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: TSizes.mediumSpace),
+                    const SizedBox(height: TSizes.mediumSpace),
 
-                  /*
-                  ==========================================
-                  isi threads
-                  ==========================================
-                  */
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      widget.komunitas.content,
-                      style: textTheme.bodyMedium,
+                    /*
+                    ==========================================
+                    isi threads
+                    ==========================================
+                    */
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        widget.komunitas.content,
+                        style: textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwSections),
 
-                  /*
-                  ==========================================
-                  button like and share
-                  ==========================================
-                  */
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(
-                              FontAwesomeIcons.heart,
-                              size: 18,
+                    /*
+                    ==========================================
+                    button like and share
+                    ==========================================
+                    */
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const FaIcon(
+                                FontAwesomeIcons.heart,
+                                size: 18,
+                              ),
                             ),
-                          ),
-                          Text(widget.komunitas.like.toString()),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(
-                              FontAwesomeIcons.comment,
-                              size: 18,
+                            Text(widget.komunitas.like.toString()),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const FaIcon(
+                                FontAwesomeIcons.comment,
+                                size: 18,
+                              ),
                             ),
-                          ),
-                          Text('0'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(
-                              FontAwesomeIcons.share,
-                              size: 18,
+                            Text('0'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const FaIcon(
+                                FontAwesomeIcons.share,
+                                size: 18,
+                              ),
                             ),
-                          ),
-                          Text(widget.komunitas.share.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
+                            Text(widget.komunitas.share.toString()),
+                          ],
+                        ),
+                      ],
+                    ),
 
-                  /*
-                  ==========================================
-                  comments
-                  ==========================================
-                  */
-                  const SizedBox(height: TSizes.spaceBtwItems),
-                  const Text('Komentar'),
-                  const Divider(color: Colors.black45),
-                  _buildCommentBody(context, commentState),
-                ],
+                    /*
+                    ==========================================
+                    comments
+                    ==========================================
+                    */
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    const Text('Komentar'),
+                    const Divider(color: Colors.black45),
+                    _buildCommentBody(context, commentState),
+                  ],
+                ),
               ),
             ),
           ),

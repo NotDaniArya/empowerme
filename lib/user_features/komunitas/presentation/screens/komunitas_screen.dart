@@ -131,136 +131,145 @@ class KomunitasScreen extends ConsumerWidget {
         ListView
         ==========================================
         */
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: TSizes.scaffoldPadding),
-          itemCount: komunitasState.communityPosts!.length,
-          itemBuilder: (context, index) {
-            final postingan = komunitasState.communityPosts![index];
+        child: RefreshIndicator(
+          displacement: 10,
+          onRefresh: () async {
+            ref.invalidate(komunitasViewModel);
+            ref.invalidate(commentViewModel);
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              vertical: TSizes.scaffoldPadding,
+            ),
+            itemCount: komunitasState.communityPosts!.length,
+            itemBuilder: (context, index) {
+              final postingan = komunitasState.communityPosts![index];
 
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        DetailKomunitasScreen(komunitas: postingan),
-                  ),
-                );
-              },
-              /*
-              ==========================================
-              Container Threads
-              ==========================================
-              */
-              child: Container(
-                margin: const EdgeInsets.only(bottom: TSizes.smallSpace),
-                color: TColors.primaryColor.withOpacity(0.1),
-                padding: const EdgeInsetsGeometry.all(TSizes.mediumSpace),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    /*
-                    ==========================================
-                    Header threads
-                    ==========================================
-                    */
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    50,
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DetailKomunitasScreen(komunitas: postingan),
+                    ),
+                  );
+                },
+                /*
+                ==========================================
+                Container Threads
+                ==========================================
+                */
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: TSizes.smallSpace),
+                  color: TColors.primaryColor.withOpacity(0.1),
+                  padding: const EdgeInsetsGeometry.all(TSizes.mediumSpace),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /*
+                      ==========================================
+                      Header threads
+                      ==========================================
+                      */
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      50,
+                                    ),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                clipBehavior: Clip.antiAlias,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                                  fit: BoxFit.cover,
+                                const SizedBox(width: TSizes.smallSpace),
+                                Expanded(
+                                  child: Text(
+                                    postingan.pasien!.name,
+                                    style: textTheme.labelLarge,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: TSizes.smallSpace),
-                              Expanded(
-                                child: Text(
-                                  postingan.pasien!.name,
-                                  style: textTheme.labelLarge,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: TSizes.spaceBtwSections),
+                          Text(
+                            DateFormat(
+                              'd MMMM yyyy, HH:mm',
+                              'id_ID',
+                            ).format(postingan.createdAt),
+                            style: textTheme.labelMedium!.copyWith(
+                              color: TColors.secondaryText,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      /*
+                      ==========================================
+                      judul threads
+                      ==========================================
+                      */
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          postingan.title,
+                          textAlign: TextAlign.start,
+                          maxLines: 2,
+                          style: textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: TSizes.spaceBtwSections),
-                        Text(
-                          DateFormat(
-                            'd MMMM yyyy, HH:mm',
-                            'id_ID',
-                          ).format(postingan.createdAt),
-                          style: textTheme.labelMedium!.copyWith(
-                            color: TColors.secondaryText,
+                      ),
+                      const SizedBox(height: TSizes.smallSpace),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          postingan.content,
+                          textAlign: TextAlign.start,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium,
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      /*
+                      ==========================================
+                      Likes dan comments button
+                      ==========================================
+                      */
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const FaIcon(FontAwesomeIcons.heart),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-
-                    /*
-                    ==========================================
-                    judul threads
-                    ==========================================
-                    */
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        postingan.title,
-                        textAlign: TextAlign.start,
-                        maxLines: 2,
-                        style: textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                          Text(postingan.like.toString()),
+                          const SizedBox(width: TSizes.mediumSpace),
+                          const FaIcon(FontAwesomeIcons.comment),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: TSizes.smallSpace),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        postingan.content,
-                        textAlign: TextAlign.start,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodyMedium,
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-
-                    /*
-                    ==========================================
-                    Likes dan comments button
-                    ==========================================
-                    */
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const FaIcon(FontAwesomeIcons.heart),
-                        ),
-                        Text(postingan.like.toString()),
-                        const SizedBox(width: TSizes.mediumSpace),
-                        const FaIcon(FontAwesomeIcons.comment),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: Container(
