@@ -2,30 +2,58 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/komunitas/domain/entities/comment.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
+import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:toastification/toastification.dart';
 
-import '../../../../../utils/constant/colors.dart';
+import '../../../../../utils/helper_functions/helper.dart';
 
-class CommentSheet extends ConsumerWidget {
-  const CommentSheet({super.key, required this.comment});
+class CommentSheet extends ConsumerStatefulWidget {
+  const CommentSheet({
+    super.key,
+    required this.parentComment,
+    required this.komunitasId,
+  });
 
-  final Comment comment;
+  final Comment parentComment;
+  final String komunitasId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
-    final replies = comment.replyComment ?? [];
-    // Padding untuk menyesuaikan dengan keyboard yang mungkin muncul
+  ConsumerState<CommentSheet> createState() => _CommentSheetState();
+}
+
+class _CommentSheetState extends ConsumerState<CommentSheet> {
+  final _replyController = TextEditingController();
+
+  @override
+  void dispose() {
+    _replyController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final commentState = ref.watch(commentViewModel(widget.komunitasId));
+    late final Comment updatedParentComment;
+
+    try {
+      updatedParentComment = commentState.commentCommunity!.firstWhere(
+        (c) => c.id == widget.parentComment.id,
+      );
+    } catch (e) {
+      updatedParentComment = widget.parentComment;
+    }
+    final replies = updatedParentComment.replyComment ?? [];
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        // Atur tinggi modal, misalnya 90% dari tinggi layar
         height: MediaQuery.of(context).size.height * 0.9,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Handle (garis abu-abu di atas)
             Container(
               width: 40,
               height: 5,
@@ -35,31 +63,25 @@ class CommentSheet extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Judul
             const Text(
               'Balasan Komentar',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const Divider(height: 24),
-
-            // Tampilkan komentar induk sebagai konteks
-            _buildParentComment(context, comment),
+            _buildParentComment(context, updatedParentComment!),
             const Divider(height: 24),
 
-            // Daftar Komentar yang Bisa di-scroll
             Expanded(
               child: replies.isEmpty
                   ? const Center(child: Text('Belum ada balasan.'))
                   : ListView.builder(
-                      itemCount: replies.length, // Jumlah komentar dummy
+                      itemCount: replies.length,
                       itemBuilder: (context, index) {
                         final reply = replies[index];
                         return ListTile(
-                          leading: const CircleAvatar(
+                          leading: CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
-                              // Ganti dengan URL gambar profil yang sesuai
-                              'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+                              reply.pasien.picture,
                             ),
                           ),
                           title: Text(
@@ -72,7 +94,6 @@ class CommentSheet extends ConsumerWidget {
                     ),
             ),
 
-            // Input Field untuk Menambah Komentar Baru
             _buildCommentInputField(),
           ],
         ),
@@ -94,7 +115,6 @@ class CommentSheet extends ConsumerWidget {
     );
   }
 
-  // Helper widget untuk input field di bagian bawah
   Widget _buildCommentInputField() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
@@ -102,15 +122,16 @@ class CommentSheet extends ConsumerWidget {
         children: [
           const CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(
-              // Ganti dengan URL gambar profil pengguna saat ini
               'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
+              controller: _replyController,
+              maxLines: null,
               decoration: InputDecoration(
-                hintText: 'Tulis komentar...',
+                hintText: 'Tulis balasan...',
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -123,7 +144,36 @@ class CommentSheet extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              // Logika untuk mengirim komentar
+              final commentText = _replyController.text.trim();
+              if (commentText.isEmpty) {
+                return;
+              }
+
+              ref
+                  .read(komunitasUpdaterProvider.notifier)
+                  .addReplyComment(
+                    id: widget.parentComment.id!,
+                    comment: commentText,
+                    onSuccess: () {
+                      _replyController.clear();
+                      if (!mounted) return;
+                      MyHelperFunction.showToast(
+                        context,
+                        'Sukses',
+                        'Komentar berhasil ditambahkan.',
+                        ToastificationType.success,
+                      );
+                    },
+                    onError: (error) {
+                      if (!mounted) return;
+                      MyHelperFunction.showToast(
+                        context,
+                        'Gagal',
+                        'Komentar gagal ditambahkan',
+                        ToastificationType.error,
+                      );
+                    },
+                  );
             },
             icon: const Icon(Icons.send, color: TColors.primaryColor),
           ),

@@ -64,4 +64,19 @@ class KomunitasRepositoryImpl implements KomunitasRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> addReplyComment({
+    required String id,
+    required String comment,
+  }) async {
+    try {
+      await remoteDataSource.addReplyComment(id: id, comment: comment);
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }

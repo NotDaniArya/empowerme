@@ -13,6 +13,8 @@ abstract class KomunitasRemoteDataSource {
   Future<void> postCommunity({required String content, required String title});
 
   Future<void> addComment({required String id, required String comment});
+
+  Future<void> addReplyComment({required String id, required String comment});
 }
 
 class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
@@ -102,6 +104,28 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
     try {
       await dio.post(
         '${TTexts.baseUrl}/comment?id=$id',
+        data: {"comment": comment},
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal mengirim komentar postingan';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal mengirim data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> addReplyComment({
+    required String id,
+    required String comment,
+  }) async {
+    try {
+      await dio.post(
+        '${TTexts.baseUrl}/replay?id=$id',
         data: {"comment": comment},
       );
     } on DioException catch (e) {

@@ -201,7 +201,10 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return CommentSheet(comment: comment);
+        return CommentSheet(
+          parentComment: comment,
+          komunitasId: widget.komunitas.id,
+        );
       },
     );
   }

@@ -179,6 +179,27 @@ class KomunitasUpdater extends Notifier<void> {
       onSuccess();
     }
   }
+
+  Future<void> addReplyComment({
+    required String id,
+    required String comment,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.addReplyComment(
+      id: id,
+      comment: comment,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(komunitasViewModel);
+      ref.invalidate(commentViewModel);
+
+      onSuccess();
+    }
+  }
 }
 
 final komunitasUpdaterProvider = NotifierProvider<KomunitasUpdater, void>(
