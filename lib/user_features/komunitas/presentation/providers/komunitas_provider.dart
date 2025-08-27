@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/komunitas/data/datasources/komunitas_remote_datasource.dart';
 import 'package:new_empowerme/user_features/komunitas/data/repositories/komunitas_repository_impl.dart';
@@ -47,13 +49,13 @@ final komunitasRepositoryProvider = Provider<KomunitasRepository>(
 class KomunitasViewModel extends Notifier<KomunitasState> {
   @override
   KomunitasState build() {
-    Future.microtask(fetchPostinganKomunitas);
+    Future.microtask(_fetchPostinganKomunitas);
     return KomunitasState(isLoading: true);
   }
 
   KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
 
-  Future<void> fetchPostinganKomunitas() async {
+  Future<void> _fetchPostinganKomunitas() async {
     state = state.copyWith(isLoading: false, clearError: true);
     final (postinganKomunitas, failure) = await _repository.getCommunityPosts();
 
@@ -128,3 +130,39 @@ final commentViewModel =
     NotifierProvider.family<CommentViewModel, CommentState, String>(
       () => CommentViewModel(),
     );
+
+// ==========================================
+// provider menangani create, read, updater
+// ==========================================
+
+class KomunitasUpdater extends Notifier<void> {
+  @override
+  void build() {}
+
+  KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
+
+  Future<void> postCommunity({
+    required String content,
+    required String title,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.postCommunityPosts(
+      content: content,
+      title: title,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(komunitasViewModel);
+      ref.invalidate(commentViewModel);
+
+      onSuccess();
+    }
+  }
+}
+
+final komunitasUpdaterProvider = NotifierProvider<KomunitasUpdater, void>(
+  () => KomunitasUpdater(),
+);

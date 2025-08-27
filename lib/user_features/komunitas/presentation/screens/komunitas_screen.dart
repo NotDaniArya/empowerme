@@ -66,29 +66,52 @@ class KomunitasScreen extends ConsumerWidget {
       return Scaffold(
         backgroundColor: TColors.backgroundColor,
         appBar: const MyAppBar(),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Tidak ada postingan komunitas yang ditemukan.',
-                style: textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              ElevatedButton(
-                onPressed: () {
-                  ref.invalidate(komunitasViewModel);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TColors.primaryColor,
+        body: Padding(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Belum ada postingan dikomunitas. Jadilah yang pertama membuat postingan',
+                  style: textTheme.titleMedium,
+                  textAlign: TextAlign.center,
                 ),
-                child: const Text(
-                  'Refresh',
-                  style: TextStyle(color: Colors.white),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(komunitasViewModel);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColors.primaryColor,
+                  ),
+                  child: const Text(
+                    'Refresh',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(bottom: 80), // Sesuaikan margin
+          child: FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) => const CreatePostSheet(),
+              );
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16), // Bentuk sedikit kotak
+            ),
+            backgroundColor: TColors.primaryColor,
+            child: const Icon(Icons.add, color: Colors.white),
           ),
         ),
       );

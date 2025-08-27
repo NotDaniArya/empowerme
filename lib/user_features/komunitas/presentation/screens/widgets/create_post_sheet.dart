@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
+import 'package:toastification/toastification.dart';
+
+import '../../../../../utils/helper_functions/helper.dart';
 
 // Asumsi Anda punya provider ini untuk membuat postingan baru
 // import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
@@ -38,34 +42,31 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
       _isLoading = true;
     });
 
-    // Panggil ViewModel Anda untuk membuat postingan
-    // Contoh:
-    // ref.read(komunitasViewModel.notifier).createPost(
-    //   title: _titleController.text,
-    //   content: _contentController.text,
-    //   onSuccess: () {
-    //     if (mounted) {
-    //       Navigator.of(context).pop(); // Tutup modal jika berhasil
-    //       // Tampilkan notifikasi sukses
-    //     }
-    //   },
-    //   onError: (error) {
-    //     if (mounted) {
-    //       setState(() => _isLoading = false);
-    //       // Tampilkan notifikasi error
-    //     }
-    //   },
-    // );
-
-    // Simulasi proses network
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Postingan berhasil dibuat!')),
+    ref
+        .read(komunitasUpdaterProvider.notifier)
+        .postCommunity(
+          title: _titleController.text,
+          content: _contentController.text,
+          onSuccess: () {
+            if (!mounted) return;
+            MyHelperFunction.showToast(
+              context,
+              'Sukses',
+              'Postingan berhasil diunggah.',
+              ToastificationType.success,
+            );
+            Navigator.of(context).pop();
+          },
+          onError: (error) {
+            if (!mounted) return;
+            MyHelperFunction.showToast(
+              context,
+              'Gagal',
+              'Postingan gagal diunggah',
+              ToastificationType.error,
+            );
+          },
         );
-      }
-    });
   }
 
   @override

@@ -9,6 +9,8 @@ abstract class KomunitasRemoteDataSource {
   Future<List<KomunitasModel>> getCommunityPosts();
 
   Future<List<CommentModel>> getCommunityComment({required String id});
+
+  Future<void> postCommunity({required String content, required String title});
 }
 
 class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
@@ -57,6 +59,35 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
       if (e.response != null) {
         errorMessage =
             'Gagal mengambil data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> postCommunity({
+    required String content,
+    required String title,
+  }) async {
+    try {
+      final now = DateTime.now();
+      final formattedCreatedAt = now.toIso8601String().split('.').first;
+
+      await dio.post(
+        '${TTexts.baseUrl}/community',
+        data: {
+          "content": content,
+          "title": title,
+          "createAt": formattedCreatedAt,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal mengambil memposting komunitas';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal mengirim data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }

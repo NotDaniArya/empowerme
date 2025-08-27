@@ -7,9 +7,8 @@ abstract class KomunitasRepository {
 
   Future<(List<Comment>?, Failure?)> getCommunityComment({required String id});
 
-  // Future<(void, Failure?)> postCommunityPosts({
-  //   required String content,
-  //   required String title,
-  //   required DateTime createdAt
-  // });
+  Future<(void, Failure?)> postCommunityPosts({
+    required String content,
+    required String title,
+  });
 }
