@@ -11,4 +11,9 @@ abstract class KomunitasRepository {
     required String content,
     required String title,
   });
+
+  Future<(void, Failure?)> addComment({
+    required String id,
+    required String comment,
+  });
 }

@@ -62,10 +62,10 @@ class KomunitasViewModel extends Notifier<KomunitasState> {
     if (failure != null) {
       state = state.copyWith(isLoading: false, error: failure.message);
     } else {
-      state = state.copyWith(
-        communityPosts: postinganKomunitas,
-        isLoading: false,
-      );
+      final posts = postinganKomunitas ?? [];
+
+      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      state = state.copyWith(communityPosts: posts, isLoading: false);
     }
   }
 }
@@ -151,6 +151,24 @@ class KomunitasUpdater extends Notifier<void> {
       content: content,
       title: title,
     );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(komunitasViewModel);
+      ref.invalidate(commentViewModel);
+
+      onSuccess();
+    }
+  }
+
+  Future<void> addComment({
+    required String id,
+    required String comment,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.addComment(id: id, comment: comment);
 
     if (failure != null) {
       onError(failure.message);
