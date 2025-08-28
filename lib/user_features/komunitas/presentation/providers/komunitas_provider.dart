@@ -49,14 +49,13 @@ final komunitasRepositoryProvider = Provider<KomunitasRepository>(
 class KomunitasViewModel extends Notifier<KomunitasState> {
   @override
   KomunitasState build() {
-    Future.microtask(_fetchPostinganKomunitas);
+    _fetchPostinganKomunitas();
     return KomunitasState(isLoading: true);
   }
 
   KomunitasRepository get _repository => ref.read(komunitasRepositoryProvider);
 
   Future<void> _fetchPostinganKomunitas() async {
-    state = state.copyWith(isLoading: false, clearError: true);
     final (postinganKomunitas, failure) = await _repository.getCommunityPosts();
 
     if (failure != null) {

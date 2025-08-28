@@ -116,6 +116,7 @@ class KomunitasScreen extends ConsumerWidget {
         ),
       );
     }
+
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
 
@@ -262,6 +263,8 @@ class KomunitasScreen extends ConsumerWidget {
                           Text(postingan.like.toString()),
                           const SizedBox(width: TSizes.mediumSpace),
                           const FaIcon(FontAwesomeIcons.comment),
+                          const SizedBox(width: TSizes.mediumSpace),
+                          Text(postingan.countComment.toString()),
                         ],
                       ),
                     ],

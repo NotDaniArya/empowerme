@@ -10,6 +10,7 @@ class Komunitas extends Equatable {
   final DateTime createdAt;
   final int like;
   final int share;
+  final int countComment;
   final List<Comment>? comments;
   final Pasien? pasien;
 
@@ -20,6 +21,7 @@ class Komunitas extends Equatable {
     required this.createdAt,
     required this.like,
     required this.share,
+    required this.countComment,
     this.pasien,
     this.comments,
   });
@@ -33,6 +35,7 @@ class Komunitas extends Equatable {
     createdAt,
     like,
     share,
+    countComment,
     pasien,
   ];
 }

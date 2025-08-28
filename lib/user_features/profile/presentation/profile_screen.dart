@@ -3,18 +3,100 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
+import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
 
 import '../../../utils/constant/colors.dart';
 import '../../../utils/constant/sizes.dart';
 import '../../../utils/shared_widgets/avatar_image.dart';
 import '../../../utils/shared_widgets/menu_item.dart';
+import '../../komunitas/presentation/providers/komunitas_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileViewModel);
+
+    return _buildBody(context, profileState, ref);
+  }
+
+  Widget _buildBody(BuildContext context, ProfileState state, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+
+    if (state.isLoading) {
+      return const Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.error != null) {
+      return Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Terjadi kesalahan: ${state.error}',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColors.primaryColor,
+                  ),
+                  onPressed: () {
+                    ref.invalidate(profileViewModel);
+                  },
+                  child: const Text(
+                    'Refresh',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (state.profile == null) {
+      return Scaffold(
+        backgroundColor: TColors.backgroundColor,
+        body: Padding(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Anda belum login',
+                  style: textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(komunitasViewModel);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColors.primaryColor,
+                  ),
+                  child: const Text(
+                    'Refresh',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
@@ -37,14 +119,14 @@ class ProfileScreen extends ConsumerWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
-              'User',
+              state.profile!.name,
               textAlign: TextAlign.center,
               style: textTheme.headlineSmall!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'user01@gmail.com',
+              state.profile!.email,
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium!.copyWith(
                 color: Colors.grey.shade600,

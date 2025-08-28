@@ -22,7 +22,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> saveAuthData(String token, String role, String id) async {
     await secureStorage.write(key: 'auth_token', value: token);
-    await secureStorage.write(key: 'userId', value: id);
+    await sharedPreferences.setString('userId', id);
     await sharedPreferences.setString('role', role);
   }
 
@@ -44,7 +44,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> clearAuthData() async {
     await secureStorage.delete(key: 'auth_token');
-    await secureStorage.delete(key: 'userId');
+    await sharedPreferences.remove('userId');
     await sharedPreferences.remove('role');
   }
 }

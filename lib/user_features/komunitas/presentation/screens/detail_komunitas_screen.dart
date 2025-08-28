@@ -153,16 +153,12 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                             Text(widget.komunitas.like.toString()),
                           ],
                         ),
+                        const SizedBox(width: 15),
                         Row(
                           children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const FaIcon(
-                                FontAwesomeIcons.comment,
-                                size: 18,
-                              ),
-                            ),
-                            Text('0'),
+                            FaIcon(FontAwesomeIcons.comment, size: 18),
+                            SizedBox(width: 15),
+                            Text(widget.komunitas.countComment.toString()),
                           ],
                         ),
                         Row(

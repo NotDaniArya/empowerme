@@ -12,6 +12,7 @@ class KomunitasModel extends Komunitas {
     required super.createdAt,
     required super.like,
     required super.share,
+    required super.countComment,
     required super.pasien,
     super.comments,
   });
@@ -32,6 +33,7 @@ class KomunitasModel extends Komunitas {
       createdAt: DateTime.parse(json['createdAt']),
       like: json['like'],
       share: json['share'],
+      countComment: json['countComment'],
       pasien: PasienModel.fromJson(json['user']),
       comments: commentsList, // Berikan list yang sudah di-parsing
     );
