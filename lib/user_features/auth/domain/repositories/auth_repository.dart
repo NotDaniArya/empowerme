@@ -22,4 +22,6 @@ abstract class AuthRepository {
   Future<(Auth?, Failure?)> getCurrentUser();
 
   Future<(void, Failure?)> logout();
+
+  Future<(void, Failure?)> requestOtp({required String email});
 }

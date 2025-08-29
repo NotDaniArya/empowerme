@@ -96,6 +96,16 @@ class AuthRepositoryImpl extends AuthRepository {
     }
   }
 
+  @override
+  Future<(void, Failure?)> requestOtp({required String email}) async {
+    try {
+      await remoteDataSource.requestOtp(email: email);
+      return (null, null);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
   // function untuk mengubah string role menjadi Enum
   UserRole _parseRole(String role) {
     switch (role.toLowerCase()) {

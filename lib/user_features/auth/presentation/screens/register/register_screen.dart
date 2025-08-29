@@ -111,7 +111,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     const SizedBox(height: TSizes.spaceBtwSections),
                     TInputTextField(
                       labelText: 'Masukkan Nama Anda',
-                      maxLength: 20,
+                      maxLength: 50,
                       icon: Icons.person,
                       minLength: 4,
                       inputType: TextInputType.name,

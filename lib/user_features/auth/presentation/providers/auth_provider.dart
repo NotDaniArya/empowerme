@@ -118,6 +118,17 @@ class AuthNotifier extends StateNotifier<AsyncValue<Auth?>> {
     }
   }
 
+  Future<void> requestOtp({required String email}) async {
+    final repository = _ref.read(authRepositoryProvider);
+    final (_, failure) = await repository.requestOtp(email: email);
+
+    if (failure != null) {
+      throw failure.message;
+    } else {
+      state = const AsyncValue.data(null);
+    }
+  }
+
   Future<void> logout() async {
     final repository = _ref.read(authRepositoryProvider);
     await repository.logout();

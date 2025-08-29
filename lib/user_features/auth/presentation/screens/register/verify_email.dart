@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/login/login_screen.dart';
@@ -21,6 +23,10 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
 
 class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   String _enteredOtp = '';
+  Timer? _timer;
+  int _start = 60;
+  bool _isResendButtonActive = true;
+  bool _isResending = false;
 
   void _submitOtp() {
     if (_enteredOtp.length < 6) {
@@ -36,6 +42,67 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     ref
         .read(authNotifierProvider.notifier)
         .verifyOtp(email: widget.email, otp: _enteredOtp);
+  }
+
+  void startTimer() {
+    setState(() {
+      _isResendButtonActive = false;
+      _start = 60;
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          timer.cancel();
+          _isResendButtonActive = true;
+        });
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
+  void _resendOtp() async {
+    setState(() {
+      _isResending = true;
+    });
+    try {
+      await ref
+          .read(authNotifierProvider.notifier)
+          .requestOtp(email: widget.email);
+      if (mounted) {
+        MyHelperFunction.showToast(
+          context,
+          'Sukses',
+          'Kode OTP baru telah dikirim ke email Anda.',
+          ToastificationType.success,
+        );
+        startTimer();
+      }
+    } catch (error) {
+      if (mounted) {
+        MyHelperFunction.showToast(
+          context,
+          'Gagal',
+          'Kode OTP gagal dikirim ulang',
+          ToastificationType.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isResending = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -150,21 +217,22 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Belum mendapatkan kode?'),
-                  const SizedBox(width: 5),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                    ),
-                    child: const Text('Kirim Ulang kode'),
-                  ),
-                ],
+              const Text('Belum mendapatkan kode?'),
+              TextButton(
+                onPressed: _isResendButtonActive && !_isResending
+                    ? _resendOtp
+                    : null,
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                ),
+                child: _isResending
+                    ? const CircularProgressIndicator()
+                    : Text(
+                        _isResendButtonActive
+                            ? 'Kirim Ulang kode'
+                            : 'Kirim ulang dalam ($_start)',
+                      ),
               ),
             ],
           ),

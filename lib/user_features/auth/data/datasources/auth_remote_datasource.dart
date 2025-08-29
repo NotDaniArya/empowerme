@@ -15,6 +15,8 @@ abstract class AuthRemoteDataSource {
   Future<AuthModel> login({required String email, required String password});
 
   Future<void> verifyOtp({required String email, required String otp});
+
+  Future<void> requestOtp({required String email});
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -54,7 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String passwordConfirm,
   }) async {
     try {
-      final response = await dio.post(
+      await dio.post(
         '${TTexts.baseUrl}/registration',
         data: {
           "name": name,
@@ -78,7 +80,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> verifyOtp({required String email, required String otp}) async {
     try {
-      final response = await dio.put(
+      await dio.put(
         '${TTexts.baseUrl}/registration/verification/otp',
         data: {"email": email, "otp": otp},
       );
@@ -87,6 +89,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (e.response != null) {
         errorMessage =
             'Gagal saat register: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> requestOtp({required String email}) async {
+    try {
+      await dio.put(
+        '${TTexts.baseUrl}/registration/request/otp',
+        data: {"email": email},
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal saat meminta kode otp';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal saat meminta kode otp: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }
