@@ -6,12 +6,14 @@ class Comment extends Equatable {
   final String comment;
   final int like;
   final Pasien pasien;
+  final int replyCount;
   final List<ReplyComment>? replyComment;
 
   const Comment({
     this.id,
     required this.comment,
     required this.like,
+    required this.replyCount,
     required this.pasien,
     this.replyComment,
   });

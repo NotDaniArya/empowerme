@@ -345,7 +345,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                   },
                   icon: const FaIcon(FontAwesomeIcons.comment, size: 18),
                 ),
-                const Text('100'),
+                Text(comment.replyCount.toString()),
               ],
             ),
             const Divider(color: Colors.black12),

@@ -6,6 +6,7 @@ class CommentModel extends Comment {
     super.id,
     required super.comment,
     required super.like,
+    required super.replyCount,
     required super.pasien,
     super.replyComment,
   });
@@ -19,6 +20,7 @@ class CommentModel extends Comment {
     return CommentModel(
       comment: json['comment'] ?? '',
       like: json['like'] ?? 0,
+      replyCount: json['replayCount'] ?? 0,
       pasien: PasienModel.fromJson(json['user']),
       id: json['id'],
       replyComment: repliesList,
