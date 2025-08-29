@@ -94,7 +94,9 @@ class CardJadwal extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Anda tidak memiliki jadwal terapi',
+                  tipeJadwal == TipeJadwal.terapi
+                      ? 'Anda tidak memiliki jadwal terapi'
+                      : 'Anda tidak memiliki jadwal ambil obat',
                   style: textTheme.titleMedium,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
