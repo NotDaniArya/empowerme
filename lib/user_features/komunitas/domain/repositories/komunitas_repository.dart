@@ -19,6 +19,8 @@ abstract class KomunitasRepository {
 
   Future<(void, Failure?)> likeCommunityPost({required String id});
 
+  Future<(void, Failure?)> likeComment({required String id});
+
   Future<(void, Failure?)> addReplyComment({
     required String id,
     required String comment,

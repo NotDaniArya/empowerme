@@ -16,6 +16,8 @@ abstract class KomunitasRemoteDataSource {
 
   Future<void> likeCommunityPosts({required String id});
 
+  Future<void> likeComment({required String id});
+
   Future<void> addReplyComment({required String id, required String comment});
 }
 
@@ -147,7 +149,23 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
     try {
       await dio.put('${TTexts.baseUrl}/community/like?id=$id');
     } on DioException catch (e) {
-      String errorMessage = 'Gagal mengirim komentar postingan';
+      String errorMessage = 'Gagal menyukai komentar postingan';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal mengirim data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> likeComment({required String id}) async {
+    try {
+      await dio.put('${TTexts.baseUrl}/comment/liked?id=$id');
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal menyukai komentar';
       if (e.response != null) {
         errorMessage =
             'Gagal mengirim data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
