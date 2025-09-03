@@ -79,4 +79,16 @@ class KomunitasRepositoryImpl implements KomunitasRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> likeCommunityPost({required String id}) async {
+    try {
+      await remoteDataSource.likeCommunityPosts(id: id);
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }

@@ -8,7 +8,9 @@ import 'package:new_empowerme/user_features/komunitas/presentation/screens/widge
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
+import 'package:toastification/toastification.dart';
 
+import '../../../../utils/helper_functions/helper.dart';
 import 'detail_komunitas_screen.dart';
 
 class KomunitasScreen extends ConsumerWidget {
@@ -257,7 +259,22 @@ class KomunitasScreen extends ConsumerWidget {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              ref
+                                  .read(komunitasUpdaterProvider.notifier)
+                                  .likeCommunityPosts(
+                                    id: postingan.id,
+                                    onSuccess: () {},
+                                    onError: (error) {
+                                      MyHelperFunction.showToast(
+                                        context,
+                                        'Gagal',
+                                        'Postingan komunitas gagal untuk disukai',
+                                        ToastificationType.error,
+                                      );
+                                    },
+                                  );
+                            },
                             icon: const FaIcon(FontAwesomeIcons.heart),
                           ),
                           Text(postingan.like.toString()),
