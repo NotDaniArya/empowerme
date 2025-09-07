@@ -114,12 +114,31 @@ class ProfileScreen extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            CircleAvatar(
-              backgroundColor: TColors.backgroundColor,
-              backgroundImage: CachedNetworkImageProvider(
-                '${TTexts.baseUrl}/images/${state.profile!.picture}',
+            ClipOval(
+              child: SizedBox(
+                width: 120,
+                height: 120,
+                child: CachedNetworkImage(
+                  imageUrl:
+                      '${TTexts.baseUrl}/images/${state.profile!.picture}',
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                        child: SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: CircularProgressIndicator(
+                            color: TColors.primaryColor.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                  errorWidget: (context, url, error) => const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: TColors.backgroundColor,
+                    child: Icon(Icons.person, color: TColors.primaryColor),
+                  ),
+                ),
               ),
-              radius: 50,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(

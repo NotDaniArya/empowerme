@@ -7,6 +7,7 @@ import 'package:new_empowerme/user_features/profile/presentation/providers/profi
 import '../../user_features/chat/presentation/screens/chat_screen.dart';
 import '../constant/colors.dart';
 import '../constant/sizes.dart';
+import '../constant/texts.dart';
 
 class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
@@ -27,13 +28,16 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Container(
-          width: 30,
-          height: 30,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadiusGeometry.circular(50),
           ),
           clipBehavior: Clip.antiAlias,
-          child: const CircularProgressIndicator(color: TColors.primaryColor),
+          child: CircularProgressIndicator(
+            strokeWidth: 2.5,
+            color: TColors.primaryColor.withOpacity(0.5),
+          ),
         ),
       );
     }
@@ -44,8 +48,8 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Container(
-          width: 35,
-          height: 35,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadiusGeometry.circular(50),
           ),
@@ -75,16 +79,29 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadiusGeometry.circular(50),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+              ClipOval(
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        '${TTexts.baseUrl}/images/${state.profile!.picture}',
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                            strokeWidth: 2.5,
+                            color: TColors.primaryColor.withOpacity(0.5),
+                          ),
+                        ),
+                    // Widget yang ditampilkan jika terjadi error
+                    errorWidget: (context, url, error) => const CircleAvatar(
+                      radius: 20,
+                      backgroundColor: TColors.backgroundColor,
+                      child: Icon(Icons.person, color: TColors.primaryColor),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: TSizes.mediumSpace),
@@ -104,6 +121,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       color: TColors.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
