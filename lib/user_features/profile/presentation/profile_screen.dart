@@ -6,6 +6,7 @@ import 'package:new_empowerme/user_features/auth/presentation/providers/auth_pro
 import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/edit_profile_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
+import 'package:new_empowerme/user_features/profile/presentation/tentang_aplikasi_screen.dart';
 import 'package:new_empowerme/utils/constant/texts.dart';
 
 import '../../../utils/constant/colors.dart';
@@ -184,7 +185,14 @@ class ProfileScreen extends ConsumerWidget {
                   const Divider(height: 1, indent: 12, endIndent: 12),
                   MenuItem(
                     title: 'About',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TentangAplikasiScreen(),
+                        ),
+                      );
+                    },
                     leading: const FaIcon(
                       FontAwesomeIcons.circleInfo,
                       size: 20,
