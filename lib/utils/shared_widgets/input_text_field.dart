@@ -12,6 +12,7 @@ class TInputTextField extends StatelessWidget {
     this.enableSuggestions = false,
     this.obscureText = false,
     required this.icon,
+    this.controller,
   });
 
   final String labelText;
@@ -23,10 +24,12 @@ class TInputTextField extends StatelessWidget {
   final bool enableSuggestions;
   final void Function(String? value)? onSaved;
   final bool obscureText;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(icon),

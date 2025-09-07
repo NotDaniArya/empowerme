@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:new_empowerme/user_features/profile/data/repositories/profile_repository_impl.dart';
@@ -80,4 +83,68 @@ class ProfileViewModel extends Notifier<ProfileState> {
 
 final profileViewModel = NotifierProvider<ProfileViewModel, ProfileState>(
   () => ProfileViewModel(),
+);
+
+class ProfileUpdater extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  ProfileRepository get _repository => ref.read(profileRepositoryProvider);
+
+  Future<void> updateProfileName({required String name}) async {
+    state = true;
+    try {
+      final (_, failure) = await _repository.updateName(name: name);
+      if (failure != null) {
+        throw failure.message;
+      }
+      ref.invalidate(profileViewModel);
+    } finally {
+      state = false;
+    }
+  }
+
+  Future<void> updateProfilePicture({required File imageFile}) async {
+    state = true;
+    try {
+      final (_, failure) = await _repository.updateProfilePicture(
+        imageFile: imageFile,
+      );
+      if (failure != null) {
+        throw failure.message;
+      }
+      ref.invalidate(profileViewModel);
+    } finally {
+      state = false;
+    }
+  }
+
+  Future<void> updatePassword({
+    required String passwordNew,
+    required String passwordConfirm,
+    required String passwordOld,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = true;
+    final (_, failure) = await _repository.updatePassword(
+      passwordNew: passwordNew,
+      passwordConfirm: passwordConfirm,
+      passwordOld: passwordOld,
+    );
+    state = false;
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(profileViewModel);
+      onSuccess();
+    }
+  }
+}
+
+final profileUpdaterProvider = NotifierProvider<ProfileUpdater, bool>(
+  () => ProfileUpdater(),
 );

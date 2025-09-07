@@ -1,13 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
+import 'package:new_empowerme/user_features/profile/presentation/edit_profile_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
+import 'package:new_empowerme/utils/constant/texts.dart';
 
 import '../../../utils/constant/colors.dart';
 import '../../../utils/constant/sizes.dart';
-import '../../../utils/shared_widgets/avatar_image.dart';
 import '../../../utils/shared_widgets/menu_item.dart';
 import '../../komunitas/presentation/providers/komunitas_provider.dart';
 
@@ -112,9 +114,11 @@ class ProfileScreen extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            const AvatarImage(
-              imageUrl:
-                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
+            CircleAvatar(
+              backgroundColor: TColors.backgroundColor,
+              backgroundImage: CachedNetworkImageProvider(
+                '${TTexts.baseUrl}/images/${state.profile!.picture}',
+              ),
               radius: 50,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
@@ -147,7 +151,15 @@ class ProfileScreen extends ConsumerWidget {
                 children: [
                   MenuItem(
                     title: 'Profile Saya',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditProfileScreen(profile: state.profile!),
+                        ),
+                      );
+                    },
                     leading: const FaIcon(FontAwesomeIcons.user, size: 20),
                   ),
                   const Divider(height: 1, indent: 12, endIndent: 12),

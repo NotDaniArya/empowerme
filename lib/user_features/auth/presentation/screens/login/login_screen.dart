@@ -143,7 +143,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
-                              value.trim().length <= 8) {
+                              value.trim().length < 8) {
                             return 'Panjang input minimal 8 karakter';
                           }
 
