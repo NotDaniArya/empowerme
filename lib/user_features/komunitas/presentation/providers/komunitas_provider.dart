@@ -67,6 +67,11 @@ class KomunitasViewModel extends Notifier<KomunitasState> {
       state = state.copyWith(communityPosts: posts, isLoading: false);
     }
   }
+
+  Future<void> refresh() async {
+    state = state.copyWith(isLoading: true);
+    await _fetchPostinganKomunitas();
+  }
 }
 
 final komunitasViewModel = NotifierProvider<KomunitasViewModel, KomunitasState>(

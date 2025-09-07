@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:new_empowerme/user_features/komunitas/domain/entities/comment.dart';
-import 'package:new_empowerme/user_features/komunitas/domain/entities/komunitas.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/comment_sheet.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -12,6 +11,7 @@ import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../utils/helper_functions/helper.dart';
+import '../../domain/entities/komunitas.dart';
 
 class DetailKomunitasScreen extends ConsumerStatefulWidget {
   const DetailKomunitasScreen({super.key, required this.komunitas});
@@ -29,7 +29,18 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final commentState = ref.watch(commentViewModel(widget.komunitas.id));
+    final komunitasState = ref.watch(komunitasViewModel);
+    final Komunitas currentPost;
+    final posts = komunitasState.communityPosts ?? [];
+
+    final foundPost = posts.cast<Komunitas?>().firstWhere(
+      (post) => post?.id == widget.komunitas.id,
+      orElse: () => null,
+    );
+
+    currentPost = foundPost ?? widget.komunitas;
+
+    final commentState = ref.watch(commentViewModel(currentPost.id));
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
@@ -56,10 +67,11 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
             child: RefreshIndicator(
               displacement: 10,
               onRefresh: () async {
-                ref.invalidate(komunitasViewModel);
-                ref.invalidate(commentViewModel);
+                await ref.read(komunitasViewModel.notifier).refresh();
+                ref.invalidate(commentViewModel(currentPost.id));
               },
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
                 child: Column(
                   children: [
@@ -86,7 +98,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         const SizedBox(width: TSizes.mediumSpace),
                         Expanded(
                           child: Text(
-                            widget.komunitas.pasien!.name,
+                            currentPost.pasien!.name,
                             style: textTheme.labelLarge,
                           ),
                         ),
@@ -94,7 +106,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                           DateFormat(
                             'd MMMM yyyy, HH:mm',
                             'id_ID',
-                          ).format(widget.komunitas.createdAt),
+                          ).format(currentPost.createdAt),
                           style: textTheme.labelMedium!.copyWith(
                             color: TColors.secondaryText,
                           ),
@@ -111,7 +123,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        widget.komunitas.title,
+                        currentPost.title,
                         textAlign: TextAlign.start,
                         style: textTheme.titleMedium!.copyWith(
                           fontWeight: FontWeight.bold,
@@ -128,7 +140,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        widget.komunitas.content,
+                        currentPost.content,
                         style: textTheme.bodyMedium,
                       ),
                     ),
@@ -144,21 +156,36 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         Row(
                           children: [
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                ref
+                                    .read(komunitasUpdaterProvider.notifier)
+                                    .likeCommunityPosts(
+                                      id: currentPost.id,
+                                      onSuccess: () {},
+                                      onError: (error) {
+                                        MyHelperFunction.showToast(
+                                          context,
+                                          'Gagal',
+                                          'Postingan komunitas gagal untuk disukai',
+                                          ToastificationType.error,
+                                        );
+                                      },
+                                    );
+                              },
                               icon: const FaIcon(
                                 FontAwesomeIcons.heart,
                                 size: 18,
                               ),
                             ),
-                            Text(widget.komunitas.like.toString()),
+                            Text(currentPost.like.toString()),
                           ],
                         ),
                         const SizedBox(width: 15),
                         Row(
                           children: [
-                            FaIcon(FontAwesomeIcons.comment, size: 18),
-                            SizedBox(width: 15),
-                            Text(widget.komunitas.countComment.toString()),
+                            const FaIcon(FontAwesomeIcons.comment, size: 18),
+                            const SizedBox(width: 15),
+                            Text(currentPost.countComment.toString()),
                           ],
                         ),
                         Row(
@@ -190,7 +217,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
               ),
             ),
           ),
-          _buildCommentInputField(),
+          _buildCommentInputField(currentPost.id),
         ],
       ),
     );
@@ -335,7 +362,20 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref
+                        .read(komunitasUpdaterProvider.notifier)
+                        .likeComment(
+                          id: comment.id!,
+                          onSuccess: () {},
+                          onError: (error) => MyHelperFunction.showToast(
+                            context,
+                            'Gagal',
+                            'Komentar gagal untuk disukai',
+                            ToastificationType.error,
+                          ),
+                        );
+                  },
                   icon: const FaIcon(FontAwesomeIcons.heart, size: 18),
                 ),
                 Text(comment.like.toString()),
@@ -355,7 +395,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
     );
   }
 
-  Widget _buildCommentInputField() {
+  Widget _buildCommentInputField(String postId) {
     return Container(
       padding: const EdgeInsets.all(
         8.0,
@@ -400,7 +440,9 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
             ),
           ),
           IconButton(
-            onPressed: submitComment,
+            onPressed: () {
+              submitComment(postId);
+            },
             icon: const Icon(Icons.send, color: TColors.primaryColor),
           ),
         ],
@@ -408,7 +450,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
     );
   }
 
-  void submitComment() {
+  void submitComment(String postId) {
     if (commentController.text.isEmpty) {
       return;
     }
