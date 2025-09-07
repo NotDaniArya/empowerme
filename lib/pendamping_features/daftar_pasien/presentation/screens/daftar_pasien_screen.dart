@@ -101,7 +101,9 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: TSizes.smallSpace),
+      padding: const EdgeInsets.symmetric(
+        horizontal: TSizes.smallSpace,
+      ).copyWith(bottom: TSizes.scaffoldPadding * 4),
       itemCount: filteredPasien.length,
       itemBuilder: (context, index) {
         final pasien = filteredPasien[index];

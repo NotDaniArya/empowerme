@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/pendamping_features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/datasources/jadwal_pasien_remote_datasource.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/data/repositories/jadwal_pasien_repository_impl.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
@@ -135,6 +136,7 @@ class JadwalPasienUpdater extends Notifier<void> {
       onError(failure.message);
     } else {
       ref.invalidate(jadwalTerapiPasienViewModel);
+      ref.invalidate(dashboardViewModel);
 
       onSuccess();
     }
@@ -163,6 +165,7 @@ class JadwalPasienUpdater extends Notifier<void> {
       onError(failure.message);
     } else {
       ref.invalidate(jadwalAmbilObatPasienViewModel);
+      ref.invalidate(dashboardViewModel);
 
       onSuccess();
     }
@@ -183,6 +186,7 @@ class JadwalPasienUpdater extends Notifier<void> {
       onError(failure.message);
     } else {
       ref.invalidate(jadwalTerapiPasienViewModel);
+      ref.invalidate(dashboardViewModel);
 
       onSuccess();
     }
@@ -203,6 +207,7 @@ class JadwalPasienUpdater extends Notifier<void> {
       onError(failure.message);
     } else {
       ref.invalidate(jadwalAmbilObatPasienViewModel);
+      ref.invalidate(dashboardViewModel);
 
       onSuccess();
     }
