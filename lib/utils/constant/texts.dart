@@ -1,3 +1,3 @@
 class TTexts {
-  static const baseUrl = 'http://192.168.1.12:8080';
+  static const baseUrl = 'http://31.97.222.109:8080';
 }
