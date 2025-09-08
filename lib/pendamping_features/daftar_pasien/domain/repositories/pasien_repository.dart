@@ -4,4 +4,6 @@ import '../entities/pasien.dart';
 
 abstract class PasienRepository {
   Future<(List<Pasien>?, Failure?)> getAllPasien();
+
+  Future<(void, Failure?)> updateStatus({required String id});
 }

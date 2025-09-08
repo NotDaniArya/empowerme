@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
 
@@ -70,4 +72,39 @@ final allPasienProvider = FutureProvider<List<Pasien>>((ref) async {
 
 final pasienViewModel = NotifierProvider<PasienViewModel, PasienState>(
   () => PasienViewModel(),
+);
+
+class PasienUpdater extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  PasienRepository get _repository => ref.read(pasienRepositoryProvider);
+
+  Future<void> updateStatus({
+    required String id,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = true;
+    try {
+      final (_, failure) = await _repository.updateStatus(id: id);
+
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(pasienViewModel);
+        ref.invalidate(allPasienProvider);
+
+        onSuccess();
+      }
+    } finally {
+      state = false;
+    }
+  }
+}
+
+final pasienUpdaterProvider = NotifierProvider<PasienUpdater, bool>(
+  () => PasienUpdater(),
 );

@@ -20,4 +20,16 @@ class PasienRepositoryImpl implements PasienRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> updateStatus({required String id}) async {
+    try {
+      await remoteDataSource.updateStatus(id: id);
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }
