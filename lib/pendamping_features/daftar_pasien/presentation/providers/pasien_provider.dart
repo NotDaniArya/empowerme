@@ -103,6 +103,33 @@ class PasienUpdater extends Notifier<bool> {
       state = false;
     }
   }
+
+  Future<void> addPasienBaru({
+    required String name,
+    required String email,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = true;
+
+    try {
+      final (_, failure) = await _repository.addPasienBaru(
+        name: name,
+        email: email,
+      );
+
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(pasienViewModel);
+        ref.invalidate(allPasienProvider);
+
+        onSuccess();
+      }
+    } finally {
+      state = false;
+    }
+  }
 }
 
 final pasienUpdaterProvider = NotifierProvider<PasienUpdater, bool>(

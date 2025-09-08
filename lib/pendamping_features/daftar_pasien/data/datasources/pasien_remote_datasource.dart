@@ -8,6 +8,8 @@ abstract class PasienRemoteDataSource {
   Future<List<PasienModel>> getAllPasien();
 
   Future<void> updateStatus({required String id});
+
+  Future<void> addPasienBaru({required String name, required String email});
 }
 
 class PasienRemoteDataSourceImpl implements PasienRemoteDataSource {
@@ -39,6 +41,28 @@ class PasienRemoteDataSourceImpl implements PasienRemoteDataSource {
   Future<void> updateStatus({required String id}) async {
     try {
       await dio.put('${TTexts.baseUrl}/update?id=$id');
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal mengubah status pasien';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal mengubah data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> addPasienBaru({
+    required String name,
+    required String email,
+  }) async {
+    try {
+      await dio.post(
+        '${TTexts.baseUrl}/registration/user',
+        data: {"name": name, "email": email},
+      );
     } on DioException catch (e) {
       String errorMessage = 'Gagal mengubah status pasien';
       if (e.response != null) {

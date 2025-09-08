@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/detail_pasien_screen.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/widgets/tambah_pasien.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
@@ -41,30 +42,57 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Cari nama pasien...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Cari nama pasien...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                filled: true,
-                fillColor: Colors.white,
               ),
+
+              Expanded(child: _buildBody(context, pasienState)),
+            ],
+          ),
+          Positioned(
+            bottom: 90,
+            right: 10.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) => const TambahPasien(),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12),
+              ),
+              backgroundColor: TColors.primaryColor,
+              child: const Icon(Icons.add, color: Colors.white),
             ),
           ),
-
-          Expanded(child: _buildBody(context, pasienState)),
         ],
       ),
     );
