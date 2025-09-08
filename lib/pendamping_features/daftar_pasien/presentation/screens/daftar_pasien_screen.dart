@@ -100,63 +100,69 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
       return const Center(child: Text('Pasien tidak ditemukan.'));
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(
-        horizontal: TSizes.smallSpace,
-      ).copyWith(bottom: TSizes.scaffoldPadding * 4),
-      itemCount: filteredPasien.length,
-      itemBuilder: (context, index) {
-        final pasien = filteredPasien[index];
+    return RefreshIndicator(
+      displacement: 10,
+      onRefresh: () async {
+        ref.invalidate(pasienViewModel);
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(
+          horizontal: TSizes.smallSpace,
+        ).copyWith(bottom: TSizes.scaffoldPadding * 4),
+        itemCount: filteredPasien.length,
+        itemBuilder: (context, index) {
+          final pasien = filteredPasien[index];
 
-        return Card(
-          margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailPasienScreen(pasien: pasien),
-                ),
-              );
-            },
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
+          return Card(
+            margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            leading: CircleAvatar(
-              backgroundColor: TColors.primaryColor.withOpacity(0.2),
-              child: Text(
-                pasien.name.isNotEmpty ? pasien.name[0].toUpperCase() : '?',
-                style: const TextStyle(
-                  color: TColors.primaryColor,
+            child: ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPasienScreen(pasien: pasien),
+                  ),
+                );
+              },
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              leading: CircleAvatar(
+                backgroundColor: TColors.primaryColor.withOpacity(0.2),
+                child: Text(
+                  pasien.name.isNotEmpty ? pasien.name[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                    color: TColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              title: Text(
+                pasien.name,
+                style: textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            title: Text(
-              pasien.name,
-              style: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+              subtitle: Text(
+                pasien.email,
+                style: textTheme.bodySmall!.copyWith(
+                  color: TColors.secondaryText,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey,
               ),
             ),
-            subtitle: Text(
-              pasien.email,
-              style: textTheme.bodySmall!.copyWith(
-                color: TColors.secondaryText,
-              ),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
