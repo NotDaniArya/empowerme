@@ -5,12 +5,13 @@ import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/
 import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/providers/pasien_provider.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/providers/jadwal_pasien_provider.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/sheet_cari_pasien.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
 import 'package:toastification/toastification.dart';
+
+import '../widgets/sheet_cari_pasien.dart';
 
 class TambahJadwalScreen extends ConsumerStatefulWidget {
   const TambahJadwalScreen({super.key, required this.jadwalType});
@@ -40,19 +41,10 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
   }
 
   void _showPatientSearchModal() async {
-    final allPasienAsync = ref.read(allPasienProvider);
-
     final selectedPatient = await showModalBottomSheet<Pasien>(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) {
-        return allPasienAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) =>
-              Center(child: Text('Gagal memuat pasien: $err')),
-          data: (pasienList) => SheetCariPasien(allPatients: pasienList),
-        );
-      },
+      builder: (ctx) => const _PasienListModalContent(),
     );
 
     if (selectedPatient != null) {
@@ -288,6 +280,27 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PasienListModalContent extends ConsumerWidget {
+  const _PasienListModalContent({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allPasienAsync = ref.watch(allPasienProvider);
+
+    return allPasienAsync.when(
+      loading: () => const SizedBox(
+        height: 300,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => SizedBox(
+        height: 300,
+        child: Center(child: Text('Gagal memuat pasien: $err')),
+      ),
+      data: (pasienList) => SheetCariPasien(allPatients: pasienList),
     );
   }
 }
