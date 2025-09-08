@@ -7,6 +7,7 @@ class PasienModel extends Pasien {
     required super.name,
     required super.picture,
     required super.status,
+    required super.drug,
   });
 
   factory PasienModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +17,7 @@ class PasienModel extends Pasien {
       name: json['name'] ?? 'name tidak diketahui',
       picture: json['picture'] ?? 'picture tidak diketahui',
       status: json['status'] ?? 'status tidak diketahui',
+      drug: json['drug'] ?? '-',
     );
   }
 }

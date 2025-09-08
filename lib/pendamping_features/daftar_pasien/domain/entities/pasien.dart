@@ -6,6 +6,7 @@ class Pasien extends Equatable {
   final String name;
   final String picture;
   final String status;
+  final String drug;
 
   const Pasien({
     required this.id,
@@ -13,9 +14,10 @@ class Pasien extends Equatable {
     required this.name,
     required this.picture,
     required this.status,
+    required this.drug,
   });
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id, email, name, picture, status];
+  List<Object?> get props => [id, email, name, picture, status, drug];
 }

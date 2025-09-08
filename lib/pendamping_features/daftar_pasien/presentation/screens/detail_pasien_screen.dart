@@ -69,7 +69,7 @@ class _DetailPasienScreenState extends ConsumerState<DetailPasienScreen> {
                         _buildInfoTile(
                           icon: Icons.medication_outlined,
                           title: 'Jenis Obat',
-                          value: 'Nama Obat',
+                          value: currentPasien.drug,
                         ),
                         _buildInfoTile(
                           icon: Icons.info_outline,
