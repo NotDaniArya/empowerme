@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/pasien.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/providers/pasien_provider.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/history_jadwal_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
+import 'package:toastification/toastification.dart';
 
-class DetailPasienScreen extends ConsumerWidget {
+class DetailPasienScreen extends ConsumerStatefulWidget {
   const DetailPasienScreen({super.key, required this.pasien});
 
   final Pasien pasien;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
+  ConsumerState<DetailPasienScreen> createState() => _DetailPasienScreenState();
+}
+
+class _DetailPasienScreenState extends ConsumerState<DetailPasienScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final detailPasien = widget.pasien;
+    final pasienState = ref.watch(pasienViewModel);
+    final Pasien currentPasien;
+    final pasien = pasienState.pasien ?? [];
+    final isLoading = ref.watch(pasienUpdaterProvider);
+
+    final foundPasien = pasien.cast<Pasien?>().firstWhere(
+      (pasien) => pasien?.id == detailPasien.id,
+      orElse: () => null,
+    );
+
+    currentPasien = foundPasien ?? detailPasien;
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
@@ -25,7 +44,7 @@ class DetailPasienScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildProfileHeader(context, pasien),
+            _buildProfileHeader(context, detailPasien),
 
             Padding(
               padding: const EdgeInsets.all(TSizes.scaffoldPadding),
@@ -45,7 +64,7 @@ class DetailPasienScreen extends ConsumerWidget {
                         _buildInfoTile(
                           icon: Icons.email_outlined,
                           title: 'Email Pasien',
-                          value: pasien.email,
+                          value: currentPasien.email,
                         ),
                         _buildInfoTile(
                           icon: Icons.medication_outlined,
@@ -56,8 +75,8 @@ class DetailPasienScreen extends ConsumerWidget {
                           icon: Icons.info_outline,
                           title: 'Status',
                           value:
-                              pasien.status[0].toUpperCase() +
-                              pasien.status.substring(1).toLowerCase(),
+                              currentPasien.status[0].toUpperCase() +
+                              currentPasien.status.substring(1).toLowerCase(),
                           valueColor: TColors.primaryColor,
                         ),
                       ],
@@ -65,14 +84,71 @@ class DetailPasienScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.edit_note),
-                      label: const Text('Ubah Status Pasien'),
-                      onPressed: () {},
+                  if (currentPasien.status == 'PENGGUNA BARU')
+                    SizedBox(
+                      width: double.infinity,
+                      child: isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton.icon(
+                              icon: const Icon(Icons.edit_note),
+                              label: const Text('Ubah Status Pasien'),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text(
+                                      'Ubah Status Pasien',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: const Text(
+                                      'Ubah status menjadi Pasien Lama?',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Batal',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          ref
+                                              .read(
+                                                pasienUpdaterProvider.notifier,
+                                              )
+                                              .updateStatus(
+                                                id: currentPasien.id,
+                                                onSuccess: () {
+                                                  MyHelperFunction.showToast(
+                                                    context,
+                                                    'Berhasil',
+                                                    'Status pasien berhasil diubah',
+                                                    ToastificationType.success,
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                onError: (error) {
+                                                  MyHelperFunction.showToast(
+                                                    context,
+                                                    'Gagal',
+                                                    'Status pasien gagal diubah',
+                                                    ToastificationType.error,
+                                                  );
+                                                },
+                                              );
+                                        },
+                                        child: const Text('Ubah'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                     ),
-                  ),
                   const SizedBox(height: TSizes.spaceBtwSections),
 
                   _buildSectionTitle(context, 'Jadwal Pasien'),
@@ -89,7 +165,7 @@ class DetailPasienScreen extends ConsumerWidget {
                               MaterialPageRoute(
                                 builder: (context) => HistoryJadwalScreen(
                                   tipeJadwal: TipeJadwal.terapi,
-                                  id: pasien.id,
+                                  id: currentPasien.id,
                                 ),
                               ),
                             );
@@ -106,7 +182,7 @@ class DetailPasienScreen extends ConsumerWidget {
                               MaterialPageRoute(
                                 builder: (context) => HistoryJadwalScreen(
                                   tipeJadwal: TipeJadwal.ambilObat,
-                                  id: pasien.id,
+                                  id: currentPasien.id,
                                 ),
                               ),
                             );
