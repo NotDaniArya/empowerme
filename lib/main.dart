@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:new_empowerme/konselor_navigation_menu.dart';
 import 'package:new_empowerme/pendamping_navigation_menu.dart';
 import 'package:new_empowerme/splash_screen.dart';
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
@@ -71,11 +72,12 @@ class AuthGate extends ConsumerWidget {
                 case UserRole.pasien:
                   print('User adalah pasien');
                   // return const NavigationMenu();
-                  return const PendampingNavigationMenu();
+                  // return const PendampingNavigationMenu();
+                  return const KonselorNavigationMenu();
                 case UserRole.konselor:
-                  return const Scaffold(
-                    body: Center(child: Text('Beranda Konselor')),
-                  );
+                  print('User adalah konselor');
+                  // return const NavigationMenu();
+                  return const KonselorNavigationMenu();
                 case UserRole.pendamping:
                   print('User adalah Pendamping');
                   return const PendampingNavigationMenu();
