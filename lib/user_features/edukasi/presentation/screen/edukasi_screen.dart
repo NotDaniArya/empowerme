@@ -38,71 +38,110 @@ class _EdukasiScreenState extends State<EdukasiScreen>
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
-      body: Padding(
-        padding: const EdgeInsetsGeometry.symmetric(
-          horizontal: TSizes.scaffoldPadding,
-          vertical: TSizes.mediumSpace,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsetsGeometry.symmetric(horizontal: 24),
-              width: double.infinity,
-              /*
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsetsGeometry.symmetric(
+              horizontal: TSizes.scaffoldPadding,
+              vertical: TSizes.mediumSpace,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsetsGeometry.symmetric(horizontal: 24),
+                  width: double.infinity,
+                  /*
+                ==========================================
+                Judul
+                ==========================================
+                */
+                  child: Text(
+                    'Panduan & Edukasi Seputar HIV/AIDS',
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleLarge!.copyWith(
+                      color: TColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: TSizes.mediumSpace),
+
+                /*
               ==========================================
-              Judul
+              Tab Bar 4 menu
               ==========================================
               */
-              child: Text(
-                'Panduan & Edukasi Seputar HIV/AIDS',
-                textAlign: TextAlign.center,
-                style: textTheme.titleLarge!.copyWith(
-                  color: TColors.primaryColor,
-                  fontWeight: FontWeight.bold,
+                TabBar(
+                  controller: _tabController,
+                  unselectedLabelColor: Colors.black45,
+                  indicatorColor: TColors.primaryColor,
+                  labelColor: Colors.black,
+                  labelPadding: const EdgeInsetsGeometry.symmetric(
+                    horizontal: 8,
+                  ),
+                  tabs: const [
+                    Tab(text: 'Panduan'),
+                    Tab(text: 'Berita'),
+                    Tab(text: 'Makanan'),
+                    Tab(text: 'Obat'),
+                  ],
                 ),
-              ),
-            ),
-            const SizedBox(height: TSizes.mediumSpace),
+                const SizedBox(height: TSizes.spaceBtwSections),
 
-            /*
-            ==========================================
-            Tab Bar 4 menu
-            ==========================================
-            */
-            TabBar(
-              controller: _tabController,
-              unselectedLabelColor: Colors.black45,
-              indicatorColor: TColors.primaryColor,
-              labelColor: Colors.black,
-              labelPadding: const EdgeInsetsGeometry.symmetric(horizontal: 8),
-              tabs: const [
-                Tab(text: 'Panduan'),
-                Tab(text: 'Berita'),
-                Tab(text: 'Makanan'),
-                Tab(text: 'Obat'),
+                /*
+              ==========================================
+              Isi tab bar
+              ==========================================
+              */
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      const ListPanduan(),
+                      const ListBerita(),
+                      const ListMakanan(),
+                      const ListObat(),
+                    ],
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-
-            /*
-            ==========================================
-            Isi tab bar
-            ==========================================
-            */
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  const ListPanduan(),
-                  const ListBerita(),
-                  const ListMakanan(),
-                  const ListObat(),
-                ],
+          ),
+          Positioned(
+            bottom: 90,
+            right: 10.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                // if (_tabController.index == 0) {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const TambahJadwalScreen(
+                //         jadwalType: TipeJadwal.terapi,
+                //       ),
+                //     ),
+                //   );
+                // } else {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const TambahJadwalScreen(
+                //         jadwalType: TipeJadwal.ambilObat,
+                //       ),
+                //     ),
+                //   );
+                // }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12),
               ),
+
+              backgroundColor: TColors.primaryColor,
+              child: const Icon(Icons.add, color: Colors.white),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

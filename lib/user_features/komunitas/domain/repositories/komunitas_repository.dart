@@ -22,6 +22,4 @@ abstract class KomunitasRepository {
   Future<(void, Failure?)> likeCommunityPost({required String id});
 
   Future<(void, Failure?)> unLikeCommunityPost({required String id});
-
-  Future<(void, Failure?)> likeComment({required String id});
 }

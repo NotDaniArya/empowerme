@@ -358,24 +358,6 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    ref
-                        .read(komunitasUpdaterProvider.notifier)
-                        .likeComment(
-                          id: comment.id!,
-                          onSuccess: () {},
-                          onError: (error) => MyHelperFunction.showToast(
-                            context,
-                            'Gagal',
-                            'Komentar gagal untuk disukai',
-                            ToastificationType.error,
-                          ),
-                        );
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.heart, size: 18),
-                ),
-                Text(comment.like.toString()),
-                IconButton(
-                  onPressed: () {
                     _showCommentModal(context, comment);
                   },
                   icon: const FaIcon(FontAwesomeIcons.comment, size: 18),
