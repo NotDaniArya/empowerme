@@ -88,7 +88,7 @@ class JadwalPasienRemoteDataSourceImpl implements JadwalPasienRemoteDataSource {
   }) async {
     try {
       final response = await dio.post(
-        '${TTexts.baseUrl}/saved/therapy',
+        '${TTexts.baseUrl}/saved/drug',
         data: {
           "idUser": id,
           "date": date,

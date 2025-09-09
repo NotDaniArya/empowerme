@@ -70,7 +70,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
     }
     _formKey.currentState!.save();
 
-    final dateOnly = DateFormat('yyyy-MM-d', 'id_ID').format(_selectedDate!);
+    final dateOnly = DateFormat('yyyy-MM-dd', 'id_ID').format(_selectedDate!);
     final timeOnly =
         '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}:00';
 
@@ -103,7 +103,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
               );
             },
           );
-    } else {
+    } else if (widget.jadwalType == TipeJadwal.ambilObat) {
       ref
           .read(jadwalPasienUpdaterProvider.notifier)
           .addJadwalAmbilObat(
@@ -128,7 +128,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
               MyHelperFunction.showToast(
                 context,
                 'Gagal',
-                'Jadwal terapi gagal ditambahkan',
+                'Gagal menambah jadwal ambil obat',
                 ToastificationType.error,
               );
             },
