@@ -38,13 +38,13 @@ final makananRepositoryProvider = Provider<MakananRepository>(
 class MakananViewModel extends Notifier<MakananState> {
   @override
   MakananState build() {
-    Future.microtask(fetchBeritaList);
+    Future.microtask(fetchMakananList);
     return MakananState(isLoading: true);
   }
 
   MakananRepository get _repository => ref.read(makananRepositoryProvider);
 
-  Future<void> fetchBeritaList() async {
+  Future<void> fetchMakananList() async {
     state = state.copyWith(isLoading: true, clearError: true);
     final (makanan, failure) = await _repository.getMakanan();
 

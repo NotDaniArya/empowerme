@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/makanan/widgets/list_makanan.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/obat/widgets/list_obat.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/list_panduan.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
-import 'package:new_empowerme/utils/shared_widgets/item_card.dart';
 
 import '../berita/widgets/list_berita.dart';
 
@@ -95,22 +96,8 @@ class _EdukasiScreenState extends State<EdukasiScreen>
                 children: [
                   const ListPanduan(),
                   const ListBerita(),
-                  const ItemCard(
-                    itemCount: 5,
-                    imageUrl:
-                        'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
-                    title:
-                        'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
-                    publisherName: 'detikJogja.com',
-                  ),
-                  const ItemCard(
-                    itemCount: 5,
-                    imageUrl:
-                        'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
-                    title:
-                        'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
-                    publisherName: 'detikJogja.com',
-                  ),
+                  const ListMakanan(),
+                  const ListObat(),
                 ],
               ),
             ),
