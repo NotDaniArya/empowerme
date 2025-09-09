@@ -230,18 +230,6 @@ class KomunitasScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                          postingan.title,
-                          textAlign: TextAlign.start,
-                          maxLines: 2,
-                          style: textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: TSizes.smallSpace),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
                           postingan.content,
                           textAlign: TextAlign.start,
                           maxLines: 3,
@@ -258,25 +246,48 @@ class KomunitasScreen extends ConsumerWidget {
                       */
                       Row(
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              ref
-                                  .read(komunitasUpdaterProvider.notifier)
-                                  .likeCommunityPosts(
-                                    id: postingan.id,
-                                    onSuccess: () {},
-                                    onError: (error) {
-                                      MyHelperFunction.showToast(
-                                        context,
-                                        'Gagal',
-                                        'Postingan komunitas gagal untuk disukai',
-                                        ToastificationType.error,
-                                      );
-                                    },
-                                  );
-                            },
-                            icon: const FaIcon(FontAwesomeIcons.heart),
-                          ),
+                          postingan.statusLike == false
+                              ? IconButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(komunitasUpdaterProvider.notifier)
+                                        .likeCommunityPosts(
+                                          id: postingan.id,
+                                          onSuccess: () {},
+                                          onError: (error) {
+                                            MyHelperFunction.showToast(
+                                              context,
+                                              'Gagal',
+                                              'Postingan komunitas gagal untuk disukai',
+                                              ToastificationType.error,
+                                            );
+                                          },
+                                        );
+                                  },
+                                  icon: const FaIcon(FontAwesomeIcons.heart),
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(komunitasUpdaterProvider.notifier)
+                                        .unLikeCommunityPosts(
+                                          id: postingan.id,
+                                          onSuccess: () {},
+                                          onError: (error) {
+                                            MyHelperFunction.showToast(
+                                              context,
+                                              'Gagal',
+                                              'Postingan komunitas gagal untuk tidak disukai',
+                                              ToastificationType.error,
+                                            );
+                                          },
+                                        );
+                                  },
+                                  icon: const FaIcon(
+                                    FontAwesomeIcons.solidHeart,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
                           Text(postingan.like.toString()),
                           const SizedBox(width: TSizes.mediumSpace),
                           const FaIcon(FontAwesomeIcons.comment),

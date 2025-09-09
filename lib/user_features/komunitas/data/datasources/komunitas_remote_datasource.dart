@@ -10,11 +10,13 @@ abstract class KomunitasRemoteDataSource {
 
   Future<List<CommentModel>> getCommunityComment({required String id});
 
-  Future<void> postCommunity({required String content, required String title});
+  Future<void> postCommunity({required String content});
 
   Future<void> addComment({required String id, required String comment});
 
   Future<void> likeCommunityPosts({required String id});
+
+  Future<void> unLikeCommunityPosts({required String id});
 
   Future<void> likeComment({required String id});
 
@@ -75,10 +77,7 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
   }
 
   @override
-  Future<void> postCommunity({
-    required String content,
-    required String title,
-  }) async {
+  Future<void> postCommunity({required String content}) async {
     try {
       final now = DateTime.now();
       final formattedCreatedAt = now.toIso8601String().split('.').first;
@@ -87,7 +86,7 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
         '${TTexts.baseUrl}/community',
         data: {
           "content": content,
-          "title": title,
+          "title": 'title',
           "createAt": formattedCreatedAt,
         },
       );
@@ -147,12 +146,28 @@ class KomunitasRemoteDataSourceImpl implements KomunitasRemoteDataSource {
   @override
   Future<void> likeCommunityPosts({required String id}) async {
     try {
-      await dio.put('${TTexts.baseUrl}/community/like?id=$id');
+      await dio.post('${TTexts.baseUrl}/liked?idCommunity=$id');
     } on DioException catch (e) {
       String errorMessage = 'Gagal menyukai komentar postingan';
       if (e.response != null) {
         errorMessage =
             'Gagal mengirim data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> unLikeCommunityPosts({required String id}) async {
+    try {
+      await dio.put('${TTexts.baseUrl}/unliked?idCommunity=$id');
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal tidak menyukai komentar postingan';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal mengubah data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }

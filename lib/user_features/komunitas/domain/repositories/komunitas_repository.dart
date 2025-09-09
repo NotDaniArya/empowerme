@@ -7,10 +7,7 @@ abstract class KomunitasRepository {
 
   Future<(List<Comment>?, Failure?)> getCommunityComment({required String id});
 
-  Future<(void, Failure?)> postCommunityPosts({
-    required String content,
-    required String title,
-  });
+  Future<(void, Failure?)> postCommunityPosts({required String content});
 
   Future<(void, Failure?)> addComment({
     required String id,
@@ -23,6 +20,8 @@ abstract class KomunitasRepository {
   });
 
   Future<(void, Failure?)> likeCommunityPost({required String id});
+
+  Future<(void, Failure?)> unLikeCommunityPost({required String id});
 
   Future<(void, Failure?)> likeComment({required String id});
 }

@@ -36,12 +36,9 @@ class KomunitasRepositoryImpl implements KomunitasRepository {
   }
 
   @override
-  Future<(void, Failure?)> postCommunityPosts({
-    required String content,
-    required String title,
-  }) async {
+  Future<(void, Failure?)> postCommunityPosts({required String content}) async {
     try {
-      await remoteDataSource.postCommunity(content: content, title: title);
+      await remoteDataSource.postCommunity(content: content);
       return (null, null);
     } on Failure catch (f) {
       return (null, f);
@@ -84,6 +81,18 @@ class KomunitasRepositoryImpl implements KomunitasRepository {
   Future<(void, Failure?)> likeCommunityPost({required String id}) async {
     try {
       await remoteDataSource.likeCommunityPosts(id: id);
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(void, Failure?)> unLikeCommunityPost({required String id}) async {
+    try {
+      await remoteDataSource.unLikeCommunityPosts(id: id);
       return (null, null);
     } on Failure catch (f) {
       return (null, f);

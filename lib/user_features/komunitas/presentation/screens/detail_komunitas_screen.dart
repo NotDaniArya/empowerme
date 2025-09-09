@@ -117,23 +117,6 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
 
                     /*
                     ==========================================
-                    judul threads
-                    ==========================================
-                    */
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        currentPost.title,
-                        textAlign: TextAlign.start,
-                        style: textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.mediumSpace),
-
-                    /*
-                    ==========================================
                     isi threads
                     ==========================================
                     */
@@ -155,28 +138,52 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                       children: [
                         Row(
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                ref
-                                    .read(komunitasUpdaterProvider.notifier)
-                                    .likeCommunityPosts(
-                                      id: currentPost.id,
-                                      onSuccess: () {},
-                                      onError: (error) {
-                                        MyHelperFunction.showToast(
-                                          context,
-                                          'Gagal',
-                                          'Postingan komunitas gagal untuk disukai',
-                                          ToastificationType.error,
-                                        );
-                                      },
-                                    );
-                              },
-                              icon: const FaIcon(
-                                FontAwesomeIcons.heart,
-                                size: 18,
-                              ),
-                            ),
+                            currentPost.statusLike == false
+                                ? IconButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            komunitasUpdaterProvider.notifier,
+                                          )
+                                          .likeCommunityPosts(
+                                            id: currentPost.id,
+                                            onSuccess: () {},
+                                            onError: (error) {
+                                              MyHelperFunction.showToast(
+                                                context,
+                                                'Gagal',
+                                                'Postingan komunitas gagal untuk disukai',
+                                                ToastificationType.error,
+                                              );
+                                            },
+                                          );
+                                    },
+                                    icon: const FaIcon(FontAwesomeIcons.heart),
+                                  )
+                                : IconButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            komunitasUpdaterProvider.notifier,
+                                          )
+                                          .unLikeCommunityPosts(
+                                            id: currentPost.id,
+                                            onSuccess: () {},
+                                            onError: (error) {
+                                              MyHelperFunction.showToast(
+                                                context,
+                                                'Gagal',
+                                                'Postingan komunitas gagal untuk tidak disukai',
+                                                ToastificationType.error,
+                                              );
+                                            },
+                                          );
+                                    },
+                                    icon: const FaIcon(
+                                      FontAwesomeIcons.solidHeart,
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
                             Text(currentPost.like.toString()),
                           ],
                         ),
@@ -186,18 +193,6 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                             const FaIcon(FontAwesomeIcons.comment, size: 18),
                             const SizedBox(width: 15),
                             Text(currentPost.countComment.toString()),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const FaIcon(
-                                FontAwesomeIcons.share,
-                                size: 18,
-                              ),
-                            ),
-                            Text(widget.komunitas.share.toString()),
                           ],
                         ),
                       ],

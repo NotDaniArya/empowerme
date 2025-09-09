@@ -1,12 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/utils/constant/sizes.dart';
-import 'package:new_empowerme/utils/shared_widgets/button.dart';
+import 'package:new_empowerme/user_features/edukasi/domain/entitites/obat.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 
-import '../../../../utils/constant/colors.dart';
+import '../../../../../utils/constant/colors.dart';
+import '../../../../../utils/constant/sizes.dart';
+import '../../../../../utils/shared_widgets/button.dart';
 
-class DetailEdukasiScreen extends StatelessWidget {
-  const DetailEdukasiScreen({super.key});
+class DetailObatScreen extends StatelessWidget {
+  const DetailObatScreen({super.key, required this.obat});
+
+  final Obat obat;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +34,7 @@ class DetailEdukasiScreen extends StatelessWidget {
                 ),
               ),
               background: CachedNetworkImage(
-                imageUrl:
-                    'https://akcdn.detik.net.id/community/media/visual/2024/08/24/ilustrasi-hiv-1_169.jpeg?w=700&q=90',
+                imageUrl: obat.displayImageUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -52,7 +55,7 @@ class DetailEdukasiScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Ciri-ciri Terkena HIV: Ini Gejala, Penyebab, dan Penanganannya',
+                    obat.title,
                     textAlign: TextAlign.center,
                     style: textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
@@ -60,7 +63,7 @@ class DetailEdukasiScreen extends StatelessWidget {
                   ),
                   // const SizedBox(height: TSizes.smallSpace),
                   Text(
-                    'detikJogja.com',
+                    obat.source,
                     textAlign: TextAlign.center,
                     style: textTheme.titleSmall!.copyWith(
                       color: TColors.secondaryText,
@@ -70,27 +73,20 @@ class DetailEdukasiScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Date : 20 maret 2025',
+                      obat.date,
                       style: textTheme.titleSmall!.copyWith(),
                     ),
                   ),
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Category : Panduan',
+                      'Category : Makanan',
                       style: textTheme.titleSmall!.copyWith(),
                     ),
                   ),
                   const Divider(color: Colors.black54),
                   const SizedBox(height: TSizes.mediumSpace),
-                  const Text(
-                    'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
-                    textAlign: TextAlign.justify,
-                  ),
-                  const Text(
-                    'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
-                    textAlign: TextAlign.justify,
-                  ),
+                  Text(obat.description, textAlign: TextAlign.justify),
                   const SizedBox(height: TSizes.mediumSpace),
                   SizedBox(
                     width: 250,
@@ -102,7 +98,10 @@ class DetailEdukasiScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        final Uri url = Uri.parse(obat.link);
+                        MyHelperFunction.visitLink(url);
+                      },
                     ),
                   ),
                 ],

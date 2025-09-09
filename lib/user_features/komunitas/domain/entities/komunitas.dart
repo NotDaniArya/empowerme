@@ -6,10 +6,9 @@ import 'comment.dart';
 class Komunitas extends Equatable {
   final String id;
   final String content;
-  final String title;
   final DateTime createdAt;
   final int like;
-  final int share;
+  final bool statusLike;
   final int countComment;
   final List<Comment>? comments;
   final Pasien? pasien;
@@ -17,10 +16,9 @@ class Komunitas extends Equatable {
   const Komunitas({
     required this.id,
     required this.content,
-    required this.title,
     required this.createdAt,
     required this.like,
-    required this.share,
+    required this.statusLike,
     required this.countComment,
     this.pasien,
     this.comments,
@@ -31,10 +29,9 @@ class Komunitas extends Equatable {
   List<Object?> get props => [
     id,
     content,
-    title,
     createdAt,
     like,
-    share,
+    statusLike,
     countComment,
     pasien,
   ];

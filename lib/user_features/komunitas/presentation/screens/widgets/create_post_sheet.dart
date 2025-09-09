@@ -9,9 +9,6 @@ import 'package:toastification/toastification.dart';
 
 import '../../../../../utils/helper_functions/helper.dart';
 
-// Asumsi Anda punya provider ini untuk membuat postingan baru
-// import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
-
 class CreatePostSheet extends ConsumerStatefulWidget {
   const CreatePostSheet({super.key});
 
@@ -21,13 +18,11 @@ class CreatePostSheet extends ConsumerStatefulWidget {
 
 class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _titleController.dispose();
     _contentController.dispose();
     super.dispose();
   }
@@ -45,7 +40,6 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
     ref
         .read(komunitasUpdaterProvider.notifier)
         .postCommunity(
-          title: _titleController.text,
           content: _contentController.text,
           onSuccess: () {
             if (!mounted) return;
@@ -97,24 +91,6 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
               subtitle: Text('Bagikan ceritamu'),
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
-
-            // Input Judul
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Judul',
-                hintText: 'Apa topik utama ceritamu?',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Judul tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-
             // Input Konten
             TextFormField(
               controller: _contentController,

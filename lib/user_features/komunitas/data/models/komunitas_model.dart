@@ -8,10 +8,9 @@ class KomunitasModel extends Komunitas {
   const KomunitasModel({
     required super.id,
     required super.content,
-    required super.title,
     required super.createdAt,
     required super.like,
-    required super.share,
+    required super.statusLike,
     required super.countComment,
     required super.pasien,
     super.comments,
@@ -29,10 +28,9 @@ class KomunitasModel extends Komunitas {
     return KomunitasModel(
       id: json['id'],
       content: json['content'],
-      title: json['title'],
       createdAt: DateTime.parse(json['createdAt']),
       like: json['like'],
-      share: json['share'],
+      statusLike: json['statusLike'],
       countComment: json['countComment'],
       pasien: PasienModel.fromJson(json['user']),
       comments: commentsList, // Berikan list yang sudah di-parsing

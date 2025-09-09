@@ -147,14 +147,10 @@ class KomunitasUpdater extends Notifier<void> {
 
   Future<void> postCommunity({
     required String content,
-    required String title,
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.postCommunityPosts(
-      content: content,
-      title: title,
-    );
+    final (_, failure) = await _repository.postCommunityPosts(content: content);
 
     if (failure != null) {
       onError(failure.message);
@@ -216,7 +212,22 @@ class KomunitasUpdater extends Notifier<void> {
       onError(failure.message);
     } else {
       ref.invalidate(komunitasViewModel);
-      ref.invalidate(commentViewModel);
+
+      onSuccess();
+    }
+  }
+
+  Future<void> unLikeCommunityPosts({
+    required String id,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.unLikeCommunityPost(id: id);
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(komunitasViewModel);
 
       onSuccess();
     }

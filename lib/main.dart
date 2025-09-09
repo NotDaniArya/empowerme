@@ -12,6 +12,8 @@ import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
 
+import 'navigation_menu.dart';
+
 final theme = ThemeData().copyWith(
   colorScheme: ColorScheme.fromSeed(
     seedColor: TColors.primaryColor,
@@ -71,12 +73,11 @@ class AuthGate extends ConsumerWidget {
               switch (user.role) {
                 case UserRole.pasien:
                   print('User adalah pasien');
-                  // return const NavigationMenu();
-                  // return const PendampingNavigationMenu();
-                  return const KonselorNavigationMenu();
+                  return const NavigationMenu();
+                // return const PendampingNavigationMenu();
+                // return const KonselorNavigationMenu();
                 case UserRole.konselor:
                   print('User adalah konselor');
-                  // return const NavigationMenu();
                   return const KonselorNavigationMenu();
                 case UserRole.pendamping:
                   print('User adalah Pendamping');

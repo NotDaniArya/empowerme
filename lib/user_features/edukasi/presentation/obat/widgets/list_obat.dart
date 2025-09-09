@@ -1,30 +1,51 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/obat/detail_obat_screen.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/obat/providers/obat_provider.dart';
+import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/constant/sizes.dart';
 
-import '../../user_features/edukasi/presentation/screen/detail_edukasi_screen.dart';
-import '../constant/sizes.dart';
-
-class ItemCard extends StatelessWidget {
-  const ItemCard({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.publisherName,
-    required this.itemCount,
-  });
-
-  final String imageUrl;
-  final String title;
-  final String publisherName;
-  final int itemCount;
+class ListObat extends ConsumerWidget {
+  const ListObat({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final obatState = ref.watch(obatViewModel);
+
+    return Scaffold(
+      backgroundColor: TColors.backgroundColor,
+      body: _buildBody(context, obatState),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, ObatState state) {
     final textTheme = Theme.of(context).textTheme;
 
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.error != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Text(
+            'Terjadi kesalahan: ${state.error}',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    if (state.obat == null || state.obat!.isEmpty) {
+      return const Center(child: Text('Tidak ada obat yang ditemukan.'));
+    }
+
     return ListView.builder(
-      itemCount: itemCount,
+      itemCount: state.obat!.length,
       itemBuilder: (context, index) {
+        final obat = state.obat![index];
         return Card(
           elevation: 5,
           margin: const EdgeInsets.symmetric(
@@ -35,7 +56,7 @@ class ItemCard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DetailEdukasiScreen(),
+                  builder: (context) => DetailObatScreen(obat: obat),
                 ),
               );
             },
@@ -45,10 +66,18 @@ class ItemCard extends StatelessWidget {
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: imageUrl,
+                    imageUrl: obat.displayImageUrl,
                     height: 150,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
+                        ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                   Positioned(
                     bottom: 0,
@@ -69,17 +98,20 @@ class ItemCard extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            title,
+                            obat.title,
                             textAlign: TextAlign.center,
-                            style: textTheme.bodySmall!.copyWith(
+                            maxLines: 2,
+                            style: textTheme.bodyMedium!.copyWith(
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: TSizes.smallSpace / 2),
                           Text(
-                            publisherName,
+                            obat.source,
+                            maxLines: 1,
                             textAlign: TextAlign.center,
-                            style: textTheme.bodySmall!.copyWith(
+                            style: textTheme.labelMedium!.copyWith(
                               color: Colors.white,
                             ),
                           ),
