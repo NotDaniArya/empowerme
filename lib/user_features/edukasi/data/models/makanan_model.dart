@@ -7,7 +7,6 @@ class MakananModel extends Makanan {
     required super.source,
     required super.date,
     required super.description,
-    required super.thumbnail,
   });
 
   factory MakananModel.fromJson(Map<String, dynamic> json) {
@@ -17,7 +16,6 @@ class MakananModel extends Makanan {
       source: json['source'],
       date: json['date'],
       description: json['snippet'],
-      thumbnail: json['thumbnail'],
     );
   }
 }

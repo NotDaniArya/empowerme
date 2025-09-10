@@ -23,10 +23,16 @@ class _EdukasiScreenState extends State<EdukasiScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
   }
@@ -111,34 +117,17 @@ class _EdukasiScreenState extends State<EdukasiScreen>
           Positioned(
             bottom: 90,
             right: 10.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                // if (_tabController.index == 0) {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => const TambahJadwalScreen(
-                //         jadwalType: TipeJadwal.terapi,
-                //       ),
-                //     ),
-                //   );
-                // } else {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => const TambahJadwalScreen(
-                //         jadwalType: TipeJadwal.ambilObat,
-                //       ),
-                //     ),
-                //   );
-                // }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(12),
-              ),
+            child: Visibility(
+              visible: _tabController.index == 0,
+              child: FloatingActionButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(12),
+                ),
 
-              backgroundColor: TColors.primaryColor,
-              child: const Icon(Icons.add, color: Colors.white),
+                backgroundColor: TColors.primaryColor,
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
             ),
           ),
         ],

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/obat/detail_obat_screen.dart';
@@ -48,9 +47,7 @@ class ListObat extends ConsumerWidget {
         final obat = state.obat![index];
         return Card(
           elevation: 5,
-          margin: const EdgeInsets.symmetric(
-            horizontal: TSizes.mediumSpace,
-          ).copyWith(bottom: TSizes.spaceBtwSections),
+          margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
           child: InkWell(
             onTap: () {
               Navigator.push(
@@ -60,66 +57,20 @@ class ListObat extends ConsumerWidget {
                 ),
               );
             },
-            child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.hardEdge,
-              child: Stack(
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: obat.displayImageUrl,
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => Center(
-                          child: CircularProgressIndicator(
-                            value: downloadProgress.progress,
-                          ),
-                        ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsetsGeometry.symmetric(
-                        vertical: 6,
-                        horizontal: 12,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.black45,
-                        borderRadius: BorderRadiusGeometry.only(
-                          bottomRight: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            obat.title,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: textTheme.bodyMedium!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: TSizes.smallSpace / 2),
-                          Text(
-                            obat.source,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            style: textTheme.labelMedium!.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+            child: ListTile(
+              title: Text(
+                obat.title,
+                style: textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Container(
+                margin: const EdgeInsets.only(top: TSizes.smallSpace),
+                child: Text(
+                  obat.source,
+                  maxLines: 1,
+                  style: textTheme.labelMedium,
+                ),
               ),
             ),
           ),

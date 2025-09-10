@@ -74,8 +74,6 @@ class AuthGate extends ConsumerWidget {
                 case UserRole.pasien:
                   print('User adalah pasien');
                   return const NavigationMenu();
-                // return const PendampingNavigationMenu();
-                // return const KonselorNavigationMenu();
                 case UserRole.konselor:
                   print('User adalah konselor');
                   return const KonselorNavigationMenu();
