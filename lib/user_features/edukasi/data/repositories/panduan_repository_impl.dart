@@ -20,4 +20,28 @@ class PanduanRepositoryImpl implements PanduanRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> postPanduan({
+    required String title,
+    required String description,
+    required List<String> authors,
+    required String publishedDate,
+    required String infoLink,
+  }) async {
+    try {
+      await remoteDataSource.postPanduan(
+        title: title,
+        description: description,
+        authors: authors,
+        publishedDate: publishedDate,
+        infoLink: infoLink,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }

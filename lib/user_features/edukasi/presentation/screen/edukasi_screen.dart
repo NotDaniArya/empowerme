@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/makanan/widgets/list_makanan.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/obat/widgets/list_obat.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/create_panduan_sheet.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/list_panduan.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
@@ -40,6 +41,7 @@ class _EdukasiScreenState extends State<EdukasiScreen>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    // final isLoading = ref.watch(panduanUpdaterProvider)
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
@@ -120,7 +122,18 @@ class _EdukasiScreenState extends State<EdukasiScreen>
             child: Visibility(
               visible: _tabController.index == 0,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) => const CreatePanduanSheet(),
+                  );
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadiusGeometry.circular(12),
                 ),

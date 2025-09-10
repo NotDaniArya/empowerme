@@ -6,6 +6,14 @@ import '../../../../core/failure.dart';
 
 abstract class PanduanRemoteDataSource {
   Future<List<PanduanModel>> getPanduanList();
+
+  Future<void> postPanduan({
+    required String title,
+    required String description,
+    required List<String> authors,
+    required String publishedDate,
+    required String infoLink,
+  });
 }
 
 class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
@@ -28,6 +36,40 @@ class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
       if (e.response != null) {
         errorMessage =
             'Gagal mengambil data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> postPanduan({
+    required String title,
+    required String description,
+    required List<String> authors,
+    required String publishedDate,
+    required String infoLink,
+  }) async {
+    try {
+      await dio.post(
+        '${TTexts.baseUrl}/guide/saved',
+        data: {
+          "title": title,
+          "description": description,
+          "authors": [authors[0]],
+          "publisher": '-',
+          "thumbnail": '',
+          "webReaderLink": '-',
+          "publishedDate": publishedDate,
+          "infoLink": infoLink,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal menambah panduan';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal menambah data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }

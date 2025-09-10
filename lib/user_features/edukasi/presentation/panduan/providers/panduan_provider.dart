@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/data/repositories/panduan_repository_impl.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/panduan.dart';
@@ -58,4 +60,42 @@ class PanduanViewModel extends Notifier<PanduanState> {
 
 final panduanViewModel = NotifierProvider<PanduanViewModel, PanduanState>(
   () => PanduanViewModel(),
+);
+
+class PanduanUpdater extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  PanduanRepository get _repository => ref.read(panduanRepositoryProvider);
+
+  Future<void> postPanduan({
+    required String title,
+    required String description,
+    required List<String> authors,
+    required String publishedDate,
+    required String infoLink,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final (_, failure) = await _repository.postPanduan(
+      title: title,
+      description: description,
+      authors: authors,
+      publishedDate: publishedDate,
+      infoLink: infoLink,
+    );
+
+    if (failure != null) {
+      onError(failure.message);
+    } else {
+      ref.invalidate(panduanViewModel);
+      onSuccess();
+    }
+  }
+}
+
+final panduanUpdaterProvider = NotifierProvider<PanduanUpdater, bool>(
+  () => PanduanUpdater(),
 );
