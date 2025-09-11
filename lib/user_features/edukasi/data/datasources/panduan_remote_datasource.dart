@@ -10,7 +10,7 @@ abstract class PanduanRemoteDataSource {
   Future<void> postPanduan({
     required String title,
     required String description,
-    required List<String> authors,
+    required String publishers,
     required String publishedDate,
     required String infoLink,
   });
@@ -47,7 +47,7 @@ class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
   Future<void> postPanduan({
     required String title,
     required String description,
-    required List<String> authors,
+    required String publishers,
     required String publishedDate,
     required String infoLink,
   }) async {
@@ -57,10 +57,10 @@ class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
         data: {
           "title": title,
           "description": description,
-          "authors": [authors[0]],
-          "publisher": '-',
-          "thumbnail": '',
-          "webReaderLink": '-',
+          "authors": ['empty'],
+          "publisher": publishers,
+          "thumbnail": 'empty',
+          "webReaderLink": 'empty',
           "publishedDate": publishedDate,
           "infoLink": infoLink,
         },

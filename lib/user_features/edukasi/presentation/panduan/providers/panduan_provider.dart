@@ -73,25 +73,30 @@ class PanduanUpdater extends Notifier<bool> {
   Future<void> postPanduan({
     required String title,
     required String description,
-    required List<String> authors,
+    required String publishers,
     required String publishedDate,
     required String infoLink,
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.postPanduan(
-      title: title,
-      description: description,
-      authors: authors,
-      publishedDate: publishedDate,
-      infoLink: infoLink,
-    );
+    state = true;
+    try {
+      final (_, failure) = await _repository.postPanduan(
+        title: title,
+        description: description,
+        publishers: publishers,
+        publishedDate: publishedDate,
+        infoLink: infoLink,
+      );
 
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(panduanViewModel);
-      onSuccess();
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(panduanViewModel);
+        onSuccess();
+      }
+    } finally {
+      state = false;
     }
   }
 }

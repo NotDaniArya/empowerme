@@ -21,7 +21,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _authorsController = TextEditingController();
+  final _publishersController = TextEditingController();
   final _infoLinkController = TextEditingController();
   DateTime? _selectedDate;
 
@@ -29,7 +29,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _authorsController.dispose();
+    _publishersController.dispose();
     _infoLinkController.dispose();
     super.dispose();
   }
@@ -61,7 +61,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
         .postPanduan(
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
-          authors: [_authorsController.text.trim()],
+          publishers: _publishersController.text.trim(),
           publishedDate: publishedDate,
           infoLink: _infoLinkController.text.trim(),
           onSuccess: () {
@@ -135,16 +135,16 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
             TextFormField(
-              controller: _authorsController,
+              controller: _publishersController,
               decoration: const InputDecoration(
-                labelText: 'Penulis Panduan',
-                hintText: 'Budi, Adit, Putri...',
+                labelText: 'Penerbit Panduan',
+                hintText: 'kompas.com',
                 alignLabelWithHint: true,
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Penulis tidak boleh kosong.';
+                  return 'Penerbit tidak boleh kosong.';
                 }
                 return null;
               },

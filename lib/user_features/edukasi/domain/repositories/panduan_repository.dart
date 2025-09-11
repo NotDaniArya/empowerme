@@ -7,7 +7,7 @@ abstract class PanduanRepository {
   Future<(void, Failure?)> postPanduan({
     required String title,
     required String description,
-    required List<String> authors,
+    required String publishers,
     required String publishedDate,
     required String infoLink,
   });

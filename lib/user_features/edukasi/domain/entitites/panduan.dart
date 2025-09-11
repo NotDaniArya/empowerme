@@ -27,7 +27,7 @@ class Panduan extends Equatable {
     // placeholder jika tidak ada gambar
     const String placeholder =
         'https://mobeng.id/wp-content/uploads/2021/10/placeholder-1-1.png';
-    if (thumbnail.isNotEmpty) {
+    if (thumbnail.isNotEmpty || thumbnail == 'empty') {
       return thumbnail;
     }
     return placeholder;

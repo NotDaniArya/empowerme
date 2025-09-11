@@ -25,7 +25,7 @@ class PanduanRepositoryImpl implements PanduanRepository {
   Future<(void, Failure?)> postPanduan({
     required String title,
     required String description,
-    required List<String> authors,
+    required String publishers,
     required String publishedDate,
     required String infoLink,
   }) async {
@@ -33,7 +33,7 @@ class PanduanRepositoryImpl implements PanduanRepository {
       await remoteDataSource.postPanduan(
         title: title,
         description: description,
-        authors: authors,
+        publishers: publishers,
         publishedDate: publishedDate,
         infoLink: infoLink,
       );

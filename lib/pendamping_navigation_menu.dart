@@ -22,6 +22,7 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
     const JadwalPasienScreen(),
     const DaftarPasienScreen(),
     const ProfileScreen(),
+    Placeholder(),
   ];
 
   void _onSelectedMenu(int index) {

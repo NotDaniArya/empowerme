@@ -6,6 +6,8 @@ import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
+import '../../../../utils/shared_widgets/pendamping_drawer.dart';
+
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
@@ -16,6 +18,7 @@ class DashboardScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
+      drawer: const PendampingDrawer(),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(dashboardViewModel),
         color: TColors.primaryColor,
