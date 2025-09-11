@@ -73,7 +73,6 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return AppBar(
       foregroundColor: TColors.primaryColor,
       backgroundColor: Colors.white,
-      // automaticallyImplyLeading: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
