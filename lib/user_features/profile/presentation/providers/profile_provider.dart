@@ -67,7 +67,7 @@ class ProfileViewModel extends Notifier<ProfileState> {
         return;
       }
 
-      // 3. Panggil repository dengan ID yang sudah didapat
+      // 3. Panggil repositories dengan ID yang sudah didapat
       final (profile, failure) = await _repository.getProfile(id: id);
 
       if (failure != null) {
