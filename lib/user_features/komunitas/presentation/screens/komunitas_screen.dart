@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -190,10 +189,19 @@ class KomunitasScreen extends ConsumerWidget {
                                     ),
                                   ),
                                   clipBehavior: Clip.antiAlias,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                                    fit: BoxFit.cover,
+                                  child: CircleAvatar(
+                                    backgroundColor: TColors.primaryColor
+                                        .withOpacity(0.2),
+                                    child: Text(
+                                      postingan.pasien!.name.isNotEmpty
+                                          ? postingan.pasien!.name[0]
+                                                .toUpperCase()
+                                          : '?',
+                                      style: const TextStyle(
+                                        color: TColors.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: TSizes.smallSpace),

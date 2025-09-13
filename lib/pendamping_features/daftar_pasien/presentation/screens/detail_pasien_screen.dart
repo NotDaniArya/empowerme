@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/domain/entities/pasien.dart';
@@ -8,6 +9,8 @@ import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:toastification/toastification.dart';
+
+import '../../../../utils/constant/texts.dart';
 
 class DetailPasienScreen extends ConsumerStatefulWidget {
   const DetailPasienScreen({super.key, required this.pasien});
@@ -213,7 +216,28 @@ class _DetailPasienScreenState extends ConsumerState<DetailPasienScreen> {
       ),
       child: Column(
         children: [
-          const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 60)),
+          Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadiusGeometry.circular(100),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: CircleAvatar(
+              child: CachedNetworkImage(
+                imageUrl: '${TTexts.baseUrl}/images/${pasien.picture}',
+                width: double.infinity,
+                fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                      ),
+                    ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+            ),
+          ),
           const SizedBox(height: TSizes.spaceBtwItems),
           Text(
             pasien.name,

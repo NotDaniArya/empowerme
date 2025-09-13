@@ -6,6 +6,7 @@ import 'package:new_empowerme/user_features/komunitas/presentation/providers/kom
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:toastification/toastification.dart';
 
+import '../../../../../utils/constant/texts.dart';
 import '../../../../../utils/helper_functions/helper.dart';
 
 class CommentSheet extends ConsumerStatefulWidget {
@@ -35,6 +36,7 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
   Widget build(BuildContext context) {
     final commentState = ref.watch(commentViewModel(widget.komunitasId));
     late final Comment updatedParentComment;
+    final textTheme = Theme.of(context).textTheme;
 
     try {
       updatedParentComment = commentState.commentCommunity!.firstWhere(
@@ -68,7 +70,7 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const Divider(height: 24),
-            _buildParentComment(context, updatedParentComment!),
+            _buildParentComment(context, updatedParentComment),
             const Divider(height: 24),
 
             Expanded(
@@ -87,16 +89,19 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundImage: CachedNetworkImageProvider(
-                                reply.pasien.picture,
+                                '${TTexts.baseUrl}/images/${reply.pasien.picture}',
                               ),
                             ),
                             title: Text(
                               reply.pasien.name,
-                              style: const TextStyle(
+                              style: textTheme.labelSmall!.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text(reply.comment),
+                            subtitle: Text(
+                              reply.comment,
+                              style: textTheme.bodyMedium,
+                            ),
                           );
                         },
                       ),
@@ -111,15 +116,18 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
   }
 
   Widget _buildParentComment(BuildContext context, Comment comment) {
+    final textTheme = Theme.of(context).textTheme;
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(comment.pasien.picture),
+        backgroundImage: CachedNetworkImageProvider(
+          '${TTexts.baseUrl}/images/${comment.pasien.picture}',
+        ),
       ),
       title: Text(
         comment.pasien.name,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: textTheme.labelSmall!.copyWith(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(comment.comment),
+      subtitle: Text(comment.comment, style: textTheme.bodyMedium),
       dense: true,
     );
   }
@@ -129,12 +137,6 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         children: [
-          const CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-              'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-            ),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: TextField(
               controller: _replyController,

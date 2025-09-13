@@ -75,28 +75,12 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Pengguna
-            const ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
-                // Ganti dengan gambar profil pengguna yang login
-                backgroundImage: NetworkImage(
-                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                ),
-              ),
-              title: Text(
-                'User',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text('Bagikan ceritamu'),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
             // Input Konten
             TextFormField(
               controller: _contentController,
               decoration: const InputDecoration(
-                labelText: 'Cerita Anda',
-                hintText: 'Tuliskan ceritamu di sini...',
+                labelText: 'Konten Postingan',
+                hintText: 'Tuliskan konten postinganmu di sini...',
                 alignLabelWithHint: true,
                 border: OutlineInputBorder(),
               ),

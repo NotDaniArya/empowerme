@@ -184,7 +184,7 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   const Divider(height: 1, indent: 12, endIndent: 12),
                   MenuItem(
-                    title: 'About',
+                    title: 'Informasi dan Bantuan',
                     onTap: () {
                       Navigator.push(
                         context,

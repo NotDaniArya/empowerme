@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/detail_pasien_screen.dart';
@@ -6,6 +7,7 @@ import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
 import '../../../../utils/constant/sizes.dart';
+import '../../../../utils/constant/texts.dart';
 import '../providers/pasien_provider.dart';
 
 class DaftarPasienScreen extends ConsumerStatefulWidget {
@@ -160,13 +162,26 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
                 horizontal: 16,
                 vertical: 8,
               ),
-              leading: CircleAvatar(
-                backgroundColor: TColors.primaryColor.withOpacity(0.2),
-                child: Text(
-                  pasien.name.isNotEmpty ? pasien.name[0].toUpperCase() : '?',
-                  style: const TextStyle(
-                    color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
+              leading: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusGeometry.circular(50),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CircleAvatar(
+                  child: CachedNetworkImage(
+                    imageUrl: '${TTexts.baseUrl}/images/${pasien.picture}',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
+                        ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),
