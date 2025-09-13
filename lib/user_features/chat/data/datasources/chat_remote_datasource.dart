@@ -1,0 +1,156 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:new_empowerme/core/failure.dart';
+import 'package:new_empowerme/user_features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:new_empowerme/user_features/chat/domain/entities/chat_contact.dart';
+import 'package:new_empowerme/utils/constant/texts.dart';
+import 'package:stomp_dart_client/stomp_dart_client.dart';
+
+import '../models/chat_message_model.dart';
+
+abstract class ChatRemoteDataSource {
+  Future<void> connect(String userId);
+
+  void disconnect();
+
+  Future<void> sendMessage(ChatMessageModel message);
+
+  Stream<ChatMessageModel> get incomingMessages;
+
+  Future<List<ChatMessageModel>> getMessageHistory(
+    String currentUserId,
+    String contactId,
+  );
+
+  Future<List<ChatContact>> getChatContacts(String userId);
+}
+
+class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
+  final Dio dio;
+  final AuthLocalDataSource authLocalDataSource;
+  StompClient? _stompClient;
+  String? _currentUserId;
+
+  final _incomingMessagesController =
+      StreamController<ChatMessageModel>.broadcast();
+
+  @override
+  Stream<ChatMessageModel> get incomingMessages =>
+      _incomingMessagesController.stream;
+
+  ChatRemoteDataSourceImpl(this.dio, this.authLocalDataSource);
+
+  @override
+  Future<void> connect(String userId) async {
+    _currentUserId = userId;
+    if (_stompClient?.connected ?? false) return;
+
+    final token = await authLocalDataSource.getToken();
+    if (token == null) {
+      print('Error: Auth token not found for WebSocket connection.');
+      return;
+    }
+
+    _stompClient = StompClient(
+      config: StompConfig(
+        url: 'ws://31.97.222.109:8080/chat-websocket',
+        onConnect: _onConnect,
+        onWebSocketError: (dynamic error) => print('WebSocket Error: $error'),
+        stompConnectHeaders: {'Authorization': 'Bearer $token'},
+        webSocketConnectHeaders: {'Authorization': 'Bearer $token'},
+      ),
+    );
+
+    _stompClient!.activate();
+  }
+
+  void _onConnect(StompFrame frame) {
+    if (_currentUserId != null) {
+      _stompClient?.subscribe(
+        destination: '/topic/private.$_currentUserId',
+        callback: (frame) {
+          if (frame.body != null) {
+            try {
+              final messageJson = json.decode(frame.body!);
+              final message = ChatMessageModel.fromJson(
+                messageJson,
+                _currentUserId!,
+              );
+              _incomingMessagesController.add(message);
+            } catch (e) {
+              print('Error decoding incoming message: $e');
+            }
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  void disconnect() {
+    _stompClient?.deactivate();
+    _stompClient = null;
+  }
+
+  @override
+  Future<void> sendMessage(ChatMessageModel message) async {
+    if (_stompClient?.connected ?? false) {
+      _stompClient?.send(
+        destination: '/app/chat',
+        body: json.encode(message.toJson()),
+      );
+    } else {
+      throw const Failure('Not connected to WebSocket.');
+    }
+  }
+
+  @override
+  Future<List<ChatContact>> getChatContacts(String userId) async {
+    try {
+      final response = await dio.get('${TTexts.baseUrl}/list/$userId');
+      // Kode ini sudah benar sesuai dengan respons API Anda
+      final List<String> contactIds = List<String>.from(response.data);
+      return contactIds.map((id) => ChatContact(id: id, name: id)).toList();
+    } on DioException catch (e) {
+      throw Failure.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<ChatMessageModel>> getMessageHistory(
+    String currentUserId,
+    String contactId,
+  ) async {
+    try {
+      final response = await dio.get(
+        '${TTexts.baseUrl}/chat/$currentUserId/$contactId',
+      );
+
+      // --- PERBAIKAN DI SINI ---
+      // 1. Validasi respons agar tidak error jika format tidak sesuai
+      if (response.data == null || response.data is! Map) {
+        return [];
+      }
+
+      final responseData = response.data as Map<String, dynamic>;
+
+      if (!responseData.containsKey('data') || responseData['data'] is! List) {
+        return [];
+      }
+
+      // 2. Ambil list pesan dari kunci 'data', bukan 'messages'
+      final List<dynamic> messagesJson = responseData['data'];
+
+      return messagesJson
+          .map((json) => ChatMessageModel.fromJson(json, currentUserId))
+          .toList();
+    } on DioException catch (e) {
+      throw Failure.fromDioException(e);
+    } catch (e) {
+      print('Error parsing message history: $e');
+      throw const Failure('Gagal memproses data riwayat chat.');
+    }
+  }
+}

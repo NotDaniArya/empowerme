@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:new_empowerme/konselor_navigation_menu.dart';
 import 'package:new_empowerme/pendamping_navigation_menu.dart';
 import 'package:new_empowerme/splash_screen.dart';
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
+import 'package:new_empowerme/user_features/chat/data/models/chat_message_model.dart';
 import 'package:new_empowerme/user_features/onboarding/onboarding_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
@@ -26,6 +28,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(ChatMessageModelAdapter());
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -72,13 +78,10 @@ class AuthGate extends ConsumerWidget {
             if (user != null) {
               switch (user.role) {
                 case UserRole.pasien:
-                  print('User adalah pasien');
                   return const NavigationMenu();
                 case UserRole.konselor:
-                  print('User adalah konselor');
                   return const KonselorNavigationMenu();
                 case UserRole.pendamping:
-                  print('User adalah Pendamping');
                   return const PendampingNavigationMenu();
                 default:
                   return const OnboardingScreen();

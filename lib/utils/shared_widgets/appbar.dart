@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
 
-import '../../user_features/chat/presentation/screens/chat_screen.dart';
 import '../constant/colors.dart';
 import '../constant/sizes.dart';
 import '../constant/texts.dart';
@@ -133,7 +133,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ChatScreen()),
+              MaterialPageRoute(builder: (context) => const ChatListScreen()),
             );
           },
           icon: const FaIcon(FontAwesomeIcons.paperPlane),

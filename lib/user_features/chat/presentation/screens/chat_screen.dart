@@ -1,165 +1,95 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:new_empowerme/utils/constant/colors.dart';
-import 'package:new_empowerme/utils/constant/sizes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/user_features/chat/domain/entities/chat_message.dart';
+import 'package:new_empowerme/user_features/chat/presentation/providers/chat_provider.dart';
 
-import '../../konselor/presentation/screens/chat_konselor_screen.dart';
-import '../../pendamping/chat_pendamping_screen.dart';
+class ChatScreen extends ConsumerStatefulWidget {
+  final String contactId;
+  const ChatScreen({super.key, required this.contactId});
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  @override
+  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends ConsumerState<ChatScreen> {
+  final _messageController = TextEditingController();
+
+  void _sendMessage() {
+    if (_messageController.text.trim().isEmpty) return;
+    ref
+        .read(chatMessagesProvider(widget.contactId).notifier)
+        .sendMessage(_messageController.text.trim());
+    _messageController.clear();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final messagesState = ref.watch(chatMessagesProvider(widget.contactId));
 
     return Scaffold(
-      backgroundColor: TColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: TColors.primaryColor,
-        foregroundColor: Colors.white,
-        title: Text(
-          'Chat',
-          style: textTheme.titleMedium!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      appBar: AppBar(title: Text(widget.contactId)), // Tampilkan nama kontak
+      body: Column(
+        children: [
+          Expanded(
+            child: messagesState.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('Error: $error')),
+              data: (messages) => ListView.builder(
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[messages.length - 1 - index];
+                  return _ChatMessageBubble(message: message);
+                },
+              ),
+            ),
           ),
-        ),
+          _buildMessageInput(),
+        ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(TSizes.mediumSpace),
-          child: Column(
-            children: [
-              /*
-              ==========================================
-              Chat konselor
-              ==========================================
-              */
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChatKonselorScreen(),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusGeometry.circular(50),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                            ),
-                          ),
-                          const SizedBox(width: TSizes.mediumSpace),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Konselor',
-                                style: textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Ayo segera periksa!',
-                                style: textTheme.bodySmall!.copyWith(
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '18.40',
-                        style: textTheme.labelMedium!.copyWith(
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+    );
+  }
 
-              const SizedBox(height: TSizes.smallSpace),
-
-              /*
-              ==========================================
-              Chat pendamping
-              ==========================================
-              */
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChatPendampingScreen(),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusGeometry.circular(50),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://photos.peopleimages.com/picture/202304/2693460-thinking-serious-and-profile-of-asian-man-in-studio-isolated-on-a-blue-background.-idea-side-face-and-male-person-contemplating-lost-in-thoughts-or-problem-solving-while-looking-for-a-solution-fit_400_400.jpg',
-                            ),
-                          ),
-                          const SizedBox(width: TSizes.mediumSpace),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Pendamping',
-                                style: textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Saatnya Ambil Obat!',
-                                style: textTheme.bodySmall!.copyWith(
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '09.40',
-                        style: textTheme.labelMedium!.copyWith(
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildMessageInput() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(hintText: 'Ketik pesan...'),
+              textCapitalization: TextCapitalization.sentences,
+            ),
           ),
+          IconButton(icon: const Icon(Icons.send), onPressed: _sendMessage),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChatMessageBubble extends StatelessWidget {
+  final ChatMessage message;
+  const _ChatMessageBubble({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final isSentByMe = message.type == MessageType.sent;
+    return Align(
+      alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Card(
+        color: isSentByMe ? Theme.of(context).primaryColorLight : Colors.white,
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(message.text),
         ),
       ),
     );
