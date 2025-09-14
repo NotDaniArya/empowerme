@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../pendamping_features/chat/presentation/providers/nonpasien_chat_provider.dart';
 import '../../../../utils/constant/colors.dart';
 import '../../../auth/domain/entities/auth.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -33,9 +32,8 @@ class ChatListScreen extends ConsumerWidget {
           final isPatient = userRole == UserRole.pasien;
 
           // 3. Pilih provider secara kondisional berdasarkan peran.
-          final contactsStateProvider = isPatient
-              ? chatContactsProvider
-              : nonPasienChatContactsProvider;
+          final contactsStateProvider = chatContactsProvider;
+          // : nonPasienChatContactsProvider;
 
           final contactsState = ref.watch(contactsStateProvider);
 

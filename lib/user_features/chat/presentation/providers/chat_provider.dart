@@ -81,37 +81,10 @@ class ChatMessagesViewModel
 
   @override
   AsyncValue<List<ChatMessage>> build(String contactId) {
+    _listenForIncomingMessages();
+
+    // Memanggil alur pengambilan data awal
     _fetchInitialMessages();
-
-    _subscription?.cancel(); // Hapus listener lama jika ada
-
-    _subscription = ref.watch(chatServiceProvider).incomingMessages.listen((
-      message,
-    ) {
-      // ===================================================================
-      // PERBAIKAN UTAMA & DEFINITIF UNTUK MASALAH DUPLIKAT
-      // ===================================================================
-      //
-      // 1. Abaikan pesan jika pengirimnya (`from`) adalah pengguna saat ini.
-      //    Pembaruan optimis di `sendMessage` sudah menangani pesan kita
-      //    sendiri, jadi kita tidak perlu memproses gema dari server.
-      //    Inilah yang mencegah gelembung obrolan kedua muncul.
-      if (message.from == _currentUserId) {
-        return; // Hentikan eksekusi jika pesan ini dari kita sendiri
-      }
-
-      // 2. Hanya proses pesan jika pengirimnya adalah kontak yang obrolannya
-      //    sedang dibuka. Ini memastikan pesan dari obrolan lain tidak
-      //    muncul di layar yang salah.
-      if (message.from == contactId) {
-        final currentMessages = state.valueOrNull ?? [];
-
-        // Cek ID untuk memastikan pesan belum ada (lapisan keamanan tambahan)
-        if (!currentMessages.any((m) => m.messageId == message.messageId)) {
-          state = AsyncValue.data([...currentMessages, message]);
-        }
-      }
-    });
 
     ref.onDispose(() {
       _subscription?.cancel();
@@ -121,39 +94,72 @@ class ChatMessagesViewModel
   }
 
   String? get _currentUserId => ref.read(authNotifierProvider).value?.id;
+  ChatRepository get _repo => ref.read(chatRepositoryProvider);
 
+  /// Alur pengambilan data "Cache-First" yang baru.
   Future<void> _fetchInitialMessages() async {
     state = const AsyncValue.loading();
-    final repo = ref.read(chatRepositoryProvider);
-    final (messages, failure) = await repo.getMessageHistory(
+
+    // 1. Ambil data dari cache lokal terlebih dahulu
+    final (localMessages, localFailure) = await _repo.getLocalMessageHistory(
       arg,
-    ); // arg adalah contactId
-    if (failure != null) {
-      state = AsyncValue.error(failure, StackTrace.current);
-    } else {
-      state = AsyncValue.data(messages ?? []);
+    );
+
+    if (localMessages != null && localMessages.isNotEmpty) {
+      // Jika ada data di cache, langsung tampilkan ke UI
+      state = AsyncValue.data(localMessages);
+    }
+
+    if (localFailure != null) {
+      state = AsyncValue.error(localFailure, StackTrace.current);
+    }
+
+    // 2. Kemudian, di latar belakang, sinkronkan dengan server
+    final (syncedMessages, remoteFailure) = await _repo.syncMessageHistory(arg);
+
+    // 3. Setelah sinkronisasi selesai, perbarui UI dengan data terbaru
+    if (syncedMessages != null) {
+      state = AsyncValue.data(syncedMessages);
+    }
+
+    if (remoteFailure != null && syncedMessages == null) {
+      // Hanya tampilkan error remote jika data lokal juga gagal
+      state = AsyncValue.error(remoteFailure, StackTrace.current);
     }
   }
 
+  /// Mendengarkan pesan baru dari WebSocket.
+  void _listenForIncomingMessages() {
+    _subscription?.cancel();
+    _subscription = _repo.incomingMessages.listen((message) {
+      if (message.from == arg) {
+        // arg adalah contactId
+        final currentMessages = state.valueOrNull ?? [];
+        if (!currentMessages.any((m) => m.messageId == message.messageId)) {
+          state = AsyncValue.data([...currentMessages, message]);
+        }
+      }
+    });
+  }
+
+  /// Mengirim pesan dengan pembaruan UI optimis.
   Future<void> sendMessage(String text) async {
     if (_currentUserId == null) return;
 
-    // Buat pesan baru dengan ID unik dari sisi klien
     final message = ChatMessage(
       messageId: const Uuid().v4(),
       from: _currentUserId!,
-      to: arg, // arg adalah contactId
+      to: arg,
       text: text,
       timestamp: DateTime.now(),
       type: MessageType.sent,
     );
 
-    // Pembaruan Optimis: tambahkan pesan ke UI secara langsung
     final currentMessages = state.valueOrNull ?? [];
     state = AsyncValue.data([...currentMessages, message]);
 
-    // Kirim pesan ke server di latar belakang
-    await ref.read(chatRepositoryProvider).sendMessage(message);
+    // Kirim ke server di latar belakang
+    await _repo.sendMessage(message);
   }
 }
 
