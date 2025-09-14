@@ -30,7 +30,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         .read(chatMessagesProvider(widget.contactId).notifier)
         .sendMessage(_messageController.text.trim());
     _messageController.clear();
-    // Scroll ke bawah setelah mengirim pesan untuk UX yang lebih baik
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -49,14 +48,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     super.dispose();
   }
 
-  // Helper untuk membandingkan apakah dua tanggal berada di hari yang sama
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
   }
 
-  // Helper untuk memformat header tanggal
   String _formatDateForSeparator(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -95,7 +92,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
                 return ListView.builder(
                   controller: _scrollController,
-                  reverse: true, // Membuat pesan baru muncul dari bawah
+                  reverse: true,
                   padding: const EdgeInsets.all(8.0),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -167,7 +164,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 }
 
-// --- WIDGET GELEMBUNG PESAN YANG TELAH DIPERBAIKI ---
 class _ChatMessageBubble extends StatelessWidget {
   final ChatMessage message;
 
@@ -180,9 +176,7 @@ class _ChatMessageBubble extends StatelessWidget {
       alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Card(
         elevation: 1,
-        color: isSentByMe
-            ? const Color(0xFFE7FFDB) // Warna gelembung "Terkirim" ala WA
-            : Colors.white,
+        color: isSentByMe ? const Color(0xFFE7FFDB) : Colors.white,
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12).copyWith(
@@ -193,7 +187,6 @@ class _ChatMessageBubble extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
           child: Column(
-            // PERBAIKAN: Sejajarkan konten di dalam bubble
             crossAxisAlignment: isSentByMe
                 ? CrossAxisAlignment.end
                 : CrossAxisAlignment.start,
@@ -215,9 +208,9 @@ class _ChatMessageBubble extends StatelessWidget {
   }
 }
 
-// --- WIDGET PEMISAH TANGGAL (TIDAK BERUBAH) ---
 class _DateSeparator extends StatelessWidget {
   final String text;
+
   const _DateSeparator({required this.text});
 
   @override
@@ -227,7 +220,7 @@ class _DateSeparator extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 12.0),
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
         decoration: BoxDecoration(
-          color: const Color(0xFFE1F3FB), // Warna latar belakang tanggal
+          color: const Color(0xFFE1F3FB),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

@@ -6,20 +6,20 @@ import '../models/chat_message_model.dart';
 
 abstract class ChatLocalDataSource {
   Future<void> saveMessage(ChatMessageModel message);
+
   Future<List<ChatMessageModel>> getMessageHistory(String contactId);
+
   Future<void> saveContacts(List<ChatContact> contacts);
+
   Future<List<ChatContact>> getContacts();
 }
 
 class ChatLocalDataSourceImpl implements ChatLocalDataSource {
-  // 1. Tambahkan dependency AuthLocalDataSource
   final AuthLocalDataSource authLocalDataSource;
 
-  // 2. Perbarui konstruktor untuk menerima dependency
   const ChatLocalDataSourceImpl({required this.authLocalDataSource});
 
   Future<Box<ChatMessageModel>> _getChatBox(String contactId) async {
-    // Membuat nama box yang aman untuk Hive
     final boxName = 'chat_${contactId.replaceAll('-', '_')}';
     if (Hive.isBoxOpen(boxName)) {
       return Hive.box<ChatMessageModel>(boxName);
@@ -37,10 +37,8 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
 
   @override
   Future<void> saveMessage(ChatMessageModel message) async {
-    // 3. Ambil ID pengguna saat ini dari SharedPreferences
     final currentUserId = await authLocalDataSource.getId();
 
-    // Tentukan ID kontak (orang lain dalam obrolan)
     final contactId = message.from == currentUserId ? message.to : message.from;
     final box = await _getChatBox(contactId);
     await box.put(message.messageId, message);
@@ -64,7 +62,6 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> saveContacts(List<ChatContact> contacts) async {
     final box = await _getContactsBox();
     await box.clear();
-    // Gunakan putAll untuk efisiensi
     final contactsMap = {for (var c in contacts) c.id: c.id};
     await box.putAll(contactsMap);
   }

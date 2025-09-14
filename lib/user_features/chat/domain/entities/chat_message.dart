@@ -7,7 +7,6 @@ part 'chat_message.g.dart';
 enum MessageType {
   @HiveField(0)
   sent,
-
   @HiveField(1)
   received,
 }

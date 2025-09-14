@@ -12,7 +12,6 @@ import '../../domain/entities/chat_contact.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/chat_repository.dart';
 
-// Providers untuk Data Layer
 final chatLocalDataSourceProvider = Provider<ChatLocalDataSource>((ref) {
   final authDataSource = ref.watch(authLocalDataSourceProvider);
   return ChatLocalDataSourceImpl(authLocalDataSource: authDataSource);
@@ -31,7 +30,6 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
   );
 });
 
-// Service untuk mengelola koneksi WebSocket
 final chatServiceProvider = Provider((ref) {
   final chatRepository = ref.watch(chatRepositoryProvider);
   final authState = ref.watch(authNotifierProvider);
@@ -48,7 +46,6 @@ final chatServiceProvider = Provider((ref) {
   return chatRepository;
 });
 
-// ViewModel untuk daftar kontak
 class ChatContactsViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   @override
   AsyncValue<List<ChatContact>> build() {
@@ -74,7 +71,6 @@ final chatContactsProvider =
       () => ChatContactsViewModel(),
     );
 
-// --- ViewModel untuk pesan dalam satu chat (TELAH DIPERBARUI SECARA TOTAL) ---
 class ChatMessagesViewModel
     extends FamilyNotifier<AsyncValue<List<ChatMessage>>, String> {
   StreamSubscription? _subscription;
@@ -83,7 +79,6 @@ class ChatMessagesViewModel
   AsyncValue<List<ChatMessage>> build(String contactId) {
     _listenForIncomingMessages();
 
-    // Memanggil alur pengambilan data awal
     _fetchInitialMessages();
 
     ref.onDispose(() {
@@ -94,19 +89,17 @@ class ChatMessagesViewModel
   }
 
   String? get _currentUserId => ref.read(authNotifierProvider).value?.id;
+
   ChatRepository get _repo => ref.read(chatRepositoryProvider);
 
-  /// Alur pengambilan data "Cache-First" yang baru.
   Future<void> _fetchInitialMessages() async {
     state = const AsyncValue.loading();
 
-    // 1. Ambil data dari cache lokal terlebih dahulu
     final (localMessages, localFailure) = await _repo.getLocalMessageHistory(
       arg,
     );
 
     if (localMessages != null && localMessages.isNotEmpty) {
-      // Jika ada data di cache, langsung tampilkan ke UI
       state = AsyncValue.data(localMessages);
     }
 
@@ -114,26 +107,21 @@ class ChatMessagesViewModel
       state = AsyncValue.error(localFailure, StackTrace.current);
     }
 
-    // 2. Kemudian, di latar belakang, sinkronkan dengan server
     final (syncedMessages, remoteFailure) = await _repo.syncMessageHistory(arg);
 
-    // 3. Setelah sinkronisasi selesai, perbarui UI dengan data terbaru
     if (syncedMessages != null) {
       state = AsyncValue.data(syncedMessages);
     }
 
     if (remoteFailure != null && syncedMessages == null) {
-      // Hanya tampilkan error remote jika data lokal juga gagal
       state = AsyncValue.error(remoteFailure, StackTrace.current);
     }
   }
 
-  /// Mendengarkan pesan baru dari WebSocket.
   void _listenForIncomingMessages() {
     _subscription?.cancel();
     _subscription = _repo.incomingMessages.listen((message) {
       if (message.from == arg) {
-        // arg adalah contactId
         final currentMessages = state.valueOrNull ?? [];
         if (!currentMessages.any((m) => m.messageId == message.messageId)) {
           state = AsyncValue.data([...currentMessages, message]);
@@ -142,7 +130,6 @@ class ChatMessagesViewModel
     });
   }
 
-  /// Mengirim pesan dengan pembaruan UI optimis.
   Future<void> sendMessage(String text) async {
     if (_currentUserId == null) return;
 
@@ -158,7 +145,6 @@ class ChatMessagesViewModel
     final currentMessages = state.valueOrNull ?? [];
     state = AsyncValue.data([...currentMessages, message]);
 
-    // Kirim ke server di latar belakang
     await _repo.sendMessage(message);
   }
 }

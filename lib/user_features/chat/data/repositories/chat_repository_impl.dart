@@ -56,17 +56,6 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
-  // @override
-  // Future<(List<ChatContact>?, Failure?)> getNonPasienChatContacts() async {
-  //   try {
-  //     final contacts = await remoteDataSource.getNonPasienChatContacts();
-  //     return (contacts, null);
-  //   } on Failure catch (f) {
-  //     return (null, f);
-  //   }
-  // }
-
-  /// BARU: Implementasi untuk mengambil data HANYA dari database lokal.
   @override
   Future<(List<ChatMessage>?, Failure?)> getLocalMessageHistory(
     String contactId,
@@ -89,7 +78,6 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
-  /// Metode ini sekarang secara eksplisit berfungsi sebagai penyinkron data dari server.
   @override
   Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(
     String contactId,
@@ -103,15 +91,11 @@ class ChatRepositoryImpl implements ChatRepository {
         userId,
         contactId,
       );
-      // Simpan setiap pesan dari server ke database lokal.
       for (var msgModel in remoteHistoryModels) {
         await localDataSource.saveMessage(msgModel);
       }
-      // Setelah sinkronisasi, kembalikan data terbaru dari lokal yang sudah diurutkan.
       return await getLocalMessageHistory(contactId);
     } on Failure catch (f) {
-      // Jika server gagal, tetap kembalikan data lokal yang ada saat ini.
-      // Ini memastikan aplikasi tetap berfungsi offline.
       final (localMessages, _) = await getLocalMessageHistory(contactId);
       return (localMessages, f);
     }

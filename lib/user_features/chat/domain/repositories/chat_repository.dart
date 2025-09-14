@@ -12,15 +12,11 @@ abstract class ChatRepository {
 
   Future<(void, Failure?)> sendMessage(ChatMessage message);
 
-  /// Mengambil riwayat dari remote dan menyimpannya ke lokal (fungsi sinkronisasi).
   Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(String contactId);
 
-  /// BARU: Mengambil riwayat pesan HANYA dari database lokal.
   Future<(List<ChatMessage>?, Failure?)> getLocalMessageHistory(
     String contactId,
   );
 
   Future<(List<ChatContact>?, Failure?)> getChatContacts();
-
-  // Future<(List<ChatContact>?, Failure?)> getNonPasienChatContacts();
 }

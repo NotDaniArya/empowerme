@@ -28,44 +28,34 @@ class ChatMessageModel extends HiveObject {
     required this.type,
   });
 
-  // ===================================================================
-  // FACTORY CONSTRUCTOR YANG TELAH DIPERBAIKI SECARA TOTAL
-  // ===================================================================
   factory ChatMessageModel.fromJson(
     Map<String, dynamic> json,
     String currentUserId,
   ) {
     DateTime parsedTimestamp;
     try {
-      // 1. Ambil string tanggal dan waktu dengan aman, berikan default jika null
       final dateString = json['date'] as String? ?? '';
       final timeString = json['time'] as String? ?? '';
 
       if (dateString.isNotEmpty && timeString.isNotEmpty) {
-        // Gabungkan string tanggal dan waktu untuk parsing yang lebih andal
         final fullDateTimeString = '$dateString $timeString';
-        // Gunakan format yang sesuai untuk mem-parsing gabungan string
         parsedTimestamp = DateFormat(
           'yyyy-MM-dd HH:mm:ss',
         ).parse(fullDateTimeString);
       } else {
-        // Jika data tanggal/waktu tidak ada, gunakan waktu saat ini sebagai fallback
         parsedTimestamp = DateTime.now();
       }
     } catch (e) {
-      // Jika parsing gagal karena format tidak terduga, gunakan waktu saat ini
       print('Error parsing timestamp from JSON: $json. Error: $e');
       parsedTimestamp = DateTime.now();
     }
 
     return ChatMessageModel(
-      // 2. Berikan nilai default yang aman untuk setiap field
       messageId: json['messageId'] as String? ?? '',
       from: json['from'] as String? ?? '',
       to: json['to'] as String? ?? '',
       text: json['text'] as String? ?? '',
       timestamp: parsedTimestamp,
-      // Tentukan tipe pesan berdasarkan pengirim
       type: (json['from'] as String? ?? '') == currentUserId
           ? MessageType.sent
           : MessageType.received,
