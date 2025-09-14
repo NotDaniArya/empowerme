@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 
 // --- Providers untuk Data Layer ---
 
-final nonPasienchatLocalDataSourceProvider = Provider<ChatLocalDataSource>((
+final nonPasienChatLocalDataSourceProvider = Provider<ChatLocalDataSource>((
   ref,
 ) {
   // Ambil dependency AuthLocalDataSource
@@ -23,7 +23,7 @@ final nonPasienchatLocalDataSourceProvider = Provider<ChatLocalDataSource>((
 });
 
 // --- Provider yang Telah Diperbarui ---
-final nonPasienchatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>((
+final nonPasienChatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>((
   ref,
 ) {
   // Ambil dependency AuthLocalDataSource
@@ -32,17 +32,17 @@ final nonPasienchatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>((
   return ChatRemoteDataSourceImpl(ref.watch(dioProvider), authLocalDataSource);
 });
 
-final chatNonPasienRepositoryProvider = Provider<ChatRepository>((ref) {
+final nonPasienChatRepositoryProvider = Provider<ChatRepository>((ref) {
   return ChatRepositoryNonPasienImpl(
-    ref.watch(nonPasienchatRemoteDataSourceProvider),
-    ref.watch(nonPasienchatLocalDataSourceProvider),
+    ref.watch(nonPasienChatRemoteDataSourceProvider),
+    ref.watch(nonPasienChatLocalDataSourceProvider),
     ref,
   );
 });
 
 // SERVICE UNTUK MENGELOLA KONEKSI
 final nonPasienchatServiceProvider = Provider((ref) {
-  final chatRepository = ref.watch(chatNonPasienRepositoryProvider);
+  final chatRepository = ref.watch(nonPasienChatRepositoryProvider);
   final authState = ref.watch(authNotifierProvider);
   final userId = authState.valueOrNull?.id;
 
@@ -68,7 +68,7 @@ class NonPasienChatContactsViewModel
 
   Future<void> _fetchContacts() async {
     state = const AsyncValue.loading();
-    final repo = ref.read(chatNonPasienRepositoryProvider);
+    final repo = ref.read(nonPasienChatRepositoryProvider);
     final (contacts, failure) = await repo.getChatContacts();
     if (failure != null) {
       state = AsyncValue.error(failure, StackTrace.current);
@@ -116,7 +116,7 @@ class NonPasienChatMessagesViewModel
 
   Future<void> _fetchInitialMessages() async {
     state = const AsyncValue.loading();
-    final repo = ref.read(chatNonPasienRepositoryProvider);
+    final repo = ref.read(nonPasienChatRepositoryProvider);
     final (messages, failure) = await repo.getMessageHistory(arg);
     if (failure != null) {
       state = AsyncValue.error(failure, StackTrace.current);
@@ -140,11 +140,11 @@ class NonPasienChatMessagesViewModel
     state = AsyncValue.data([...currentMessages, message]);
 
     // Kirim ke server
-    await ref.read(chatNonPasienRepositoryProvider).sendMessage(message);
+    await ref.read(nonPasienChatRepositoryProvider).sendMessage(message);
   }
 }
 
-final chatMessagesProvider =
+final nonPasienchatMessagesProvider =
     NotifierProvider.family<
       NonPasienChatMessagesViewModel,
       AsyncValue<List<ChatMessage>>,

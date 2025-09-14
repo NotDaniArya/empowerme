@@ -12,13 +12,18 @@ import '../models/chat_message_model.dart';
 
 abstract class ChatRemoteDataSource {
   Future<void> connect(String userId);
+
   void disconnect();
+
   Future<void> sendMessage(ChatMessageModel message);
+
   Stream<ChatMessageModel> get incomingMessages;
+
   Future<List<ChatMessageModel>> getMessageHistory(
     String currentUserId,
     String contactId,
   );
+
   Future<List<ChatContact>> getChatContacts(String userId);
 }
 
@@ -39,7 +44,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<void> connect(String userId) async {
-    // ... (kode koneksi tidak berubah)
     _currentUserId = userId;
     if (_stompClient?.connected ?? false) return;
 
@@ -102,29 +106,22 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
-  // --- FUNGSI getChatContacts YANG TELAH DIPERBAIKI ---
   @override
   Future<List<ChatContact>> getChatContacts(String userId) async {
     try {
       final response = await dio.get('${TTexts.baseUrl}/list/$userId');
 
-      // 1. Validasi bahwa respons tidak null dan merupakan sebuah List.
-      //    Jika tidak, kembalikan list kosong untuk mencegah error.
       if (response.data == null || response.data is! List) {
         return [];
       }
 
-      // 2. Lakukan casting yang aman.
       final List<dynamic> contactIdsRaw = response.data;
       final List<String> contactIds = List<String>.from(contactIdsRaw);
 
       return contactIds.map((id) => ChatContact(id: id, name: id)).toList();
     } on DioException catch (e) {
-      // Menangkap error jaringan spesifik dari Dio.
       throw Failure.fromDioException(e);
     } catch (e) {
-      // 3. Tambahkan blok catch generik untuk menangkap error lain,
-      //    seperti TypeError saat casting.
       print('Error parsing contacts: $e');
       throw const Failure('Gagal memproses data kontak dari server.');
     }
@@ -135,7 +132,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String currentUserId,
     String contactId,
   ) async {
-    // ... (kode ini sudah benar dari perbaikan sebelumnya, tidak perlu diubah)
     try {
       final response = await dio.get(
         '${TTexts.baseUrl}/chat/$currentUserId/$contactId',

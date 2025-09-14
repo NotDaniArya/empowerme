@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
-import 'package:new_empowerme/user_features/home/presentation/screens/widgets/card_jadwal.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/home/presentation/screens/widgets/history_navigation_card.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/widgets/information_slider.dart';
 
 import '../../../../pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
 import '../../../../utils/shared_widgets/appbar.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import 'history_jadwal_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -19,12 +21,6 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-
-      /*
-      ==========================================
-      Appbar
-      ==========================================
-       */
       appBar: const MyAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,60 +38,73 @@ class HomeScreen extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /*
-                ==========================================
-                Container jadwal terapi
-                ==========================================
-                */
                     Text(
-                      'Jadwal Terapi',
-                      style: textTheme.bodyLarge!.copyWith(
+                      'Akses Cepat Jadwal Anda',
+                      style: textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: TSizes.smallSpace),
-                    CardJadwal(tipeJadwal: TipeJadwal.terapi, id: authData.id),
-                    const SizedBox(height: TSizes.spaceBtwSections),
-
-                    /*
-                ==========================================
-                Container jadwal ambil obat
-                ==========================================
-                */
-                    Text(
-                      'Jadwal Ambil Obat',
-                      style: textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: HistoryNavigationCard(
+                            icon: FontAwesomeIcons.calendarCheck,
+                            title: 'Riwayat Terapi',
+                            subtitle: 'Lihat semua jadwal terapi Anda',
+                            color: Colors.blue.shade700,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryJadwalScreen(
+                                    tipeJadwal: TipeJadwal.terapi,
+                                    id: authData.id,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: TSizes.spaceBtwItems),
+                        Expanded(
+                          child: HistoryNavigationCard(
+                            icon: FontAwesomeIcons.pills,
+                            title: 'Riwayat Ambil Obat',
+                            subtitle: 'Lihat semua jadwal ambil obat anda',
+                            color: Colors.green.shade700,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryJadwalScreen(
+                                    tipeJadwal: TipeJadwal.ambilObat,
+                                    id: authData.id,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: TSizes.smallSpace),
-                    CardJadwal(
-                      tipeJadwal: TipeJadwal.ambilObat,
-                      id: authData.id,
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwSections * 1.5),
 
-                    /*
-                ==========================================
-                Container Informasi terbaru
-                ==========================================
-                */
                     Text(
                       'Informasi Terbaru',
-                      style: textTheme.bodyLarge!.copyWith(
+                      style: textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: TSizes.smallSpace),
+                    const SizedBox(height: TSizes.spaceBtwItems),
                     const InformationSlider(),
-                    const SizedBox(height: TSizes.mediumSpace),
                   ],
                 );
               },
               error: (error, stack) =>
                   Center(child: Text('Terjadi kesalahan: $error')),
               loading: () => const Center(
-                heightFactor: 5,
+                heightFactor: 10,
                 child: CircularProgressIndicator(),
               ),
             ),

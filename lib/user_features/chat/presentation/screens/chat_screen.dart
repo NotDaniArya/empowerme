@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:new_empowerme/user_features/chat/domain/entities/chat_message.dart';
 
-import '../../../../pendamping_features/chat/presentation/providers/nonpasien_chat_provider.dart';
 import '../../../../utils/constant/colors.dart';
+import '../providers/chat_provider.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String contactId;

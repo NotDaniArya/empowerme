@@ -78,7 +78,7 @@ class ChatListScreen extends ConsumerWidget {
                           MaterialPageRoute(
                             builder: (context) => ChatScreen(
                               contactId: contact.id,
-                              contactName: contact.name,
+                              contactName: namaKontak,
                             ),
                           ),
                         );

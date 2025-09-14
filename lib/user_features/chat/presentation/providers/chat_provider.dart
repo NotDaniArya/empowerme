@@ -74,7 +74,7 @@ final chatContactsProvider =
       () => ChatContactsViewModel(),
     );
 
-// --- ViewModel untuk pesan dalam satu chat (TELAH DIPERBARUI) ---
+// --- ViewModel untuk pesan dalam satu chat (TELAH DIPERBARUI SECARA TOTAL) ---
 class ChatMessagesViewModel
     extends FamilyNotifier<AsyncValue<List<ChatMessage>>, String> {
   StreamSubscription? _subscription;
@@ -88,17 +88,25 @@ class ChatMessagesViewModel
     _subscription = ref.watch(chatServiceProvider).incomingMessages.listen((
       message,
     ) {
-      // --- PERBAIKAN UTAMA DI SINI ---
-      // 1. Abaikan pesan jika pengirimnya adalah pengguna saat ini.
-      //    Pembaruan optimis sudah menanganinya.
+      // ===================================================================
+      // PERBAIKAN UTAMA & DEFINITIF UNTUK MASALAH DUPLIKAT
+      // ===================================================================
+      //
+      // 1. Abaikan pesan jika pengirimnya (`from`) adalah pengguna saat ini.
+      //    Pembaruan optimis di `sendMessage` sudah menangani pesan kita
+      //    sendiri, jadi kita tidak perlu memproses gema dari server.
+      //    Inilah yang mencegah gelembung obrolan kedua muncul.
       if (message.from == _currentUserId) {
-        return;
+        return; // Hentikan eksekusi jika pesan ini dari kita sendiri
       }
 
-      // 2. Hanya proses pesan yang relevan dengan obrolan yang sedang dibuka.
-      if (message.from == contactId && message.to == _currentUserId) {
+      // 2. Hanya proses pesan jika pengirimnya adalah kontak yang obrolannya
+      //    sedang dibuka. Ini memastikan pesan dari obrolan lain tidak
+      //    muncul di layar yang salah.
+      if (message.from == contactId) {
         final currentMessages = state.valueOrNull ?? [];
-        // Pemeriksaan ID tetap ada sebagai lapisan keamanan tambahan.
+
+        // Cek ID untuk memastikan pesan belum ada (lapisan keamanan tambahan)
         if (!currentMessages.any((m) => m.messageId == message.messageId)) {
           state = AsyncValue.data([...currentMessages, message]);
         }
@@ -130,7 +138,7 @@ class ChatMessagesViewModel
   Future<void> sendMessage(String text) async {
     if (_currentUserId == null) return;
 
-    // Buat pesan baru dengan ID unik
+    // Buat pesan baru dengan ID unik dari sisi klien
     final message = ChatMessage(
       messageId: const Uuid().v4(),
       from: _currentUserId!,
@@ -140,7 +148,7 @@ class ChatMessagesViewModel
       type: MessageType.sent,
     );
 
-    // Optimistic update: tambahkan pesan ke UI secara langsung
+    // Pembaruan Optimis: tambahkan pesan ke UI secara langsung
     final currentMessages = state.valueOrNull ?? [];
     state = AsyncValue.data([...currentMessages, message]);
 
