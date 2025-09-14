@@ -12,6 +12,16 @@ abstract class ChatLocalDataSource {
   Future<void> saveContacts(List<ChatContact> contacts);
 
   Future<List<ChatContact>> getContacts();
+
+  Future<void> updateContactActivity(String contactId);
+
+  Future<Map<String, int>> getAllContactActivities();
+
+  Future<void> incrementUnreadCount(String contactId);
+
+  Future<void> clearUnreadCount(String contactId);
+
+  Future<Map<String, int>> getAllUnreadCounts();
 }
 
 class ChatLocalDataSourceImpl implements ChatLocalDataSource {
@@ -19,34 +29,25 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
 
   const ChatLocalDataSourceImpl({required this.authLocalDataSource});
 
-  Future<Box<ChatMessageModel>> _getChatBox(String contactId) async {
-    final boxName = 'chat_${contactId.replaceAll('-', '_')}';
-    if (Hive.isBoxOpen(boxName)) {
-      return Hive.box<ChatMessageModel>(boxName);
-    }
-    return await Hive.openBox<ChatMessageModel>(boxName);
-  }
+  final String _contactsBoxName = 'chat_contacts';
+  final String _activityBoxName = 'chat_activity';
+  final String _unreadCountBoxName = 'chat_unread_count';
 
-  Future<Box<String>> _getContactsBox() async {
-    const boxName = 'chat_contacts';
-    if (Hive.isBoxOpen(boxName)) {
-      return Hive.box<String>(boxName);
-    }
-    return await Hive.openBox<String>(boxName);
-  }
+  String _chatBoxName(String contactId) => 'chat_with_$contactId';
 
   @override
   Future<void> saveMessage(ChatMessageModel message) async {
     final currentUserId = await authLocalDataSource.getId();
+    if (currentUserId == null) return;
 
     final contactId = message.from == currentUserId ? message.to : message.from;
-    final box = await _getChatBox(contactId);
+    final box = await Hive.openBox<ChatMessageModel>(_chatBoxName(contactId));
     await box.put(message.messageId, message);
   }
 
   @override
   Future<List<ChatMessageModel>> getMessageHistory(String contactId) async {
-    final box = await _getChatBox(contactId);
+    final box = await Hive.openBox<ChatMessageModel>(_chatBoxName(contactId));
     final messages = box.values.toList();
     messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     return messages;
@@ -54,15 +55,58 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
 
   @override
   Future<List<ChatContact>> getContacts() async {
-    final box = await _getContactsBox();
-    return box.values.map((id) => ChatContact(id: id, name: id)).toList();
+    final contactsBox = await Hive.openBox<String>(_contactsBoxName);
+    final unreadBox = await Hive.openBox<int>(_unreadCountBoxName);
+
+    final List<ChatContact> contacts = [];
+    for (var key in contactsBox.keys) {
+      contacts.add(
+        ChatContact(
+          id: key as String,
+          name: contactsBox.get(key)!,
+          unreadCount: unreadBox.get(key) ?? 0,
+        ),
+      );
+    }
+    return contacts;
   }
 
   @override
   Future<void> saveContacts(List<ChatContact> contacts) async {
-    final box = await _getContactsBox();
+    final box = await Hive.openBox<String>(_contactsBoxName);
     await box.clear();
-    final contactsMap = {for (var c in contacts) c.id: c.id};
+    final contactsMap = {for (var c in contacts) c.id: c.name};
     await box.putAll(contactsMap);
+  }
+
+  @override
+  Future<void> updateContactActivity(String contactId) async {
+    final box = await Hive.openBox<int>(_activityBoxName);
+    await box.put(contactId, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  @override
+  Future<Map<String, int>> getAllContactActivities() async {
+    final box = await Hive.openBox<int>(_activityBoxName);
+    return box.toMap().cast<String, int>();
+  }
+
+  @override
+  Future<void> incrementUnreadCount(String contactId) async {
+    final box = await Hive.openBox<int>(_unreadCountBoxName);
+    final currentCount = box.get(contactId) ?? 0;
+    await box.put(contactId, currentCount + 1);
+  }
+
+  @override
+  Future<void> clearUnreadCount(String contactId) async {
+    final box = await Hive.openBox<int>(_unreadCountBoxName);
+    await box.put(contactId, 0);
+  }
+
+  @override
+  Future<Map<String, int>> getAllUnreadCounts() async {
+    final box = await Hive.openBox<int>(_unreadCountBoxName);
+    return box.toMap().cast<String, int>();
   }
 }

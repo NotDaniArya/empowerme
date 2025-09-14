@@ -68,7 +68,7 @@ class _KonselorNavigationMenuState extends State<KonselorNavigationMenu> {
               _buildNavItem(
                 icon: FontAwesomeIcons.solidUser,
                 label: 'Profile',
-                index: 2,
+                index: 1,
               ),
             ],
           ),

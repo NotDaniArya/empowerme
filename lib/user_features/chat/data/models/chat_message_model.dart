@@ -62,6 +62,18 @@ class ChatMessageModel extends HiveObject {
     );
   }
 
+  // --- FACTORY CONSTRUCTOR BARU UNTUK KONVERSI DARI ENTITY ---
+  factory ChatMessageModel.fromEntity(ChatMessage entity) {
+    return ChatMessageModel(
+      messageId: entity.messageId,
+      from: entity.from,
+      to: entity.to,
+      text: entity.text,
+      timestamp: entity.timestamp,
+      type: entity.type,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'messageId': messageId,

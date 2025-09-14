@@ -2,6 +2,7 @@ import 'package:new_empowerme/user_features/chat/domain/entities/chat_contact.da
 import 'package:new_empowerme/user_features/chat/domain/entities/chat_message.dart';
 
 import '../../../../core/failure.dart';
+import '../../../../pendamping_features/daftar_pasien/domain/entities/pasien.dart';
 
 abstract class ChatRepository {
   Future<(void, Failure?)> connect(String userId);
@@ -12,11 +13,15 @@ abstract class ChatRepository {
 
   Future<(void, Failure?)> sendMessage(ChatMessage message);
 
-  Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(String contactId);
-
   Future<(List<ChatMessage>?, Failure?)> getLocalMessageHistory(
     String contactId,
   );
 
-  Future<(List<ChatContact>?, Failure?)> getChatContacts();
+  Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(String contactId);
+
+  Future<(List<ChatContact>?, Failure?)> getPasienChatContacts();
+
+  Future<(List<Pasien>?, Failure?)> getSortedPatientList();
+
+  Future<(void, Failure?)> clearUnreadCount(String contactId);
 }

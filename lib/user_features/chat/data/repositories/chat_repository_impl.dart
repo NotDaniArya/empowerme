@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/core/failure.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 
+import '../../../../pendamping_features/daftar_pasien/domain/entities/pasien.dart';
+import '../../../../pendamping_features/daftar_pasien/domain/repositories/pasien_repository.dart';
 import '../../domain/entities/chat_contact.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/chat_repository.dart';
@@ -12,15 +14,23 @@ import '../models/chat_message_model.dart';
 class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource remoteDataSource;
   final ChatLocalDataSource localDataSource;
+  final PasienRepository pasienRepository;
   final Ref ref;
 
   String? get _currentUserId => ref.read(authNotifierProvider).valueOrNull?.id;
 
-  ChatRepositoryImpl(this.remoteDataSource, this.localDataSource, this.ref);
+  ChatRepositoryImpl(
+    this.remoteDataSource,
+    this.localDataSource,
+    this.pasienRepository,
+    this.ref,
+  );
 
   @override
   Stream<ChatMessage> get incomingMessages =>
       remoteDataSource.incomingMessages.asyncMap((messageModel) async {
+        await localDataSource.incrementUnreadCount(messageModel.from);
+        await localDataSource.updateContactActivity(messageModel.from);
         await localDataSource.saveMessage(messageModel);
         return messageModel.toEntity();
       });
@@ -41,18 +51,62 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<(List<ChatContact>?, Failure?)> getChatContacts() async {
-    final userId = _currentUserId;
-    if (userId == null) {
-      return (null, const Failure('Sesi pengguna tidak valid.'));
-    }
+  Future<(void, Failure?)> clearUnreadCount(String contactId) async {
     try {
-      final remoteContacts = await remoteDataSource.getChatContacts(userId);
-      await localDataSource.saveContacts(remoteContacts);
-      return (remoteContacts, null);
-    } on Failure catch (f) {
-      final localContacts = await localDataSource.getContacts();
-      return (localContacts, f);
+      await localDataSource.clearUnreadCount(contactId);
+      return (null, null);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(List<ChatContact>?, Failure?)> getPasienChatContacts() async {
+    try {
+      const pendamping = ChatContact(id: '000005', name: 'Pendamping');
+      const konselor = ChatContact(id: '000006', name: 'Konselor');
+
+      final activityData = await localDataSource.getAllContactActivities();
+      final unreadData = await localDataSource.getAllUnreadCounts();
+
+      final defaultContacts = [pendamping, konselor];
+
+      var contactsWithData = defaultContacts.map((c) {
+        return c.copyWith(unreadCount: unreadData[c.id] ?? 0);
+      }).toList();
+
+      contactsWithData.sort((a, b) {
+        final activityA = activityData[a.id] ?? 0;
+        final activityB = activityData[b.id] ?? 0;
+        return activityB.compareTo(activityA);
+      });
+
+      return (contactsWithData, null);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<(List<Pasien>?, Failure?)> getSortedPatientList() async {
+    try {
+      final (pasienList, failure) = await pasienRepository.getAllPasien();
+      if (failure != null) {
+        return (null, failure);
+      }
+
+      final activityData = await localDataSource.getAllContactActivities();
+
+      final validPasienList = pasienList ?? [];
+      validPasienList.sort((a, b) {
+        final activityA = activityData[a.id] ?? 0;
+        final activityB = activityData[b.id] ?? 0;
+        return activityB.compareTo(activityA);
+      });
+
+      return (validPasienList, null);
+    } catch (e) {
+      return (null, Failure(e.toString()));
     }
   }
 
@@ -104,14 +158,8 @@ class ChatRepositoryImpl implements ChatRepository {
   @override
   Future<(void, Failure?)> sendMessage(ChatMessage message) async {
     try {
-      final messageModel = ChatMessageModel(
-        messageId: message.messageId,
-        from: message.from,
-        to: message.to,
-        text: message.text,
-        timestamp: message.timestamp,
-        type: message.type,
-      );
+      final messageModel = ChatMessageModel.fromEntity(message);
+      await localDataSource.updateContactActivity(message.to);
       await localDataSource.saveMessage(messageModel);
       await remoteDataSource.sendMessage(messageModel);
       return (null, null);

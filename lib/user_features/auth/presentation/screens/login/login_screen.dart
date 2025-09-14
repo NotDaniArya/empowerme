@@ -113,6 +113,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onSaved: (value) {
                           _enteredEmail = value!;
                         },
+                        maxLength: 50,
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
                       TextFormField(
@@ -138,7 +139,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           isDense: true,
                         ),
-                        maxLength: 15,
+                        maxLength: 30,
                         autocorrect: false,
                         validator: (value) {
                           if (value == null ||

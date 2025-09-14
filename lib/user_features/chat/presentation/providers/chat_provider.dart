@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/failure.dart';
+import '../../../../pendamping_features/daftar_pasien/presentation/providers/pasien_provider.dart';
 import '../../../../utils/shared_providers/provider.dart';
+import '../../../auth/domain/entities/auth.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../data/datasources/chat_local_datasource.dart';
 import '../../data/datasources/chat_remote_datasource.dart';
@@ -23,9 +26,11 @@ final chatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>((ref) {
 });
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
+  final pasienRepository = ref.watch(pasienRepositoryProvider);
   return ChatRepositoryImpl(
     ref.watch(chatRemoteDataSourceProvider),
     ref.watch(chatLocalDataSourceProvider),
+    pasienRepository,
     ref,
   );
 });
@@ -46,18 +51,62 @@ final chatServiceProvider = Provider((ref) {
   return chatRepository;
 });
 
-class ChatContactsViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
+class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   @override
   AsyncValue<List<ChatContact>> build() {
     ref.watch(chatServiceProvider);
-    _fetchContacts();
+    final userRole =
+        ref.watch(authNotifierProvider).valueOrNull?.role ?? UserRole.unknown;
+    _fetchContactsByRole(userRole);
     return const AsyncValue.loading();
   }
 
-  Future<void> _fetchContacts() async {
+  Future<void> _fetchContactsByRole(UserRole role) async {
     state = const AsyncValue.loading();
     final repo = ref.read(chatRepositoryProvider);
-    final (contacts, failure) = await repo.getChatContacts();
+
+    switch (role) {
+      case UserRole.pasien:
+        final (contacts, failure) = await repo.getPasienChatContacts();
+        _updateState(contacts, failure);
+        break;
+      case UserRole.pendamping:
+        final (pasienList, failure) = await repo.getSortedPatientList();
+        final contacts = pasienList
+            ?.map((p) => ChatContact(id: p.id, name: p.name))
+            .toList();
+        _updateState(contacts, failure);
+        break;
+      case UserRole.konselor:
+        final (pasienList, failure) = await repo.getSortedPatientList();
+        final filteredList = pasienList
+            ?.where((p) => p.status == 'Pengguna Baru')
+            .toList();
+        final contacts = filteredList
+            ?.map((p) => ChatContact(id: p.id, name: p.name))
+            .toList();
+        _updateState(contacts, failure);
+        break;
+      default:
+        state = AsyncValue.data([]);
+    }
+  }
+
+  Future<void> markAsRead(String contactId) async {
+    await ref.read(chatRepositoryProvider).clearUnreadCount(contactId);
+
+    state = state.whenData((contacts) {
+      return [
+        for (final contact in contacts)
+          if (contact.id == contactId)
+            contact.copyWith(unreadCount: 0)
+          else
+            contact,
+      ];
+    });
+  }
+
+  void _updateState(List<ChatContact>? contacts, Failure? failure) {
     if (failure != null) {
       state = AsyncValue.error(failure, StackTrace.current);
     } else {
@@ -66,10 +115,12 @@ class ChatContactsViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   }
 }
 
-final chatContactsProvider =
-    NotifierProvider<ChatContactsViewModel, AsyncValue<List<ChatContact>>>(
-      () => ChatContactsViewModel(),
+final chatListProvider =
+    NotifierProvider<ChatListViewModel, AsyncValue<List<ChatContact>>>(
+      () => ChatListViewModel(),
     );
+
+final chatSearchQueryProvider = StateProvider<String>((ref) => '');
 
 class ChatMessagesViewModel
     extends FamilyNotifier<AsyncValue<List<ChatMessage>>, String> {
@@ -78,13 +129,8 @@ class ChatMessagesViewModel
   @override
   AsyncValue<List<ChatMessage>> build(String contactId) {
     _listenForIncomingMessages();
-
     _fetchInitialMessages();
-
-    ref.onDispose(() {
-      _subscription?.cancel();
-    });
-
+    ref.onDispose(() => _subscription?.cancel());
     return const AsyncValue.loading();
   }
 
@@ -94,16 +140,13 @@ class ChatMessagesViewModel
 
   Future<void> _fetchInitialMessages() async {
     state = const AsyncValue.loading();
-
     final (localMessages, localFailure) = await _repo.getLocalMessageHistory(
       arg,
     );
 
     if (localMessages != null && localMessages.isNotEmpty) {
       state = AsyncValue.data(localMessages);
-    }
-
-    if (localFailure != null) {
+    } else if (localFailure != null) {
       state = AsyncValue.error(localFailure, StackTrace.current);
     }
 
@@ -111,9 +154,7 @@ class ChatMessagesViewModel
 
     if (syncedMessages != null) {
       state = AsyncValue.data(syncedMessages);
-    }
-
-    if (remoteFailure != null && syncedMessages == null) {
+    } else if (remoteFailure != null && state.value == null) {
       state = AsyncValue.error(remoteFailure, StackTrace.current);
     }
   }
@@ -121,11 +162,14 @@ class ChatMessagesViewModel
   void _listenForIncomingMessages() {
     _subscription?.cancel();
     _subscription = _repo.incomingMessages.listen((message) {
+      if (message.from == _currentUserId) return;
       if (message.from == arg) {
         final currentMessages = state.valueOrNull ?? [];
         if (!currentMessages.any((m) => m.messageId == message.messageId)) {
           state = AsyncValue.data([...currentMessages, message]);
         }
+      } else {
+        ref.invalidate(chatListProvider);
       }
     });
   }
@@ -141,11 +185,11 @@ class ChatMessagesViewModel
       timestamp: DateTime.now(),
       type: MessageType.sent,
     );
-
     final currentMessages = state.valueOrNull ?? [];
     state = AsyncValue.data([...currentMessages, message]);
 
     await _repo.sendMessage(message);
+    ref.invalidate(chatListProvider);
   }
 }
 
