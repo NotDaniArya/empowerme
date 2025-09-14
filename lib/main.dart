@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:new_empowerme/app_root.dart';
 import 'package:new_empowerme/konselor_navigation_menu.dart';
 import 'package:new_empowerme/pendamping_navigation_menu.dart';
 import 'package:new_empowerme/splash_screen.dart';
@@ -46,7 +47,7 @@ class MyApp extends ConsumerWidget {
       title: 'EmpowerMe',
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: const AuthGate(),
+      home: const AppRoot(),
     );
   }
 }
