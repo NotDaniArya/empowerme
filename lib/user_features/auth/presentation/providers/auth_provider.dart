@@ -1,12 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:new_empowerme/app_root.dart';
 import 'package:new_empowerme/user_features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:new_empowerme/user_features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:new_empowerme/user_features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
 import 'package:new_empowerme/user_features/auth/domain/repositories/auth_repository.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 final secureStorageProvider = Provider((ref) => const FlutterSecureStorage());
 
@@ -133,6 +137,21 @@ class AuthNotifier extends StateNotifier<AsyncValue<Auth?>> {
     final repository = _ref.read(authRepositoryProvider);
     await repository.logout();
     state = const AsyncValue.data(null);
+
+    final context = navigatorKey.currentContext;
+    if (context != null && context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AppRoot()),
+        (route) => false,
+      );
+
+      MyHelperFunction.showToast(
+        context,
+        'Sesi Berakhir',
+        'Sesi Anda telah berakhir. Silakan login kembali.',
+        ToastificationType.info,
+      );
+    }
   }
 }
 

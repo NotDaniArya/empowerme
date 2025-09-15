@@ -47,6 +47,7 @@ class MyApp extends ConsumerWidget {
       title: 'EmpowerMe',
       debugShowCheckedModeBanner: false,
       theme: theme,
+      navigatorKey: navigatorKey,
       home: const AppRoot(),
     );
   }
