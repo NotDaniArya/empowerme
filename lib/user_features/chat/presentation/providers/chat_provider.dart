@@ -80,7 +80,7 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
       case UserRole.konselor:
         final (pasienList, failure) = await repo.getSortedPatientList();
         final filteredList = pasienList
-            ?.where((p) => p.status == 'Pengguna Baru')
+            ?.where((p) => p.status == 'PENGGUNA BARU')
             .toList();
         final contacts = filteredList
             ?.map((p) => ChatContact(id: p.id, name: p.name))
@@ -88,7 +88,7 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
         _updateState(contacts, failure);
         break;
       default:
-        state = AsyncValue.data([]);
+        state = const AsyncValue.data([]);
     }
   }
 

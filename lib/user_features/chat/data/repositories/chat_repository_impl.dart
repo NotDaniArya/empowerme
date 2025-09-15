@@ -137,8 +137,9 @@ class ChatRepositoryImpl implements ChatRepository {
     String contactId,
   ) async {
     final userId = _currentUserId;
-    if (userId == null)
+    if (userId == null) {
       return (null, const Failure('Sesi pengguna tidak valid.'));
+    }
 
     try {
       final remoteHistoryModels = await remoteDataSource.getMessageHistory(
