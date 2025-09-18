@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/verify_email.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
@@ -219,21 +218,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     const SizedBox(height: TSizes.mediumSpace),
                     const OrDivider(),
                     const SizedBox(height: TSizes.mediumSpace),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: TColors.secondaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(8),
-                        ),
-                      ),
-                      onPressed: () {},
-                      icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                        color: Colors.redAccent,
-                      ),
-                      label: const Text('Daftar dengan google'),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
                     const MyTextButton(
                       text: Text('Sudah Punya Akun?'),
                       buttonText: Text('Masuk sekarang'),

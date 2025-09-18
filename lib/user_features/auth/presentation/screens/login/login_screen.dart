@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/main.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/register_screen.dart';
@@ -154,21 +153,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _enteredPass = value!;
                         },
                       ),
-                      const SizedBox(height: TSizes.smallSpace),
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                        ),
-                        child: Text(
-                          'Lupa password?',
-                          textAlign: TextAlign.end,
-                          style: textTheme.bodyMedium!.copyWith(
-                            color: TColors.primaryColor,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -195,26 +179,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: TSizes.mediumSpace),
                 const OrDivider(),
-                const SizedBox(height: TSizes.mediumSpace),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: TColors.secondaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(8),
-                    ),
-                  ),
-                  onPressed: () {},
-                  icon: const FaIcon(
-                    FontAwesomeIcons.google,
-                    color: Colors.redAccent,
-                  ),
-                  label: const Text('Masuk dengan google'),
-                ),
                 const MyTextButton(
                   text: Text('Belum Punya Akun?'),
                   buttonText: Text('Daftar sekarang'),
                   route: RegisterScreen(),
                 ),
+                const SizedBox(height: TSizes.spaceBtwSections),
               ],
             ),
           ),
