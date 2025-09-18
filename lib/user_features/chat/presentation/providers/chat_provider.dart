@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/failure.dart';
+import '../../../../pendamping_features/daftar_pasien/domain/entities/pasien.dart';
 import '../../../../pendamping_features/daftar_pasien/presentation/providers/pasien_provider.dart';
 import '../../../../utils/shared_providers/provider.dart';
 import '../../../auth/domain/entities/auth.dart';
@@ -64,32 +66,69 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   Future<void> _fetchContactsByRole(UserRole role) async {
     state = const AsyncValue.loading();
     final repo = ref.read(chatRepositoryProvider);
+    final profileState = ref.read(profileViewModel);
 
     switch (role) {
       case UserRole.pasien:
-        final (contacts, failure) = await repo.getPasienChatContacts();
+        var (contacts, failure) = await repo.getPasienChatContacts();
+        if (profileState.profile?.status == 'PENGGUNA LAMA') {
+          contacts = contacts?.where((c) => c.id != '000006').toList();
+        }
         _updateState(contacts, failure);
         break;
+
       case UserRole.pendamping:
-        final (pasienList, failure) = await repo.getSortedPatientList();
-        final contacts = pasienList
-            ?.map((p) => ChatContact(id: p.id, name: p.name))
-            .toList();
+        final (contacts, failure) = await repo.getSortedPatientList();
         _updateState(contacts, failure);
         break;
+
       case UserRole.konselor:
-        final (pasienList, failure) = await repo.getSortedPatientList();
-        final filteredList = pasienList
+        final (pasienList, failure) = await ref
+            .read(pasienRepositoryProvider)
+            .getAllPasien();
+        if (failure != null) {
+          _updateState(null, failure);
+          return;
+        }
+
+        final filteredPasien = pasienList
             ?.where((p) => p.status == 'PENGGUNA BARU')
             .toList();
-        final contacts = filteredList
-            ?.map((p) => ChatContact(id: p.id, name: p.name))
-            .toList();
-        _updateState(contacts, failure);
+        final contacts = await _getSortedContactsFromPasienList(
+          filteredPasien ?? [],
+        );
+        _updateState(contacts, null);
         break;
+
       default:
         state = const AsyncValue.data([]);
     }
+  }
+
+  Future<List<ChatContact>> _getSortedContactsFromPasienList(
+    List<Pasien> pasienList,
+  ) async {
+    final activityData = await ref
+        .read(chatLocalDataSourceProvider)
+        .getAllContactActivities();
+    final unreadData = await ref
+        .read(chatLocalDataSourceProvider)
+        .getAllUnreadCounts();
+
+    final contactList = pasienList.map((pasien) {
+      return ChatContact(
+        id: pasien.id,
+        name: pasien.name,
+        unreadCount: unreadData[pasien.id] ?? 0,
+      );
+    }).toList();
+
+    contactList.sort((a, b) {
+      final activityA = activityData[a.id] ?? 0;
+      final activityB = activityData[b.id] ?? 0;
+      return activityB.compareTo(activityA);
+    });
+    return contactList;
   }
 
   Future<void> markAsRead(String contactId) async {

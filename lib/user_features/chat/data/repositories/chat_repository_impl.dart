@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/core/failure.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 
-import '../../../../pendamping_features/daftar_pasien/domain/entities/pasien.dart';
 import '../../../../pendamping_features/daftar_pasien/domain/repositories/pasien_repository.dart';
 import '../../domain/entities/chat_contact.dart';
 import '../../domain/entities/chat_message.dart';
@@ -88,7 +87,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<(List<Pasien>?, Failure?)> getSortedPatientList() async {
+  Future<(List<ChatContact>?, Failure?)> getSortedPatientList() async {
     try {
       final (pasienList, failure) = await pasienRepository.getAllPasien();
       if (failure != null) {
@@ -96,15 +95,25 @@ class ChatRepositoryImpl implements ChatRepository {
       }
 
       final activityData = await localDataSource.getAllContactActivities();
+      final unreadData = await localDataSource.getAllUnreadCounts();
 
       final validPasienList = pasienList ?? [];
-      validPasienList.sort((a, b) {
+
+      final contactList = validPasienList.map((pasien) {
+        return ChatContact(
+          id: pasien.id,
+          name: pasien.name,
+          unreadCount: unreadData[pasien.id] ?? 0,
+        );
+      }).toList();
+
+      contactList.sort((a, b) {
         final activityA = activityData[a.id] ?? 0;
         final activityB = activityData[b.id] ?? 0;
         return activityB.compareTo(activityA);
       });
 
-      return (validPasienList, null);
+      return (contactList, null);
     } catch (e) {
       return (null, Failure(e.toString()));
     }
