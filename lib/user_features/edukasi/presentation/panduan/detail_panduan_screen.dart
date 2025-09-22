@@ -26,12 +26,6 @@ class DetailPanduanScreen extends StatelessWidget {
             expandedHeight: 300.0,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Detail',
-                style: textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               background: CachedNetworkImage(
                 imageUrl: panduan.displayThumbnail,
                 fit: BoxFit.fitHeight,
