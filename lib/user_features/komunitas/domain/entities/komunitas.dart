@@ -24,6 +24,28 @@ class Komunitas extends Equatable {
     this.comments,
   });
 
+  Komunitas copyWith({
+    String? id,
+    String? content,
+    DateTime? createdAt,
+    int? like,
+    bool? statusLike,
+    int? countComment,
+    Pasien? pasien,
+    List<Comment>? comments,
+  }) {
+    return Komunitas(
+      id: id ?? this.id,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      like: like ?? this.like,
+      statusLike: statusLike ?? this.statusLike,
+      countComment: countComment ?? this.countComment,
+      pasien: pasien ?? this.pasien,
+      comments: comments ?? this.comments,
+    );
+  }
+
   @override
   // TODO: implement props
   List<Object?> get props => [

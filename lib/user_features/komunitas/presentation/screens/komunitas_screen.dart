@@ -7,9 +7,7 @@ import 'package:new_empowerme/user_features/komunitas/presentation/screens/widge
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
-import 'package:toastification/toastification.dart';
 
-import '../../../../utils/helper_functions/helper.dart';
 import 'detail_komunitas_screen.dart';
 
 class KomunitasScreen extends ConsumerWidget {
@@ -254,48 +252,26 @@ class KomunitasScreen extends ConsumerWidget {
                       */
                       Row(
                         children: [
-                          postingan.statusLike == false
-                              ? IconButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(komunitasUpdaterProvider.notifier)
-                                        .likeCommunityPosts(
-                                          id: postingan.id,
-                                          onSuccess: () {},
-                                          onError: (error) {
-                                            MyHelperFunction.showToast(
-                                              context,
-                                              'Gagal',
-                                              'Postingan komunitas gagal untuk disukai',
-                                              ToastificationType.error,
-                                            );
-                                          },
-                                        );
-                                  },
-                                  icon: const FaIcon(FontAwesomeIcons.heart),
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(komunitasUpdaterProvider.notifier)
-                                        .unLikeCommunityPosts(
-                                          id: postingan.id,
-                                          onSuccess: () {},
-                                          onError: (error) {
-                                            MyHelperFunction.showToast(
-                                              context,
-                                              'Gagal',
-                                              'Postingan komunitas gagal untuk tidak disukai',
-                                              ToastificationType.error,
-                                            );
-                                          },
-                                        );
-                                  },
-                                  icon: const FaIcon(
-                                    FontAwesomeIcons.solidHeart,
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
+                          IconButton(
+                            onPressed: () {
+                              final notifier = ref.read(
+                                komunitasViewModel.notifier,
+                              );
+                              if (postingan.statusLike) {
+                                notifier.unLikeCommunityPost(id: postingan.id);
+                              } else {
+                                notifier.likeCommunityPost(id: postingan.id);
+                              }
+                            },
+                            icon: FaIcon(
+                              postingan.statusLike
+                                  ? FontAwesomeIcons.solidHeart
+                                  : FontAwesomeIcons.heart,
+                              color: postingan.statusLike
+                                  ? Colors.redAccent
+                                  : null,
+                            ),
+                          ),
                           Text(postingan.like.toString()),
                           const SizedBox(width: TSizes.mediumSpace),
                           const FaIcon(FontAwesomeIcons.comment),

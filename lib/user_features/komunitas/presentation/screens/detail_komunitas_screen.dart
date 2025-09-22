@@ -26,6 +26,12 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
   final commentController = TextEditingController();
 
   @override
+  void dispose() {
+    commentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final komunitasState = ref.watch(komunitasViewModel);
@@ -146,52 +152,30 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                       children: [
                         Row(
                           children: [
-                            currentPost.statusLike == false
-                                ? IconButton(
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                            komunitasUpdaterProvider.notifier,
-                                          )
-                                          .likeCommunityPosts(
-                                            id: currentPost.id,
-                                            onSuccess: () {},
-                                            onError: (error) {
-                                              MyHelperFunction.showToast(
-                                                context,
-                                                'Gagal',
-                                                'Postingan komunitas gagal untuk disukai',
-                                                ToastificationType.error,
-                                              );
-                                            },
-                                          );
-                                    },
-                                    icon: const FaIcon(FontAwesomeIcons.heart),
-                                  )
-                                : IconButton(
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                            komunitasUpdaterProvider.notifier,
-                                          )
-                                          .unLikeCommunityPosts(
-                                            id: currentPost.id,
-                                            onSuccess: () {},
-                                            onError: (error) {
-                                              MyHelperFunction.showToast(
-                                                context,
-                                                'Gagal',
-                                                'Postingan komunitas gagal untuk tidak disukai',
-                                                ToastificationType.error,
-                                              );
-                                            },
-                                          );
-                                    },
-                                    icon: const FaIcon(
-                                      FontAwesomeIcons.solidHeart,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
+                            IconButton(
+                              onPressed: () {
+                                final notifier = ref.read(
+                                  komunitasViewModel.notifier,
+                                );
+                                if (currentPost.statusLike) {
+                                  notifier.unLikeCommunityPost(
+                                    id: currentPost.id,
+                                  );
+                                } else {
+                                  notifier.likeCommunityPost(
+                                    id: currentPost.id,
+                                  );
+                                }
+                              },
+                              icon: FaIcon(
+                                currentPost.statusLike
+                                    ? FontAwesomeIcons.solidHeart
+                                    : FontAwesomeIcons.heart,
+                                color: currentPost.statusLike
+                                    ? Colors.redAccent
+                                    : null,
+                              ),
+                            ),
                             Text(currentPost.like.toString()),
                           ],
                         ),
@@ -256,9 +240,27 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-          child: Text(
-            'Terjadi kesalahan: ${state.error}',
-            textAlign: TextAlign.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Terjadi kesalahan: ${state.error}',
+                textAlign: TextAlign.center,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(commentViewModel(widget.komunitas.id));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -439,7 +441,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
   }
 
   void submitComment(String postId) {
-    if (commentController.text.isEmpty) {
+    if (commentController.text.trim().isEmpty) {
       return;
     }
 
@@ -449,6 +451,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
           id: widget.komunitas.id,
           comment: commentController.text,
           onSuccess: () {
+            commentController.clear();
             if (!mounted) return;
             MyHelperFunction.showToast(
               context,

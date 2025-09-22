@@ -72,6 +72,54 @@ class KomunitasViewModel extends Notifier<KomunitasState> {
     state = state.copyWith(isLoading: true);
     await _fetchPostinganKomunitas();
   }
+
+  Future<void> likeCommunityPost({required String id}) async {
+    final originalState = state;
+    final posts = state.communityPosts ?? [];
+
+    final updatedPosts = [
+      for (final post in posts)
+        if (post.id == id)
+          post.copyWith(statusLike: true, like: post.like + 1)
+        else
+          post,
+    ];
+    state = state.copyWith(communityPosts: updatedPosts);
+
+    try {
+      final (_, failure) = await _repository.likeCommunityPost(id: id);
+      if (failure != null) {
+        throw failure;
+      }
+    } catch (e) {
+      state = originalState;
+      print("Gagal menyukai postingan: $e");
+    }
+  }
+
+  Future<void> unLikeCommunityPost({required String id}) async {
+    final originalState = state;
+    final posts = state.communityPosts ?? [];
+
+    final updatedPosts = [
+      for (final post in posts)
+        if (post.id == id)
+          post.copyWith(statusLike: false, like: post.like - 1)
+        else
+          post,
+    ];
+    state = state.copyWith(communityPosts: updatedPosts);
+
+    try {
+      final (_, failure) = await _repository.unLikeCommunityPost(id: id);
+      if (failure != null) {
+        throw failure;
+      }
+    } catch (e) {
+      state = originalState;
+      print("Gagal tidak menyukai postingan: $e");
+    }
+  }
 }
 
 final komunitasViewModel = NotifierProvider<KomunitasViewModel, KomunitasState>(
@@ -196,38 +244,6 @@ class KomunitasUpdater extends Notifier<void> {
     } else {
       ref.invalidate(komunitasViewModel);
       ref.invalidate(commentViewModel);
-
-      onSuccess();
-    }
-  }
-
-  Future<void> likeCommunityPosts({
-    required String id,
-    required VoidCallback onSuccess,
-    required Function(String) onError,
-  }) async {
-    final (_, failure) = await _repository.likeCommunityPost(id: id);
-
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(komunitasViewModel);
-
-      onSuccess();
-    }
-  }
-
-  Future<void> unLikeCommunityPosts({
-    required String id,
-    required VoidCallback onSuccess,
-    required Function(String) onError,
-  }) async {
-    final (_, failure) = await _repository.unLikeCommunityPost(id: id);
-
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(komunitasViewModel);
 
       onSuccess();
     }
