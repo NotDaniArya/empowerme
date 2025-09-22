@@ -117,7 +117,7 @@ class KomunitasScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: TColors.backgroundColor,
+      backgroundColor: TColors.secondaryColor,
 
       /*
       ==========================================
@@ -139,7 +139,7 @@ class KomunitasScreen extends ConsumerWidget {
           },
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(
-              vertical: TSizes.scaffoldPadding,
+              vertical: TSizes.smallSpace / 2,
             ),
             itemCount: komunitasState.communityPosts!.length,
             itemBuilder: (context, index) {
@@ -161,8 +161,8 @@ class KomunitasScreen extends ConsumerWidget {
                 ==========================================
                 */
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: TSizes.smallSpace),
-                  color: TColors.primaryColor.withOpacity(0.1),
+                  margin: const EdgeInsets.only(bottom: TSizes.smallSpace / 2),
+                  color: Colors.white,
                   padding: const EdgeInsetsGeometry.all(TSizes.mediumSpace),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -206,7 +206,9 @@ class KomunitasScreen extends ConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     postingan.pasien!.name,
-                                    style: textTheme.labelLarge,
+                                    style: textTheme.labelLarge!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -217,7 +219,7 @@ class KomunitasScreen extends ConsumerWidget {
                           const SizedBox(width: TSizes.spaceBtwSections),
                           Text(
                             DateFormat(
-                              'd MMMM yyyy, HH:mm',
+                              'd-MM-yyyy, HH:mm',
                               'id_ID',
                             ).format(postingan.createdAt),
                             style: textTheme.labelMedium!.copyWith(
@@ -267,14 +269,19 @@ class KomunitasScreen extends ConsumerWidget {
                               postingan.statusLike
                                   ? FontAwesomeIcons.solidHeart
                                   : FontAwesomeIcons.heart,
+                              size: 18,
                               color: postingan.statusLike
                                   ? Colors.redAccent
-                                  : null,
+                                  : Colors.black45,
                             ),
                           ),
                           Text(postingan.like.toString()),
                           const SizedBox(width: TSizes.mediumSpace),
-                          const FaIcon(FontAwesomeIcons.comment),
+                          const FaIcon(
+                            FontAwesomeIcons.comment,
+                            size: 18,
+                            color: Colors.black45,
+                          ),
                           const SizedBox(width: TSizes.mediumSpace),
                           Text(postingan.countComment.toString()),
                         ],

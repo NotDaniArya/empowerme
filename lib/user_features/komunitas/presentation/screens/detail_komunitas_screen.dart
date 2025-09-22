@@ -109,16 +109,18 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: TSizes.mediumSpace),
+                        const SizedBox(width: TSizes.smallSpace),
                         Expanded(
                           child: Text(
                             currentPost.pasien!.name,
-                            style: textTheme.labelLarge,
+                            style: textTheme.labelLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Text(
                           DateFormat(
-                            'd MMMM yyyy, HH:mm',
+                            'd-MM-yyyy, HH:mm',
                             'id_ID',
                           ).format(currentPost.createdAt),
                           style: textTheme.labelMedium!.copyWith(
@@ -127,7 +129,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwItems),
 
                     /*
                     ==========================================
@@ -141,7 +143,7 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         style: textTheme.bodyMedium,
                       ),
                     ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwItems),
 
                     /*
                     ==========================================
@@ -171,9 +173,10 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                                 currentPost.statusLike
                                     ? FontAwesomeIcons.solidHeart
                                     : FontAwesomeIcons.heart,
+                                size: 18,
                                 color: currentPost.statusLike
                                     ? Colors.redAccent
-                                    : null,
+                                    : Colors.black45,
                               ),
                             ),
                             Text(currentPost.like.toString()),
@@ -182,7 +185,11 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
                         const SizedBox(width: 15),
                         Row(
                           children: [
-                            const FaIcon(FontAwesomeIcons.comment, size: 18),
+                            const FaIcon(
+                              FontAwesomeIcons.comment,
+                              size: 18,
+                              color: Colors.black45,
+                            ),
                             const SizedBox(width: 15),
                             Text(currentPost.countComment.toString()),
                           ],
@@ -303,6 +310,8 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: TSizes.spaceBtwItems),
+
             /*
                     ==========================================
                     Header threads
