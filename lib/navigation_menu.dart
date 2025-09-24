@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/screen/edukasi_screen.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/home_screen.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/komunitas_screen.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/create_post_sheet.dart';
 import 'package:new_empowerme/user_features/profile/presentation/profile_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 
@@ -92,6 +93,27 @@ class _NavigationMenuState extends State<NavigationMenu> {
           ),
         ),
       ),
+      floatingActionButton: _selectedIndex == 2
+          ? FloatingActionButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) => const CreatePostSheet(),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16), // Bentuk sedikit kotak
+              ),
+              backgroundColor: TColors.primaryColor,
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 

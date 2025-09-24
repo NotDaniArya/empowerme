@@ -294,26 +294,6 @@ class KomunitasScreen extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 80), // Sesuaikan margin
-        child: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              builder: (context) => const CreatePostSheet(),
-            );
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16), // Bentuk sedikit kotak
-          ),
-          backgroundColor: TColors.primaryColor,
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
-      ),
     );
   }
 }
