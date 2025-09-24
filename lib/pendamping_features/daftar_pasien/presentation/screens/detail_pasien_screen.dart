@@ -44,160 +44,164 @@ class _DetailPasienScreenState extends ConsumerState<DetailPasienScreen> {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildProfileHeader(context, detailPasien),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildProfileHeader(context, detailPasien),
 
-            Padding(
-              padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle(context, 'Informasi Detail'),
-                  const SizedBox(height: TSizes.spaceBtwItems),
+              Padding(
+                padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle(context, 'Informasi Detail'),
+                    const SizedBox(height: TSizes.spaceBtwItems),
 
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          _buildInfoTile(
+                            icon: Icons.email_outlined,
+                            title: 'Email Pasien',
+                            value: currentPasien.email,
+                          ),
+                          _buildInfoTile(
+                            icon: Icons.medication_outlined,
+                            title: 'Jenis Obat',
+                            value: currentPasien.drug,
+                          ),
+                          _buildInfoTile(
+                            icon: Icons.info_outline,
+                            title: 'Status',
+                            value:
+                                currentPasien.status[0].toUpperCase() +
+                                currentPasien.status.substring(1).toLowerCase(),
+                            valueColor: TColors.primaryColor,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
+                    const SizedBox(height: TSizes.spaceBtwSections),
+
+                    if (currentPasien.status == 'PENGGUNA BARU')
+                      SizedBox(
+                        width: double.infinity,
+                        child: isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ElevatedButton.icon(
+                                icon: const Icon(Icons.edit_note),
+                                label: const Text('Ubah Status Pasien'),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        'Ubah Status Pasien',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      content: const Text(
+                                        'Ubah status menjadi Pasien Lama?',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'Batal',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            ref
+                                                .read(
+                                                  pasienUpdaterProvider
+                                                      .notifier,
+                                                )
+                                                .updateStatus(
+                                                  id: currentPasien.id,
+                                                  onSuccess: () {
+                                                    MyHelperFunction.showToast(
+                                                      context,
+                                                      'Berhasil',
+                                                      'Status pasien berhasil diubah',
+                                                      ToastificationType
+                                                          .success,
+                                                    );
+                                                    Navigator.pop(context);
+                                                  },
+                                                  onError: (error) {
+                                                    MyHelperFunction.showToast(
+                                                      context,
+                                                      'Gagal',
+                                                      'Status pasien gagal diubah',
+                                                      ToastificationType.error,
+                                                    );
+                                                  },
+                                                );
+                                          },
+                                          child: const Text('Ubah'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+                    const SizedBox(height: TSizes.spaceBtwSections),
+
+                    _buildSectionTitle(context, 'Jadwal Pasien'),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+
+                    Row(
                       children: [
-                        _buildInfoTile(
-                          icon: Icons.email_outlined,
-                          title: 'Email Pasien',
-                          value: currentPasien.email,
+                        Expanded(
+                          child: OutlinedButton(
+                            child: const Text('Jadwal Terapi'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryJadwalScreen(
+                                    tipeJadwal: TipeJadwal.terapi,
+                                    id: currentPasien.id,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                        _buildInfoTile(
-                          icon: Icons.medication_outlined,
-                          title: 'Jenis Obat',
-                          value: currentPasien.drug,
-                        ),
-                        _buildInfoTile(
-                          icon: Icons.info_outline,
-                          title: 'Status',
-                          value:
-                              currentPasien.status[0].toUpperCase() +
-                              currentPasien.status.substring(1).toLowerCase(),
-                          valueColor: TColors.primaryColor,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: OutlinedButton(
+                            child: const Text('Jadwal Obat'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryJadwalScreen(
+                                    tipeJadwal: TipeJadwal.ambilObat,
+                                    id: currentPasien.id,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
-
-                  if (currentPasien.status == 'PENGGUNA BARU')
-                    SizedBox(
-                      width: double.infinity,
-                      child: isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : ElevatedButton.icon(
-                              icon: const Icon(Icons.edit_note),
-                              label: const Text('Ubah Status Pasien'),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text(
-                                      'Ubah Status Pasien',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    content: const Text(
-                                      'Ubah status menjadi Pasien Lama?',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text(
-                                          'Batal',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          ref
-                                              .read(
-                                                pasienUpdaterProvider.notifier,
-                                              )
-                                              .updateStatus(
-                                                id: currentPasien.id,
-                                                onSuccess: () {
-                                                  MyHelperFunction.showToast(
-                                                    context,
-                                                    'Berhasil',
-                                                    'Status pasien berhasil diubah',
-                                                    ToastificationType.success,
-                                                  );
-                                                  Navigator.pop(context);
-                                                },
-                                                onError: (error) {
-                                                  MyHelperFunction.showToast(
-                                                    context,
-                                                    'Gagal',
-                                                    'Status pasien gagal diubah',
-                                                    ToastificationType.error,
-                                                  );
-                                                },
-                                              );
-                                        },
-                                        child: const Text('Ubah'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
-
-                  _buildSectionTitle(context, 'Jadwal Pasien'),
-                  const SizedBox(height: TSizes.spaceBtwItems),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          child: const Text('Jadwal Terapi'),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HistoryJadwalScreen(
-                                  tipeJadwal: TipeJadwal.terapi,
-                                  id: currentPasien.id,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton(
-                          child: const Text('Jadwal Obat'),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HistoryJadwalScreen(
-                                  tipeJadwal: TipeJadwal.ambilObat,
-                                  id: currentPasien.id,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

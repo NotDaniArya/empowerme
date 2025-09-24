@@ -43,31 +43,33 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Cari nama pasien...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Cari nama pasien...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                filled: true,
-                fillColor: Colors.white,
               ),
             ),
-          ),
 
-          Expanded(child: _buildBody(context, pasienState)),
-        ],
+            Expanded(child: _buildBody(context, pasienState)),
+          ],
+        ),
       ),
     );
   }

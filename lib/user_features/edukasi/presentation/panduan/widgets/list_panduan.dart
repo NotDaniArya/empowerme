@@ -103,6 +103,8 @@ class ListPanduan extends ConsumerWidget {
         itemCount: state.panduan!.length,
         itemBuilder: (context, index) {
           final panduan = state.panduan![index];
+          print('gambar asli: ${panduan.thumbnail}');
+          print('gambar format: ${panduan.displayThumbnail}');
           return Card(
             elevation: 5,
             color: TColors.secondaryColor,

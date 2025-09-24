@@ -152,131 +152,134 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Pilih Pasien',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              Card(
-                margin: EdgeInsets.zero,
-                child: ListTile(
-                  onTap: _showPatientSearchModal,
-                  leading: const Icon(Icons.person_search),
-                  title: Text(
-                    _selectedPasien?.name ?? 'Pilih salah satu pasien',
-                  ),
-                  trailing: const Icon(Icons.arrow_drop_down),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pilih Pasien',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    onTap: _showPatientSearchModal,
+                    leading: const Icon(Icons.person_search),
+                    title: Text(
+                      _selectedPasien?.name ?? 'Pilih salah satu pasien',
+                    ),
+                    trailing: const Icon(Icons.arrow_drop_down),
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections),
 
-              Text(
-                'Detail Jadwal',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
+                Text(
+                  'Detail Jadwal',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) setState(() => _selectedDate = date);
-                      },
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(
-                        _selectedDate == null
-                            ? 'Pilih Tanggal'
-                            : DateFormat(
-                                'd-MM-yyyy',
-                                'id_ID',
-                              ).format(_selectedDate!),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                          if (date != null)
+                            setState(() => _selectedDate = date);
+                        },
+                        icon: const Icon(Icons.calendar_today),
+                        label: Text(
+                          _selectedDate == null
+                              ? 'Pilih Tanggal'
+                              : DateFormat(
+                                  'd-MM-yyyy',
+                                  'id_ID',
+                                ).format(_selectedDate!),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  OutlinedButton.icon(
-                    onPressed: () async {
-                      final time = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-                      if (time != null) setState(() => _selectedTime = time);
-                    },
-                    icon: const Icon(Icons.access_time),
-                    label: Text(
-                      _selectedTime == null
-                          ? 'Pilih Waktu'
-                          : '${_selectedTime!.format(context)} WITA',
+                    const SizedBox(width: 16),
+                    OutlinedButton.icon(
+                      onPressed: () async {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (time != null) setState(() => _selectedTime = time);
+                      },
+                      icon: const Icon(Icons.access_time),
+                      label: Text(
+                        _selectedTime == null
+                            ? 'Pilih Waktu'
+                            : '${_selectedTime!.format(context)} WITA',
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-
-              TextFormField(
-                controller: _locationController,
-                decoration: const InputDecoration(
-                  labelText: 'Lokasi',
-                  border: OutlineInputBorder(),
+                  ],
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Lokasi tidak boleh kosong.'
-                    : null,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-
-              TextFormField(
-                controller: _meetWithController,
-                decoration: const InputDecoration(
-                  labelText: 'Bertemu Dengan',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Field ini tidak boleh kosong.'
-                    : null,
-              ),
-
-              if (!isTerapi) ...[
                 const SizedBox(height: TSizes.spaceBtwItems),
+
                 TextFormField(
-                  controller: _typeDrugController,
+                  controller: _locationController,
                   decoration: const InputDecoration(
-                    labelText: 'Jenis Obat',
+                    labelText: 'Lokasi',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Jenis obat tidak boleh kosong.'
+                      ? 'Lokasi tidak boleh kosong.'
                       : null,
                 ),
-              ],
+                const SizedBox(height: TSizes.spaceBtwItems),
 
-              const SizedBox(height: TSizes.spaceBtwSections * 2),
+                TextFormField(
+                  controller: _meetWithController,
+                  decoration: const InputDecoration(
+                    labelText: 'Bertemu Dengan',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Field ini tidak boleh kosong.'
+                      : null,
+                ),
 
-              SizedBox(
-                width: double.infinity,
-                child: MyButton(
-                  onPressed: _submit,
-                  text: const Text(
-                    'Simpan Jadwal',
-                    style: TextStyle(color: Colors.white),
+                if (!isTerapi) ...[
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  TextFormField(
+                    controller: _typeDrugController,
+                    decoration: const InputDecoration(
+                      labelText: 'Jenis Obat',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Jenis obat tidak boleh kosong.'
+                        : null,
+                  ),
+                ],
+
+                const SizedBox(height: TSizes.spaceBtwSections * 2),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: MyButton(
+                    onPressed: _submit,
+                    text: const Text(
+                      'Simpan Jadwal',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
