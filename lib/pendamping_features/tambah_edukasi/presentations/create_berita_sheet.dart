@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:new_empowerme/user_features/edukasi/presentation/panduan/providers/panduan_provider.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/berita/providers/berita_provider.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../../utils/helper_functions/helper.dart';
 
-class CreatePanduanSheet extends ConsumerStatefulWidget {
-  const CreatePanduanSheet({super.key});
+class CreateBeritaSheet extends ConsumerStatefulWidget {
+  const CreateBeritaSheet({super.key});
 
   @override
-  ConsumerState<CreatePanduanSheet> createState() => _CreatePanduanSheetState();
+  ConsumerState<CreateBeritaSheet> createState() => _CreateBeritaSheetState();
 }
 
-class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
+class _CreateBeritaSheetState extends ConsumerState<CreateBeritaSheet> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
+  final _authorController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _publishersController = TextEditingController();
-  final _infoLinkController = TextEditingController();
+  final _urlController = TextEditingController();
   DateTime? _selectedDate;
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _publishersController.dispose();
-    _infoLinkController.dispose();
+    _authorController.dispose();
+    _urlController.dispose();
     super.dispose();
   }
 
-  void _submitPanduan() {
+  void _submitBerita() {
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) {
@@ -43,7 +43,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
       MyHelperFunction.showToast(
         context,
         'Tanggal tidak ditambahkan',
-        'Harap isi kapan tanggal panduan diterbitkan.',
+        'Harap isi kapan tanggal berita diterbitkan.',
         ToastificationType.error,
       );
       return;
@@ -55,19 +55,19 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
     ).format(_selectedDate!);
 
     ref
-        .read(panduanUpdaterProvider.notifier)
-        .postPanduan(
+        .read(beritaUpdaterProvider.notifier)
+        .postBerita(
           title: _titleController.text.trim(),
+          author: _authorController.text.trim(),
           description: _descriptionController.text.trim(),
-          publishers: _publishersController.text.trim(),
           publishedDate: publishedDate,
-          infoLink: _infoLinkController.text.trim(),
+          url: _urlController.text.trim(),
           onSuccess: () {
             if (!mounted) return;
             MyHelperFunction.showToast(
               context,
               'Sukses',
-              'Panduan berhasil diunggah.',
+              'Berita berhasil diunggah.',
               ToastificationType.success,
             );
             Navigator.of(context).pop();
@@ -77,7 +77,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
             MyHelperFunction.showToast(
               context,
               'Gagal',
-              'Panduan gagal diunggah',
+              'Berita Gagal diunggah',
               ToastificationType.error,
             );
           },
@@ -86,7 +86,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(panduanUpdaterProvider);
+    final isLoading = ref.watch(beritaUpdaterProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return SafeArea(
@@ -100,13 +100,13 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Unggah Edukasi Panduan', style: textTheme.titleMedium),
+              Text('Unggah Berita', style: textTheme.titleMedium),
               const SizedBox(height: TSizes.spaceBtwSections),
               // Input Konten
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  labelText: 'Judul Panduan',
+                  labelText: 'Judul Berita',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
                 ),
@@ -121,7 +121,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Deskripsi Panduan',
+                  labelText: 'Deskripsi Berita',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
                 ),
@@ -134,10 +134,10 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
               TextFormField(
-                controller: _publishersController,
+                controller: _authorController,
                 decoration: const InputDecoration(
-                  labelText: 'Penerbit Panduan',
-                  hintText: 'kompas.com',
+                  labelText: 'Penulis Berita',
+                  hintText: 'Andrea Hirata, Erisca Febriani...',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
                 ),
@@ -150,9 +150,9 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
               TextFormField(
-                controller: _infoLinkController,
+                controller: _urlController,
                 decoration: const InputDecoration(
-                  labelText: 'Tautan Panduan',
+                  labelText: 'Tautan Berita',
                   hintText: 'Tautan harus diawali dengan http atau https',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
@@ -198,7 +198,7 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
               SizedBox(
                 width: double.infinity,
                 child: MyButton(
-                  onPressed: isLoading ? null : _submitPanduan,
+                  onPressed: isLoading ? null : _submitBerita,
                   text: isLoading
                       ? const SizedBox(
                           width: 24,

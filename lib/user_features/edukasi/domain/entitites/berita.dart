@@ -22,8 +22,8 @@ class Berita extends Equatable {
   String get displayImageUrl {
     // placeholder jika tidak ada gambar
     const String placeholder =
-        'https://mobeng.id/wp-content/uploads/2021/10/placeholder-1-1.png';
-    if (urlToImage.isNotEmpty) {
+        'https://obssr.od.nih.gov/sites/obssr/files/2025-05/red-ribbon-stethoscope.jpg';
+    if (urlToImage.isNotEmpty && urlToImage != 'empty') {
       return urlToImage;
     }
     return placeholder;

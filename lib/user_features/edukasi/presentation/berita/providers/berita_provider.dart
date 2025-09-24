@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/data/repositories/berita_repository_impl.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/berita.dart';
@@ -58,4 +60,47 @@ class BeritaViewModel extends Notifier<BeritaState> {
 
 final beritaViewModel = NotifierProvider<BeritaViewModel, BeritaState>(
   () => BeritaViewModel(),
+);
+
+class BeritaUpdater extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  BeritaRepository get _repository => ref.read(beritaRepositoryProvider);
+
+  Future<void> postBerita({
+    required String title,
+    required String author,
+    required String description,
+    required String publishedDate,
+    required String url,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = true;
+    try {
+      final (_, failure) = await _repository.postBerita(
+        title: title,
+        author: author,
+        description: description,
+        publishedDate: publishedDate,
+        url: url,
+      );
+
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(beritaViewModel);
+        onSuccess();
+      }
+    } finally {
+      state = false;
+    }
+  }
+}
+
+final beritaUpdaterProvider = NotifierProvider<BeritaUpdater, bool>(
+  () => BeritaUpdater(),
 );

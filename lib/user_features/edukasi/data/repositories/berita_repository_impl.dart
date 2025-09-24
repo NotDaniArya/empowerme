@@ -20,4 +20,28 @@ class BeritaRepositoryImpl implements BeritaRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> postBerita({
+    required String title,
+    required String author,
+    required String description,
+    required String publishedDate,
+    required String url,
+  }) async {
+    try {
+      await remoteDataSource.postBerita(
+        title: title,
+        author: author,
+        description: description,
+        publishedDate: publishedDate,
+        url: url,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }
