@@ -20,4 +20,28 @@ class ObatRepositoryImpl implements ObatRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> postObat({
+    required String title,
+    required String source,
+    required String date,
+    required String snippet,
+    required String link,
+  }) async {
+    try {
+      await remoteDataSource.postObat(
+        title: title,
+        source: source,
+        date: date,
+        snippet: snippet,
+        link: link,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }

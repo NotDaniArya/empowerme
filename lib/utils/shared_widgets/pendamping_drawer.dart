@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/pendamping_features/tambah_edukasi/presentations/create_berita_sheet.dart';
+import 'package:new_empowerme/pendamping_features/tambah_edukasi/presentations/create_obat_sheet.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/screen/edukasi_screen.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/komunitas_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -68,7 +69,7 @@ class PendampingDrawer extends StatelessWidget {
               ),
               PendampingMenuItem(
                 title: 'Tambah Edukasi Panduan',
-                iconData: FontAwesomeIcons.addressBook,
+                iconData: FontAwesomeIcons.bookOpenReader,
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
@@ -84,7 +85,7 @@ class PendampingDrawer extends StatelessWidget {
               ),
               PendampingMenuItem(
                 title: 'Tambah Berita',
-                iconData: FontAwesomeIcons.addressBook,
+                iconData: FontAwesomeIcons.newspaper,
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
@@ -95,6 +96,22 @@ class PendampingDrawer extends StatelessWidget {
                       ),
                     ),
                     builder: (context) => const CreateBeritaSheet(),
+                  );
+                },
+              ),
+              PendampingMenuItem(
+                title: 'Tambah Edukasi Obat',
+                iconData: FontAwesomeIcons.addressBook,
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) => const CreateOBatSheet(),
                   );
                 },
               ),

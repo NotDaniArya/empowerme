@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/utils/constant/sizes.dart';
 
 class PendampingMenuItem extends StatelessWidget {
   const PendampingMenuItem({
@@ -16,15 +17,16 @@ class PendampingMenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(TSizes.smallSpace / 2),
       child: ListTile(
         leading: FaIcon(
           iconData,
+          size: 20,
           color: Theme.of(context).colorScheme.onSurface,
         ),
         title: Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),

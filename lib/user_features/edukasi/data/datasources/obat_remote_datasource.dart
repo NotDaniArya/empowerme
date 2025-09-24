@@ -6,6 +6,14 @@ import '../models/obat_model.dart';
 
 abstract class ObatRemoteDataSource {
   Future<List<ObatModel>> getObat();
+
+  Future<void> postObat({
+    required String title,
+    required String source,
+    required String date,
+    required String snippet,
+    required String link,
+  });
 }
 
 class ObatRemoteDataSourceImpl implements ObatRemoteDataSource {
@@ -26,6 +34,40 @@ class ObatRemoteDataSourceImpl implements ObatRemoteDataSource {
       if (e.response != null) {
         errorMessage =
             'Gagal mengambil data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
+      } else {
+        errorMessage = 'Gagal terhubung ke server: ${e.message}';
+      }
+      throw Failure(errorMessage, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<void> postObat({
+    required String title,
+    required String source,
+    required String date,
+    required String snippet,
+    required String link,
+  }) async {
+    try {
+      await dio.post(
+        '${TTexts.baseUrl}/news/medication',
+        data: {
+          "link": link,
+          "title": title,
+          "source": source,
+          "date": date,
+          "published_at": 'empty',
+          "snippet": snippet,
+          "favicon": 'empty',
+          "thumbnail": 'empty',
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Gagal menambah edukasi obat';
+      if (e.response != null) {
+        errorMessage =
+            'Gagal menambah data: ${e.response?.statusMessage}. Status: ${e.response?.statusCode}';
       } else {
         errorMessage = 'Gagal terhubung ke server: ${e.message}';
       }
