@@ -16,7 +16,7 @@ class ListBerita extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: _buildBody(context, beritaState, ref),
+      body: SafeArea(child: _buildBody(context, beritaState, ref)),
     );
   }
 

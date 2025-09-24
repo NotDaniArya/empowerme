@@ -34,43 +34,45 @@ class _KonselorNavigationMenuState extends State<KonselorNavigationMenu> {
       body: _listMenu[_selectedIndex],
 
       // 3. Gunakan BottomAppBar, bukan BottomNavigationBar
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Anda bisa atur warna bar di sini
-          boxShadow: [
-            BoxShadow(
-              // Atur warna dan transparansi bayangan
-              color: Colors.black.withOpacity(0.18),
-              // Atur tingkat blur
-              blurRadius: 20,
-              // Atur seberapa menyebar bayangannya
-              spreadRadius: 5,
-              // KUNCI UTAMA: Atur posisi bayangan (x, y)
-              // Nilai y negatif berarti bayangan akan bergeser ke atas
-              offset: const Offset(0, -3),
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          color: Colors.white,
-
-          clipBehavior: Clip.antiAlias,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              // Item Navigasi di Kiri
-              _buildNavItem(
-                icon: Icons.dashboard,
-                label: 'Dashboard',
-                index: 0,
-              ),
-              _buildNavItem(
-                icon: FontAwesomeIcons.solidUser,
-                label: 'Profile',
-                index: 1,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Anda bisa atur warna bar di sini
+            boxShadow: [
+              BoxShadow(
+                // Atur warna dan transparansi bayangan
+                color: Colors.black.withOpacity(0.18),
+                // Atur tingkat blur
+                blurRadius: 20,
+                // Atur seberapa menyebar bayangannya
+                spreadRadius: 5,
+                // KUNCI UTAMA: Atur posisi bayangan (x, y)
+                // Nilai y negatif berarti bayangan akan bergeser ke atas
+                offset: const Offset(0, -3),
               ),
             ],
+          ),
+          child: BottomAppBar(
+            color: Colors.white,
+
+            clipBehavior: Clip.antiAlias,
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                // Item Navigasi di Kiri
+                _buildNavItem(
+                  icon: Icons.dashboard,
+                  label: 'Dashboard',
+                  index: 0,
+                ),
+                _buildNavItem(
+                  icon: FontAwesomeIcons.solidUser,
+                  label: 'Profile',
+                  index: 1,
+                ),
+              ],
+            ),
           ),
         ),
       ),

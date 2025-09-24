@@ -21,7 +21,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileViewModel);
 
-    return _buildBody(context, profileState, ref);
+    return SafeArea(child: _buildBody(context, profileState, ref));
   }
 
   Widget _buildBody(BuildContext context, ProfileState state, WidgetRef ref) {

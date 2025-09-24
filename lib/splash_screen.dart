@@ -12,35 +12,31 @@ class SplashScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/logo_app.png', width: 150),
-              const SizedBox(height: TSizes.spaceBtwSections),
-              Text(
-                'EmpowerMe',
-                style: textTheme.headlineMedium!.copyWith(
-                  color: TColors.primaryColor,
-                  fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/icons/logo_app.png', width: 200),
+                Text(
+                  'Peduli, Terhubung, Bangkit: Bersama untuk Masa Depan Lebih Baik',
+                  textAlign: TextAlign.center,
+                  style: textTheme.titleMedium!.copyWith(
+                    color: TColors.secondaryText,
+                  ),
                 ),
-              ),
-              const SizedBox(height: TSizes.smallSpace),
-              Text(
-                'Peduli, Terhubung, Bangkit: Bersama untuk Masa Depan Lebih Baik',
-                textAlign: TextAlign.center,
-                style: textTheme.titleMedium!.copyWith(
-                  color: TColors.secondaryText,
+                const SizedBox(height: TSizes.mediumSpace),
+                const SizedBox(
+                  width: 150,
+                  child: SpinKitThreeInOut(
+                    size: 30,
+                    color: TColors.primaryColor,
+                  ),
                 ),
-              ),
-              const SizedBox(height: TSizes.mediumSpace),
-              const SizedBox(
-                width: 150,
-                child: SpinKitThreeInOut(size: 30, color: TColors.primaryColor),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

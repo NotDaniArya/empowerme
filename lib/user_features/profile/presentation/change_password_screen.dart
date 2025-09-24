@@ -84,128 +84,131 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Keamanan Akun Anda',
-                style: textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems / 2),
-              Text(
-                'Untuk melindungi akun Anda, pastikan password baru Anda kuat dan tidak mudah ditebak.',
-                style: textTheme.bodyMedium,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections * 1.5),
-
-              // --- Input Password Lama ---
-              TextFormField(
-                controller: _oldPasswordController,
-                obscureText: !_oldPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Password Lama',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _oldPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () => setState(
-                      () => _oldPasswordVisible = !_oldPasswordVisible,
-                    ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Keamanan Akun Anda',
+                  style: textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Password lama tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
+                const SizedBox(height: TSizes.spaceBtwItems / 2),
+                Text(
+                  'Untuk melindungi akun Anda, pastikan password baru Anda kuat dan tidak mudah ditebak.',
+                  style: textTheme.bodyMedium,
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections * 1.5),
 
-              // --- Input Password Baru ---
-              TextFormField(
-                controller: _newPasswordController,
-                obscureText: !_newPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Password Baru',
-                  prefixIcon: const Icon(Icons.lock_clock_outlined),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _newPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () => setState(
-                      () => _newPasswordVisible = !_newPasswordVisible,
+                // --- Input Password Lama ---
+                TextFormField(
+                  controller: _oldPasswordController,
+                  obscureText: !_oldPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Password Lama',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _oldPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () => setState(
+                        () => _oldPasswordVisible = !_oldPasswordVisible,
+                      ),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Password lama tidak boleh kosong';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Password baru tidak boleh kosong';
-                  }
-                  if (value.length < 8) {
-                    return 'Password minimal harus 8 karakter';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
+                const SizedBox(height: TSizes.spaceBtwItems),
 
-              // --- Input Konfirmasi Password Baru ---
-              TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: !_confirmPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Konfirmasi Password Baru',
-                  prefixIcon: const Icon(Icons.lock_person_outlined),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _confirmPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () => setState(
-                      () => _confirmPasswordVisible = !_confirmPasswordVisible,
+                // --- Input Password Baru ---
+                TextFormField(
+                  controller: _newPasswordController,
+                  obscureText: !_newPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Password Baru',
+                    prefixIcon: const Icon(Icons.lock_clock_outlined),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _newPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () => setState(
+                        () => _newPasswordVisible = !_newPasswordVisible,
+                      ),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Password baru tidak boleh kosong';
+                    }
+                    if (value.length < 8) {
+                      return 'Password minimal harus 8 karakter';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value != _newPasswordController.text) {
-                    return 'Password konfirmasi tidak cocok';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections * 2),
+                const SizedBox(height: TSizes.spaceBtwItems),
 
-              // --- Tombol Simpan ---
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _submitChangePassword,
-                  child: isLoading
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                      : const Text('Simpan Perubahan'),
+                // --- Input Konfirmasi Password Baru ---
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: !_confirmPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Konfirmasi Password Baru',
+                    prefixIcon: const Icon(Icons.lock_person_outlined),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _confirmPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () => setState(
+                        () =>
+                            _confirmPasswordVisible = !_confirmPasswordVisible,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value != _newPasswordController.text) {
+                      return 'Password konfirmasi tidak cocok';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: TSizes.spaceBtwSections * 2),
+
+                // --- Tombol Simpan ---
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _submitChangePassword,
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : const Text('Simpan Perubahan'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

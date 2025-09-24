@@ -18,89 +18,91 @@ class DetailPanduanScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: TColors.primaryColor,
-            foregroundColor: Colors.white,
-            expandedHeight: 300.0,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: CachedNetworkImage(
-                imageUrl: panduan.displayThumbnail,
-                fit: BoxFit.fitHeight,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                      child: CircularProgressIndicator(
-                        value: downloadProgress.progress,
-                      ),
-                    ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-            ),
-          ),
-
-          // Konten utama halaman
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsetsGeometry.all(TSizes.largeSpace),
-              child: Column(
-                children: [
-                  Text(
-                    panduan.title,
-                    textAlign: TextAlign.center,
-                    style: textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // const SizedBox(height: TSizes.smallSpace),
-                  Text(
-                    panduan.publisher,
-                    textAlign: TextAlign.center,
-                    style: textTheme.titleSmall!.copyWith(
-                      color: TColors.secondaryText,
-                    ),
-                  ),
-                  const SizedBox(height: TSizes.mediumSpace),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      panduan.formattedPublishedAt,
-                      style: textTheme.titleSmall!.copyWith(),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Category : Panduan',
-                      style: textTheme.titleSmall!.copyWith(),
-                    ),
-                  ),
-                  const Divider(color: Colors.black54),
-                  const SizedBox(height: TSizes.mediumSpace),
-                  Text(panduan.description!, textAlign: TextAlign.justify),
-                  const SizedBox(height: TSizes.mediumSpace),
-                  SizedBox(
-                    width: 250,
-                    child: MyButton(
-                      text: const Text(
-                        'Baca Selengkapnya',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: TColors.primaryColor,
+              foregroundColor: Colors.white,
+              expandedHeight: 300.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: CachedNetworkImage(
+                  imageUrl: panduan.displayThumbnail,
+                  fit: BoxFit.fitHeight,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                        child: CircularProgressIndicator(
+                          value: downloadProgress.progress,
                         ),
                       ),
-                      onPressed: () {
-                        final Uri url = Uri.parse(panduan.infoLink);
-                        MyHelperFunction.visitLink(url);
-                      },
-                    ),
-                  ),
-                ],
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
-          ),
-        ],
+
+            // Konten utama halaman
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsetsGeometry.all(TSizes.largeSpace),
+                child: Column(
+                  children: [
+                    Text(
+                      panduan.title,
+                      textAlign: TextAlign.center,
+                      style: textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    // const SizedBox(height: TSizes.smallSpace),
+                    Text(
+                      panduan.publisher,
+                      textAlign: TextAlign.center,
+                      style: textTheme.titleSmall!.copyWith(
+                        color: TColors.secondaryText,
+                      ),
+                    ),
+                    const SizedBox(height: TSizes.mediumSpace),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        panduan.formattedPublishedAt,
+                        style: textTheme.titleSmall!.copyWith(),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        'Category : Panduan',
+                        style: textTheme.titleSmall!.copyWith(),
+                      ),
+                    ),
+                    const Divider(color: Colors.black54),
+                    const SizedBox(height: TSizes.mediumSpace),
+                    Text(panduan.description!, textAlign: TextAlign.justify),
+                    const SizedBox(height: TSizes.mediumSpace),
+                    SizedBox(
+                      width: 250,
+                      child: MyButton(
+                        text: const Text(
+                          'Baca Selengkapnya',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          final Uri url = Uri.parse(panduan.infoLink);
+                          MyHelperFunction.visitLink(url);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -47,69 +47,71 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
     }
     final replies = updatedParentComment.replyComment ?? [];
 
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.9,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              width: 40,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.9,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Balasan Komentar',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const Divider(height: 24),
-            _buildParentComment(context, updatedParentComment),
-            const Divider(height: 24),
+              const SizedBox(height: 16),
+              const Text(
+                'Balasan Komentar',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const Divider(height: 24),
+              _buildParentComment(context, updatedParentComment),
+              const Divider(height: 24),
 
-            Expanded(
-              child: replies.isEmpty
-                  ? const Center(child: Text('Belum ada balasan.'))
-                  : RefreshIndicator(
-                      displacement: 10,
-                      onRefresh: () async {
-                        ref.invalidate(komunitasViewModel);
-                        ref.invalidate(commentViewModel);
-                      },
-                      child: ListView.builder(
-                        itemCount: replies.length,
-                        itemBuilder: (context, index) {
-                          final reply = replies[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(
-                                '${TTexts.baseUrl}/images/${reply.pasien.picture}',
-                              ),
-                            ),
-                            title: Text(
-                              reply.pasien.name,
-                              style: textTheme.labelSmall!.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              reply.comment,
-                              style: textTheme.bodyMedium,
-                            ),
-                          );
+              Expanded(
+                child: replies.isEmpty
+                    ? const Center(child: Text('Belum ada balasan.'))
+                    : RefreshIndicator(
+                        displacement: 10,
+                        onRefresh: () async {
+                          ref.invalidate(komunitasViewModel);
+                          ref.invalidate(commentViewModel);
                         },
+                        child: ListView.builder(
+                          itemCount: replies.length,
+                          itemBuilder: (context, index) {
+                            final reply = replies[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                  '${TTexts.baseUrl}/images/${reply.pasien.picture}',
+                                ),
+                              ),
+                              title: Text(
+                                reply.pasien.name,
+                                style: textTheme.labelSmall!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                reply.comment,
+                                style: textTheme.bodyMedium,
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-            ),
+              ),
 
-            _buildCommentInputField(),
-          ],
+              _buildCommentInputField(),
+            ],
+          ),
         ),
       ),
     );

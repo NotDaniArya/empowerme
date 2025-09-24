@@ -91,126 +91,131 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
     final isLoading = ref.watch(panduanUpdaterProvider);
     final textTheme = Theme.of(context).textTheme;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
-        bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Unggah Edukasi Panduan', style: textTheme.titleMedium),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            // Input Konten
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Judul Panduan',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
+          bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Unggah Edukasi Panduan', style: textTheme.titleMedium),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              // Input Konten
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Judul Panduan',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Judul tidak boleh kosong.';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Judul tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Deskripsi Panduan',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Deskripsi Panduan',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Deksripsi tidak boleh kosong.';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Deksripsi tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            TextFormField(
-              controller: _publishersController,
-              decoration: const InputDecoration(
-                labelText: 'Penerbit Panduan',
-                hintText: 'kompas.com',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              TextFormField(
+                controller: _publishersController,
+                decoration: const InputDecoration(
+                  labelText: 'Penerbit Panduan',
+                  hintText: 'kompas.com',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Penerbit tidak boleh kosong.';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Penerbit tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            TextFormField(
-              controller: _infoLinkController,
-              decoration: const InputDecoration(
-                labelText: 'Tautan Panduan',
-                hintText: 'Contoh: http://books.google.co.id/books?id',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              TextFormField(
+                controller: _infoLinkController,
+                decoration: const InputDecoration(
+                  labelText: 'Tautan Panduan',
+                  hintText: 'Contoh: http://books.google.co.id/books?id',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Tautan tidak boleh kosong.';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Tautan tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-            // Input Tanggal
-            OutlinedButton.icon(
-              onPressed: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (date != null) setState(() => _selectedDate = date);
-              },
-              icon: const Icon(Icons.calendar_today),
-              label: Text(
-                _selectedDate == null
-                    ? 'Pilih Tanggal Terbit'
-                    : DateFormat('d MMMM yyyy', 'id_ID').format(_selectedDate!),
+              // Input Tanggal
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (date != null) setState(() => _selectedDate = date);
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: Text(
+                  _selectedDate == null
+                      ? 'Pilih Tanggal Terbit'
+                      : DateFormat(
+                          'd MMMM yyyy',
+                          'id_ID',
+                        ).format(_selectedDate!),
+                ),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
               ),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-            // Tombol Aksi
-            SizedBox(
-              width: double.infinity,
-              child: MyButton(
-                onPressed: isLoading ? null : _submitPanduan,
-                text: isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+              // Tombol Aksi
+              SizedBox(
+                width: double.infinity,
+                child: MyButton(
+                  onPressed: isLoading ? null : _submitPanduan,
+                  text: isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Unggah',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      )
-                    : const Text(
-                        'Unggah',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

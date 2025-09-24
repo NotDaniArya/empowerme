@@ -66,153 +66,155 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: RefreshIndicator(
-              displacement: 10,
-              onRefresh: () async {
-                await ref.read(komunitasViewModel.notifier).refresh();
-                ref.invalidate(commentViewModel(currentPost.id));
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
-                child: Column(
-                  children: [
-                    /*
-                    ==========================================
-                    profile user
-                    ==========================================
-                    */
-                    Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadiusGeometry.circular(50),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: CircleAvatar(
-                            backgroundColor: TColors.primaryColor.withOpacity(
-                              0.2,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                displacement: 10,
+                onRefresh: () async {
+                  await ref.read(komunitasViewModel.notifier).refresh();
+                  ref.invalidate(commentViewModel(currentPost.id));
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
+                  child: Column(
+                    children: [
+                      /*
+                      ==========================================
+                      profile user
+                      ==========================================
+                      */
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadiusGeometry.circular(50),
                             ),
+                            clipBehavior: Clip.antiAlias,
+                            child: CircleAvatar(
+                              backgroundColor: TColors.primaryColor.withOpacity(
+                                0.2,
+                              ),
+                              child: Text(
+                                currentPost.pasien!.name.isNotEmpty
+                                    ? currentPost.pasien!.name[0].toUpperCase()
+                                    : '?',
+                                style: const TextStyle(
+                                  color: TColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: TSizes.smallSpace),
+                          Expanded(
                             child: Text(
-                              currentPost.pasien!.name.isNotEmpty
-                                  ? currentPost.pasien!.name[0].toUpperCase()
-                                  : '?',
-                              style: const TextStyle(
-                                color: TColors.primaryColor,
+                              currentPost.pasien!.name,
+                              style: textTheme.labelLarge!.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: TSizes.smallSpace),
-                        Expanded(
-                          child: Text(
-                            currentPost.pasien!.name,
-                            style: textTheme.labelLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
+                          Text(
+                            DateFormat(
+                              'd-MM-yyyy, HH:mm',
+                              'id_ID',
+                            ).format(currentPost.createdAt),
+                            style: textTheme.labelMedium!.copyWith(
+                              color: TColors.secondaryText,
                             ),
                           ),
-                        ),
-                        Text(
-                          DateFormat(
-                            'd-MM-yyyy, HH:mm',
-                            'id_ID',
-                          ).format(currentPost.createdAt),
-                          style: textTheme.labelMedium!.copyWith(
-                            color: TColors.secondaryText,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-
-                    /*
-                    ==========================================
-                    isi threads
-                    ==========================================
-                    */
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        currentPost.content,
-                        style: textTheme.bodyMedium,
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
+                      const SizedBox(height: TSizes.spaceBtwItems),
 
-                    /*
-                    ==========================================
-                    button like and share
-                    ==========================================
-                    */
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                final notifier = ref.read(
-                                  komunitasViewModel.notifier,
-                                );
-                                if (currentPost.statusLike) {
-                                  notifier.unLikeCommunityPost(
-                                    id: currentPost.id,
+                      /*
+                      ==========================================
+                      isi threads
+                      ==========================================
+                      */
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          currentPost.content,
+                          style: textTheme.bodyMedium,
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      /*
+                      ==========================================
+                      button like and share
+                      ==========================================
+                      */
+                      Row(
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  final notifier = ref.read(
+                                    komunitasViewModel.notifier,
                                   );
-                                } else {
-                                  notifier.likeCommunityPost(
-                                    id: currentPost.id,
-                                  );
-                                }
-                              },
-                              icon: FaIcon(
-                                currentPost.statusLike
-                                    ? FontAwesomeIcons.solidHeart
-                                    : FontAwesomeIcons.heart,
-                                size: 18,
-                                color: currentPost.statusLike
-                                    ? Colors.redAccent
-                                    : Colors.black45,
+                                  if (currentPost.statusLike) {
+                                    notifier.unLikeCommunityPost(
+                                      id: currentPost.id,
+                                    );
+                                  } else {
+                                    notifier.likeCommunityPost(
+                                      id: currentPost.id,
+                                    );
+                                  }
+                                },
+                                icon: FaIcon(
+                                  currentPost.statusLike
+                                      ? FontAwesomeIcons.solidHeart
+                                      : FontAwesomeIcons.heart,
+                                  size: 18,
+                                  color: currentPost.statusLike
+                                      ? Colors.redAccent
+                                      : Colors.black45,
+                                ),
                               ),
-                            ),
-                            Text(currentPost.like.toString()),
-                          ],
-                        ),
-                        const SizedBox(width: 15),
-                        Row(
-                          children: [
-                            const FaIcon(
-                              FontAwesomeIcons.comment,
-                              size: 18,
-                              color: Colors.black45,
-                            ),
-                            const SizedBox(width: 15),
-                            Text(currentPost.countComment.toString()),
-                          ],
-                        ),
-                      ],
-                    ),
+                              Text(currentPost.like.toString()),
+                            ],
+                          ),
+                          const SizedBox(width: 15),
+                          Row(
+                            children: [
+                              const FaIcon(
+                                FontAwesomeIcons.comment,
+                                size: 18,
+                                color: Colors.black45,
+                              ),
+                              const SizedBox(width: 15),
+                              Text(currentPost.countComment.toString()),
+                            ],
+                          ),
+                        ],
+                      ),
 
-                    /*
-                    ==========================================
-                    comments
-                    ==========================================
-                    */
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    const Text('Komentar'),
-                    const Divider(color: Colors.black45),
-                    _buildCommentBody(context, commentState),
-                  ],
+                      /*
+                      ==========================================
+                      comments
+                      ==========================================
+                      */
+                      const SizedBox(height: TSizes.spaceBtwItems),
+                      const Text('Komentar'),
+                      const Divider(color: Colors.black45),
+                      _buildCommentBody(context, commentState),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          _buildCommentInputField(currentPost.id),
-        ],
+            _buildCommentInputField(currentPost.id),
+          ],
+        ),
       ),
     );
   }

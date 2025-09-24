@@ -79,47 +79,49 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: messagesState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Error: $error')),
-              data: (messages) {
-                if (messages.isEmpty) {
-                  return const Center(child: Text('Mulai percakapan!'));
-                }
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: messagesState.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => Center(child: Text('Error: $error')),
+                data: (messages) {
+                  if (messages.isEmpty) {
+                    return const Center(child: Text('Mulai percakapan!'));
+                  }
 
-                return ListView.builder(
-                  controller: _scrollController,
-                  reverse: true,
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[messages.length - 1 - index];
-                    final showDateSeparator =
-                        index == messages.length - 1 ||
-                        !_isSameDay(
-                          message.timestamp,
-                          messages[messages.length - 2 - index].timestamp,
-                        );
+                  return ListView.builder(
+                    controller: _scrollController,
+                    reverse: true,
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[messages.length - 1 - index];
+                      final showDateSeparator =
+                          index == messages.length - 1 ||
+                          !_isSameDay(
+                            message.timestamp,
+                            messages[messages.length - 2 - index].timestamp,
+                          );
 
-                    return Column(
-                      children: [
-                        if (showDateSeparator)
-                          _DateSeparator(
-                            text: _formatDateForSeparator(message.timestamp),
-                          ),
-                        _ChatMessageBubble(message: message),
-                      ],
-                    );
-                  },
-                );
-              },
+                      return Column(
+                        children: [
+                          if (showDateSeparator)
+                            _DateSeparator(
+                              text: _formatDateForSeparator(message.timestamp),
+                            ),
+                          _ChatMessageBubble(message: message),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-          _buildMessageInput(),
-        ],
+            _buildMessageInput(),
+          ],
+        ),
       ),
     );
   }

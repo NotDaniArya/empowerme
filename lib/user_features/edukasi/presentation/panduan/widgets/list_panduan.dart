@@ -16,7 +16,7 @@ class ListPanduan extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: _buildBody(context, panduanState, ref),
+      body: SafeArea(child: _buildBody(context, panduanState, ref)),
     );
   }
 

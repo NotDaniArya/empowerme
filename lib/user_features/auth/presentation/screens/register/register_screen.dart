@@ -97,9 +97,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 margin: const EdgeInsets.only(bottom: 45),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 20),
+                    Image.asset('assets/icons/logo_app.png', width: 180),
                     Text(
                       'Mulai Perjalanan Baru Anda',
                       style: textTheme.headlineSmall!.copyWith(
@@ -198,22 +197,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       },
                     ),
                     const SizedBox(height: TSizes.spaceBtwSections),
-                    MyButton(
-                      text: isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: TColors.primaryColor,
+                    SizedBox(
+                      width: double.infinity,
+                      child: MyButton(
+                        text: isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: TColors.primaryColor,
+                                ),
+                              )
+                            : Text(
+                                'Daftar',
+                                style: textTheme.bodyMedium!.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
-                            )
-                          : Text(
-                              'Daftar',
-                              style: textTheme.bodyMedium!.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                      onPressed: isLoading ? null : _submitSignUp,
+                        onPressed: isLoading ? null : _submitSignUp,
+                      ),
                     ),
                     const SizedBox(height: TSizes.mediumSpace),
                     const OrDivider(),

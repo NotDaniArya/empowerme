@@ -57,13 +57,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
 
       if (next is AsyncData && next.value != null) {
-        MyHelperFunction.showToast(
-          context,
-          'Login Berhasil!',
-          'Selamat datang kembali.',
-          ToastificationType.success,
-        );
-
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const AuthGate()),
@@ -74,118 +67,121 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Bersama Lebih Kuat',
-                  style: textTheme.headlineMedium!.copyWith(
-                    color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: TSizes.smallSpace),
-                SizedBox(
-                  width: 255,
-                  child: Text(
-                    'Login untuk Akses Komunitas Dan Dukungan Anda',
-                    style: textTheme.titleMedium!.copyWith(
-                      color: TColors.secondaryText,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsetsGeometry.all(TSizes.scaffoldPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset('assets/icons/logo_app.png', width: 180),
+                  Text(
+                    'Bersama Lebih Kuat',
+                    style: textTheme.headlineMedium!.copyWith(
+                      color: TColors.primaryColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
-                Form(
-                  key: _form,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TInputTextField(
-                        icon: Icons.email_rounded,
-                        labelText: 'Masukkan email anda',
-                        inputType: TextInputType.emailAddress,
-                        onSaved: (value) {
-                          _enteredEmail = value!;
-                        },
-                        maxLength: 50,
+                  const SizedBox(height: TSizes.smallSpace),
+                  SizedBox(
+                    width: 255,
+                    child: Text(
+                      'Login untuk Akses Komunitas Dan Dukungan Anda',
+                      style: textTheme.titleMedium!.copyWith(
+                        color: TColors.secondaryText,
                       ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      TextFormField(
-                        obscureText: !_isPasswordVisible,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          labelText: 'Masukkan password anda',
-                          prefixIcon: const Icon(Icons.lock),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                          ),
-                          isDense: true,
+                    ),
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwSections),
+                  Form(
+                    key: _form,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TInputTextField(
+                          icon: Icons.email_rounded,
+                          labelText: 'Masukkan email anda',
+                          inputType: TextInputType.emailAddress,
+                          onSaved: (value) {
+                            _enteredEmail = value!;
+                          },
+                          maxLength: 50,
                         ),
-                        maxLength: 30,
-                        autocorrect: false,
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.trim().length < 8) {
-                            return 'Panjang input minimal 8 karakter';
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _enteredPass = value!;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                SizedBox(
-                  width: 250,
-                  child: MyButton(
-                    text: isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: TColors.primaryColor,
+                        const SizedBox(height: TSizes.spaceBtwItems),
+                        TextFormField(
+                          obscureText: !_isPasswordVisible,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            labelText: 'Masukkan password anda',
+                            prefixIcon: const Icon(Icons.lock),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          )
-                        : Text(
-                            'Masuk',
-                            style: textTheme.bodyLarge!.copyWith(
-                              color: Colors.white,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
                             ),
+                            isDense: true,
                           ),
-                    onPressed: isLoading ? null : _submitLogin,
+                          maxLength: 30,
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim().length < 8) {
+                              return 'Panjang input minimal 8 karakter';
+                            }
+
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _enteredPass = value!;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: TSizes.mediumSpace),
-                const OrDivider(),
-                const MyTextButton(
-                  text: Text('Belum Punya Akun?'),
-                  buttonText: Text('Daftar sekarang'),
-                  route: RegisterScreen(),
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
-              ],
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  SizedBox(
+                    width: 250,
+                    child: MyButton(
+                      text: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: TColors.primaryColor,
+                              ),
+                            )
+                          : Text(
+                              'Masuk',
+                              style: textTheme.bodyLarge!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                      onPressed: isLoading ? null : _submitLogin,
+                    ),
+                  ),
+                  const SizedBox(height: TSizes.mediumSpace),
+                  const OrDivider(),
+                  const MyTextButton(
+                    text: Text('Belum Punya Akun?'),
+                    buttonText: Text('Daftar sekarang'),
+                    route: RegisterScreen(),
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwSections),
+                ],
+              ),
             ),
           ),
         ),

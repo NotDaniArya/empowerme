@@ -15,7 +15,7 @@ class ListMakanan extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: _buildBody(context, makananState, ref),
+      body: SafeArea(child: _buildBody(context, makananState, ref)),
     );
   }
 

@@ -65,57 +65,59 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
-        bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Input Konten
-            TextFormField(
-              controller: _contentController,
-              decoration: const InputDecoration(
-                labelText: 'Konten Postingan',
-                hintText: 'Tuliskan konten postinganmu di sini...',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
+          bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Input Konten
+              TextFormField(
+                controller: _contentController,
+                decoration: const InputDecoration(
+                  labelText: 'Konten Postingan',
+                  hintText: 'Tuliskan konten postinganmu di sini...',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 8,
+                minLines: 5,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Cerita tidak boleh kosong.';
+                  }
+                  return null;
+                },
               ),
-              maxLines: 8,
-              minLines: 5,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Cerita tidak boleh kosong.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-            // Tombol Aksi
-            SizedBox(
-              width: double.infinity,
-              child: MyButton(
-                onPressed: _isLoading ? null : _submitPost,
-                text: _isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+              // Tombol Aksi
+              SizedBox(
+                width: double.infinity,
+                child: MyButton(
+                  onPressed: _isLoading ? null : _submitPost,
+                  text: _isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Posting',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      )
-                    : const Text(
-                        'Posting',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -23,28 +23,31 @@ class ChatListScreen extends ConsumerWidget {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: Column(
-        children: [
-          if (userRole == UserRole.pendamping || userRole == UserRole.konselor)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Cari nama pasien...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (userRole == UserRole.pendamping ||
+                userRole == UserRole.konselor)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Cari nama pasien...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
                   ),
-                  filled: true,
-                  fillColor: Colors.white,
+                  onChanged: (query) =>
+                      ref.read(chatSearchQueryProvider.notifier).state = query,
                 ),
-                onChanged: (query) =>
-                    ref.read(chatSearchQueryProvider.notifier).state = query,
               ),
-            ),
 
-          const Expanded(child: _ContactListView()),
-        ],
+            const Expanded(child: _ContactListView()),
+          ],
+        ),
       ),
     );
   }

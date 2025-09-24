@@ -22,7 +22,6 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
     const JadwalPasienScreen(),
     const DaftarPasienScreen(),
     const ProfileScreen(),
-    Placeholder(),
   ];
 
   void _onSelectedMenu(int index) {
@@ -39,55 +38,57 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
       body: _listMenu[_selectedIndex],
 
       // 3. Gunakan BottomAppBar, bukan BottomNavigationBar
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Anda bisa atur warna bar di sini
-          boxShadow: [
-            BoxShadow(
-              // Atur warna dan transparansi bayangan
-              color: Colors.black.withOpacity(0.18),
-              // Atur tingkat blur
-              blurRadius: 20,
-              // Atur seberapa menyebar bayangannya
-              spreadRadius: 5,
-              // KUNCI UTAMA: Atur posisi bayangan (x, y)
-              // Nilai y negatif berarti bayangan akan bergeser ke atas
-              offset: const Offset(0, -3),
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          color: Colors.white,
-
-          clipBehavior: Clip.antiAlias,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              // Item Navigasi di Kiri
-              _buildNavItem(
-                icon: Icons.dashboard,
-                label: 'Dashboard',
-                index: 0,
-              ),
-              _buildNavItem(
-                icon: FontAwesomeIcons.calendarDays,
-                label: 'Jadwal Pasien',
-                index: 1,
-              ),
-
-              // Item Navigasi di Kanan
-              _buildNavItem(
-                icon: FontAwesomeIcons.addressBook,
-                label: 'Daftar Pasien',
-                index: 2,
-              ),
-              _buildNavItem(
-                icon: FontAwesomeIcons.solidUser,
-                label: 'Profile',
-                index: 3,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Anda bisa atur warna bar di sini
+            boxShadow: [
+              BoxShadow(
+                // Atur warna dan transparansi bayangan
+                color: Colors.black.withOpacity(0.18),
+                // Atur tingkat blur
+                blurRadius: 20,
+                // Atur seberapa menyebar bayangannya
+                spreadRadius: 5,
+                // KUNCI UTAMA: Atur posisi bayangan (x, y)
+                // Nilai y negatif berarti bayangan akan bergeser ke atas
+                offset: const Offset(0, -3),
               ),
             ],
+          ),
+          child: BottomAppBar(
+            color: Colors.white,
+
+            clipBehavior: Clip.antiAlias,
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                // Item Navigasi di Kiri
+                _buildNavItem(
+                  icon: Icons.dashboard,
+                  label: 'Dashboard',
+                  index: 0,
+                ),
+                _buildNavItem(
+                  icon: FontAwesomeIcons.calendarDays,
+                  label: 'Jadwal Pasien',
+                  index: 1,
+                ),
+
+                // Item Navigasi di Kanan
+                _buildNavItem(
+                  icon: FontAwesomeIcons.addressBook,
+                  label: 'Daftar Pasien',
+                  index: 2,
+                ),
+                _buildNavItem(
+                  icon: FontAwesomeIcons.solidUser,
+                  label: 'Profile',
+                  index: 3,
+                ),
+              ],
+            ),
           ),
         ),
       ),

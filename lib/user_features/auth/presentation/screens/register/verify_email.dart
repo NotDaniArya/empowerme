@@ -168,73 +168,75 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-          child: Column(
-            children: [
-              Text(
-                'Masukkan kode OTP',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              Text(
-                'Kode verifikasi telah dikirim ke:',
-                style: Theme.of(context).textTheme.labelMedium,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                widget.email,
-                style: Theme.of(context).textTheme.labelLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections * 2),
-
-              Pinput(
-                length: 6,
-                defaultPinTheme: defaultPinTheme,
-                focusedPinTheme: focusedPinTheme,
-                submittedPinTheme: submittedPinTheme,
-                pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                onCompleted: (pin) {
-                  _enteredOtp = pin;
-                },
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections * 2),
-
-              SizedBox(
-                width: double.infinity,
-                child: MyButton(
-                  text: const Text(
-                    'Verifikasi OTP',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: isLoading ? null : _submitOtp,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+            child: Column(
+              children: [
+                Text(
+                  'Masukkan kode OTP',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              const Text('Belum mendapatkan kode?'),
-              TextButton(
-                onPressed: _isResendButtonActive && !_isResending
-                    ? _resendOtp
-                    : null,
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
+                const SizedBox(height: TSizes.spaceBtwItems),
+                Text(
+                  'Kode verifikasi telah dikirim ke:',
+                  style: Theme.of(context).textTheme.labelMedium,
+                  textAlign: TextAlign.center,
                 ),
-                child: _isResending
-                    ? const CircularProgressIndicator()
-                    : Text(
-                        _isResendButtonActive
-                            ? 'Kirim Ulang kode'
-                            : 'Kirim ulang dalam ($_start)',
+                Text(
+                  widget.email,
+                  style: Theme.of(context).textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections * 2),
+
+                Pinput(
+                  length: 6,
+                  defaultPinTheme: defaultPinTheme,
+                  focusedPinTheme: focusedPinTheme,
+                  submittedPinTheme: submittedPinTheme,
+                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                  onCompleted: (pin) {
+                    _enteredOtp = pin;
+                  },
+                ),
+                const SizedBox(height: TSizes.spaceBtwSections * 2),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: MyButton(
+                    text: const Text(
+                      'Verifikasi OTP',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-              ),
-            ],
+                    ),
+                    onPressed: isLoading ? null : _submitOtp,
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                const Text('Belum mendapatkan kode?'),
+                TextButton(
+                  onPressed: _isResendButtonActive && !_isResending
+                      ? _resendOtp
+                      : null,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                  ),
+                  child: _isResending
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          _isResendButtonActive
+                              ? 'Kirim Ulang kode'
+                              : 'Kirim ulang dalam ($_start)',
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

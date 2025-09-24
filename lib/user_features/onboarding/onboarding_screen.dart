@@ -23,17 +23,7 @@ class OnboardingScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/images/logo_app.png', width: 150),
-                const SizedBox(height: TSizes.largeSpace),
-                Text(
-                  'Selamat Datang di EmpowerMe',
-                  textAlign: TextAlign.center,
-                  style: textTheme.titleLarge!.copyWith(
-                    color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: TSizes.largeSpace),
+                Image.asset('assets/icons/logo_app.png', width: 200),
                 Text(
                   'Peduli, Terhubung, Bangkit: Bersama untuk Masa Depan Lebih Baik',
                   textAlign: TextAlign.center,

@@ -157,11 +157,7 @@ class HistoryJadwalScreen extends ConsumerWidget {
                 ),
               ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: TSizes.scaffoldPadding,
-          horizontal: TSizes.smallSpace,
-        ),
+      body: SafeArea(
         child: RefreshIndicator(
           displacement: 10,
           onRefresh: () async {
@@ -176,7 +172,7 @@ class HistoryJadwalScreen extends ConsumerWidget {
 
               return Card(
                 elevation: 2,
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: TSizes.mediumSpace),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

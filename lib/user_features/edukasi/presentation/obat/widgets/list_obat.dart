@@ -15,7 +15,7 @@ class ListObat extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      body: _buildBody(context, obatState, ref),
+      body: SafeArea(child: _buildBody(context, obatState, ref)),
     );
   }
 
