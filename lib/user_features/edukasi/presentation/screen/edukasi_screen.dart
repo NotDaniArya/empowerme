@@ -40,7 +40,6 @@ class _EdukasiScreenState extends State<EdukasiScreen>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    // final isLoading = ref.watch(panduanUpdaterProvider)
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,

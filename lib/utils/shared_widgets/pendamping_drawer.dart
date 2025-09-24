@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_empowerme/user_features/edukasi/presentation/screen/edukasi_screen.dart';
+import 'package:new_empowerme/user_features/komunitas/presentation/screens/komunitas_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/shared_widgets/pendamping_menu_item.dart';
 
-import '../../user_features/edukasi/presentation/panduan/widgets/create_panduan_sheet.dart';
+import '../../pendamping_features/tambah_edukasi/presentations/create_panduan_sheet.dart';
 
 class PendampingDrawer extends StatelessWidget {
   const PendampingDrawer({super.key});
@@ -36,32 +39,49 @@ class PendampingDrawer extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              leading: FaIcon(
-                FontAwesomeIcons.bookMedical,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-              title: Text(
-                'Tambah Edukasi Panduan',
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
+          Column(
+            children: [
+              PendampingMenuItem(
+                title: 'Edukasi',
+                iconData: FontAwesomeIcons.bookMedical,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EdukasiScreen(),
                     ),
-                  ),
-                  builder: (context) => const CreatePanduanSheet(),
-                );
-              },
-            ),
+                  );
+                },
+              ),
+              PendampingMenuItem(
+                title: 'Komunitas',
+                iconData: FontAwesomeIcons.peopleGroup,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const KomunitasScreen(),
+                    ),
+                  );
+                },
+              ),
+              PendampingMenuItem(
+                title: 'Tambah Edukasi Panduan',
+                iconData: FontAwesomeIcons.addressBook,
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) => const CreatePanduanSheet(),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
+import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/create_post_sheet.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -17,6 +19,9 @@ class KomunitasScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final komunitasState = ref.watch(komunitasViewModel);
+
+    final authState = ref.watch(authNotifierProvider);
+    final userRole = authState.valueOrNull?.role ?? UserRole.unknown;
 
     if (komunitasState.isLoading) {
       return const Scaffold(
@@ -93,26 +98,32 @@ class KomunitasScreen extends ConsumerWidget {
             ),
           ),
         ),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(bottom: 80), // Sesuaikan margin
-          child: FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        floatingActionButton: userRole == UserRole.pendamping
+            ? Container(
+                margin: const EdgeInsets.only(bottom: 80), // Sesuaikan margin
+                child: FloatingActionButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      builder: (context) => const CreatePostSheet(),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      16,
+                    ), // Bentuk sedikit kotak
+                  ),
+                  backgroundColor: TColors.primaryColor,
+                  child: const Icon(Icons.add, color: Colors.white),
                 ),
-                builder: (context) => const CreatePostSheet(),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16), // Bentuk sedikit kotak
-            ),
-            backgroundColor: TColors.primaryColor,
-            child: const Icon(Icons.add, color: Colors.white),
-          ),
-        ),
+              )
+            : null,
       );
     }
 
@@ -294,6 +305,30 @@ class KomunitasScreen extends ConsumerWidget {
           ),
         ),
       ),
+      floatingActionButton: userRole == UserRole.pendamping
+          ? Container(
+              margin: const EdgeInsets.only(bottom: TSizes.scaffoldPadding),
+              child: FloatingActionButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) => const CreatePostSheet(),
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                backgroundColor: TColors.primaryColor,
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+            )
+          : null,
     );
   }
 }

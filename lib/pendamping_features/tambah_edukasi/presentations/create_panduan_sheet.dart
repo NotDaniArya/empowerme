@@ -1,5 +1,3 @@
-// lib/user_features/komunitas/presentation/screens/widgets/create_post_sheet.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -155,10 +153,12 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
                 controller: _infoLinkController,
                 decoration: const InputDecoration(
                   labelText: 'Tautan Panduan',
-                  hintText: 'Contoh: http://books.google.co.id/books?id',
+                  hintText: 'Tautan harus diawali dengan http atau https',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(),
                 ),
+                minLines: 2,
+                maxLines: 3,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Tautan tidak boleh kosong.';
