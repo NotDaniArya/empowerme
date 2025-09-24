@@ -34,122 +34,127 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionTitle(context, 'Informasi Pasien'),
-            Card(
-              child: ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.person)),
-                title: Text(
-                  jadwal.pasien.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionTitle(context, 'Informasi Pasien'),
+              Card(
+                child: ListTile(
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
+                  title: Text(
+                    jadwal.pasien.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(jadwal.pasien.email),
                 ),
-                subtitle: Text(jadwal.pasien.email),
               ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-            _buildSectionTitle(context, 'Detail Jadwal'),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
+              _buildSectionTitle(context, 'Detail Jadwal'),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Status:',
+                            style: TextStyle(color: TColors.secondaryText),
+                          ),
+                          _buildStatusChip(context, jadwal.status),
+                        ],
+                      ),
+                      const Divider(height: 24),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.calendar_today,
+                        title: 'Tanggal',
+                        value: DateFormat(
+                          'EEEE, d MMMM yyyy',
+                          'id_ID',
+                        ).format(jadwal.date),
+                      ),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.access_time,
+                        title: 'Waktu',
+                        value: jadwal.time,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.location_on,
+                        title: 'Lokasi',
+                        value: jadwal.location,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.group,
+                        title: 'Bertemu Dengan',
+                        value: jadwal.meetWith,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: TSizes.spaceBtwSections),
+
+              _buildSectionTitle(context, 'Aksi'),
+              if (jadwal.status != 'SELESAI' && jadwal.status != 'DIBATALKAN')
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Status:',
-                          style: TextStyle(color: TColors.secondaryText),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          _updateStatus(ref, context, 'SELESAI');
+                        },
+                        icon: const Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
                         ),
-                        _buildStatusChip(context, jadwal.status),
-                      ],
+                        label: const Text('Selesai'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
                     ),
-                    const Divider(height: 24),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.calendar_today,
-                      title: 'Tanggal',
-                      value: DateFormat(
-                        'EEEE, d MMMM yyyy',
-                        'id_ID',
-                      ).format(jadwal.date),
-                    ),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.access_time,
-                      title: 'Waktu',
-                      value: jadwal.time,
-                    ),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.location_on,
-                      title: 'Lokasi',
-                      value: jadwal.location,
-                    ),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.group,
-                      title: 'Bertemu Dengan',
-                      value: jadwal.meetWith,
+                    const SizedBox(width: TSizes.spaceBtwItems),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          _updateStatus(ref, context, 'DIBATALKAN');
+                        },
+                        icon: const Icon(Icons.cancel, color: Colors.white),
+                        label: const Text('Batalkan'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
-                ),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-
-            _buildSectionTitle(context, 'Aksi'),
-            if (jadwal.status != 'SELESAI' && jadwal.status != 'DIBATALKAN')
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        _updateStatus(ref, context, 'SELESAI');
-                      },
-                      icon: const Icon(Icons.check_circle, color: Colors.white),
-                      label: const Text('Selesai'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                )
+              else
+                Card(
+                  color: Colors.grey.shade200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Center(
+                      child: Text(
+                        'Aksi tidak tersedia untuk status ini.',
+                        style: TextStyle(color: Colors.grey.shade600),
                       ),
                     ),
                   ),
-                  const SizedBox(width: TSizes.spaceBtwItems),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        _updateStatus(ref, context, 'DIBATALKAN');
-                      },
-                      icon: const Icon(Icons.cancel, color: Colors.white),
-                      label: const Text('Batalkan'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            else
-              Card(
-                color: Colors.grey.shade200,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Center(
-                    child: Text(
-                      'Aksi tidak tersedia untuk status ini.',
-                      style: TextStyle(color: Colors.grey.shade600),
-                    ),
-                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

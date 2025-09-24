@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/daftar_pasien_screen.dart';
+import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/widgets/tambah_pasien.dart';
 import 'package:new_empowerme/pendamping_features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/providers/jadwal_tab_provider.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/jadwal_pasien_screen.dart';
+import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/tambah_jadwal_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/profile_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 
-class PendampingNavigationMenu extends StatefulWidget {
+class PendampingNavigationMenu extends ConsumerStatefulWidget {
   const PendampingNavigationMenu({super.key});
 
   @override
-  State<PendampingNavigationMenu> createState() =>
+  ConsumerState<PendampingNavigationMenu> createState() =>
       _PendampingNavigationMenuState();
 }
 
-class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
-  int _selectedIndex = 0; // State untuk melacak tab yang aktif
+class _PendampingNavigationMenuState
+    extends ConsumerState<PendampingNavigationMenu> {
+  int _selectedIndex = 0;
 
   static final List<Widget> _listMenu = [
     const DashboardScreen(),
@@ -32,26 +38,24 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final activeJadwalTabIndex = ref.watch(jadwalTabProvider);
+
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      extendBody: true, // Membuat body bisa berada di belakang navbar
+      extendBody: true,
       body: _listMenu[_selectedIndex],
 
-      // 3. Gunakan BottomAppBar, bukan BottomNavigationBar
+      floatingActionButton: _buildFab(context, activeJadwalTabIndex),
+
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white, // Anda bisa atur warna bar di sini
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
-                // Atur warna dan transparansi bayangan
                 color: Colors.black.withOpacity(0.18),
-                // Atur tingkat blur
                 blurRadius: 20,
-                // Atur seberapa menyebar bayangannya
                 spreadRadius: 5,
-                // KUNCI UTAMA: Atur posisi bayangan (x, y)
-                // Nilai y negatif berarti bayangan akan bergeser ke atas
                 offset: const Offset(0, -3),
               ),
             ],
@@ -64,7 +68,6 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                // Item Navigasi di Kiri
                 _buildNavItem(
                   icon: Icons.dashboard,
                   label: 'Dashboard',
@@ -76,7 +79,6 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
                   index: 1,
                 ),
 
-                // Item Navigasi di Kanan
                 _buildNavItem(
                   icon: FontAwesomeIcons.addressBook,
                   label: 'Daftar Pasien',
@@ -95,7 +97,6 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
     );
   }
 
-  // Helper widget untuk membuat setiap item navigasi agar kode tidak berulang
   Widget _buildNavItem({
     required IconData icon,
     required String label,
@@ -126,5 +127,46 @@ class _PendampingNavigationMenuState extends State<PendampingNavigationMenu> {
         ),
       ),
     );
+  }
+
+  Widget? _buildFab(BuildContext context, int activeJadwalTabIndex) {
+    if (_selectedIndex == 1) {
+      return FloatingActionButton(
+        onPressed: () {
+          final jadwalType = activeJadwalTabIndex == 0
+              ? TipeJadwal.terapi
+              : TipeJadwal.ambilObat;
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TambahJadwalScreen(jadwalType: jadwalType),
+            ),
+          );
+        },
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: TColors.primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
+      );
+    } else if (_selectedIndex == 2) {
+      return FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (context) => const TambahPasien(),
+          );
+        },
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: TColors.primaryColor,
+        // Gunakan ikon yang lebih deskriptif
+        child: const Icon(Icons.person_add_alt_1, color: Colors.white),
+      );
+    }
+    // KONDISI LAINNYA: Jangan tampilkan FAB
+    return null;
   }
 }

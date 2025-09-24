@@ -28,7 +28,7 @@ class PendampingDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Empowerme',
+                  'EmpowerMe',
                   style: Theme.of(
                     context,
                   ).textTheme.headlineLarge!.copyWith(color: Colors.white),

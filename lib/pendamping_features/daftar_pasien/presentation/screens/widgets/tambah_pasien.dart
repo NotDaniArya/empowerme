@@ -64,74 +64,78 @@ class _TambahPasienState extends ConsumerState<TambahPasien> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(pasienUpdaterProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
-        bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _nameController,
-              keyboardType: TextInputType.name,
-              decoration: const InputDecoration(
-                labelText: 'Nama Pasien',
-                hintText: 'Masukkan nama pasien...',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(TSizes.scaffoldPadding).copyWith(
+          bottom: MediaQuery.of(context).viewInsets.bottom + TSizes.mediumSpace,
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                keyboardType: TextInputType.name,
+                decoration: const InputDecoration(
+                  labelText: 'Nama Pasien',
+                  hintText: 'Masukkan nama pasien...',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null ||
+                      value.trim().isEmpty ||
+                      value.trim().length < 4) {
+                    return 'Nama tidak boleh kosong dan panjang minimal adalah 4 karakter';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null ||
-                    value.trim().isEmpty ||
-                    value.trim().length < 4) {
-                  return 'Nama tidak boleh kosong dan panjang minimal adalah 4 karakter';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'Email Pasien',
-                hintText: 'Masukkan email pasien...',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              TextFormField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'Email Pasien',
+                  hintText: 'Masukkan email pasien...',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value.trim().length < 8) {
+                    return 'Panjang input minimal 8 karakter';
+                  }
+
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty || value.trim().length < 8) {
-                  return 'Panjang input minimal 8 karakter';
-                }
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-                return null;
-              },
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-
-            SizedBox(
-              width: double.infinity,
-              child: MyButton(
-                onPressed: isLoading ? null : _submitAddPasien,
-                text: isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+              SizedBox(
+                width: double.infinity,
+                child: MyButton(
+                  onPressed: isLoading ? null : _submitAddPasien,
+                  text: isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Tambah Pasien',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      )
-                    : const Text(
-                        'Tambah Pasien',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

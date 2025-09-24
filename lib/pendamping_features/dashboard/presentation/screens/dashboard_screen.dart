@@ -19,10 +19,12 @@ class DashboardScreen extends ConsumerWidget {
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
       drawer: const PendampingDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(dashboardViewModel),
-        color: TColors.primaryColor,
-        child: _buildBody(context, dashboardState, ref),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async => ref.invalidate(dashboardViewModel),
+          color: TColors.primaryColor,
+          child: _buildBody(context, dashboardState, ref),
+        ),
       ),
     );
   }
