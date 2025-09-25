@@ -7,6 +7,7 @@ import 'package:new_empowerme/user_features/auth/data/datasources/auth_remote_da
 import 'package:new_empowerme/user_features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:new_empowerme/user_features/auth/domain/entities/auth.dart';
 import 'package:new_empowerme/user_features/auth/domain/repositories/auth_repository.dart';
+import 'package:new_empowerme/user_features/profile/presentation/providers/profile_provider.dart';
 import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_providers/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -119,6 +120,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<Auth?>> {
       state = AsyncValue.error(failure, StackTrace.current);
     } else {
       state = AsyncValue.data(user);
+      _ref.invalidate(profileViewModel);
     }
   }
 
@@ -136,6 +138,8 @@ class AuthNotifier extends StateNotifier<AsyncValue<Auth?>> {
   Future<void> logout() async {
     final repository = _ref.read(authRepositoryProvider);
     await repository.logout();
+
+    _ref.invalidate(profileViewModel);
     state = const AsyncValue.data(null);
 
     final context = navigatorKey.currentContext;
