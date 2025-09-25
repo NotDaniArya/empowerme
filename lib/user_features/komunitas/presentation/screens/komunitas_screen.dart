@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:new_empowerme/user_features/komunitas/presentation/providers/kom
 import 'package:new_empowerme/user_features/komunitas/presentation/screens/widgets/create_post_sheet.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
+import 'package:new_empowerme/utils/helper_functions/helper.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
 import 'detail_komunitas_screen.dart';
@@ -248,12 +250,21 @@ class KomunitasScreen extends ConsumerWidget {
                       */
                       SizedBox(
                         width: double.infinity,
-                        child: Text(
-                          postingan.content,
+                        child: Linkify(
+                          onOpen: (link) => MyHelperFunction.launchUrlPostingan(
+                            link.url,
+                            context,
+                          ),
+                          text: postingan.content,
                           textAlign: TextAlign.start,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.bodyMedium,
+                          linkStyle: textTheme.bodyMedium?.copyWith(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.blue,
+                          ),
                         ),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),

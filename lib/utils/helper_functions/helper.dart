@@ -41,4 +41,30 @@ class MyHelperFunction {
       throw Exception('Could not launch $url');
     }
   }
+
+  static Future<void> launchUrlPostingan(
+    String url,
+    BuildContext context,
+  ) async {
+    final uri = Uri.parse(url);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        showToast(
+          context,
+          'Gagal',
+          'Tidak dapat membuka tautan: $url',
+          ToastificationType.error,
+        );
+      }
+    } catch (e) {
+      showToast(
+        context,
+        'Error',
+        'Terjadi kesalahan saat membuka tautan.',
+        ToastificationType.error,
+      );
+    }
+  }
 }
