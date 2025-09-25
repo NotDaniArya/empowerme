@@ -56,7 +56,7 @@ class BeritaRemoteDataSourceImpl implements BeritaRemoteDataSource {
           "title": title,
           "author": author,
           "description": description,
-          "urlToImage": 'empty',
+          "urlToImage": 'pendamping',
           "publishedAt": publishedDate,
           "url": url,
         },

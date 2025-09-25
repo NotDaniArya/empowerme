@@ -162,11 +162,9 @@ class _PendampingNavigationMenuState
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: TColors.primaryColor,
-        // Gunakan ikon yang lebih deskriptif
         child: const Icon(Icons.person_add_alt_1, color: Colors.white),
       );
     }
-    // KONDISI LAINNYA: Jangan tampilkan FAB
     return null;
   }
 }

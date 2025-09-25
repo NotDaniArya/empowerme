@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/edukasi/data/repositories/makanan_repository_impl.dart';
 import 'package:new_empowerme/user_features/edukasi/domain/entitites/makanan.dart';
@@ -58,4 +60,47 @@ class MakananViewModel extends Notifier<MakananState> {
 
 final makananViewModel = NotifierProvider<MakananViewModel, MakananState>(
   () => MakananViewModel(),
+);
+
+class MakananUpdater extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  MakananRepository get _repository => ref.read(makananRepositoryProvider);
+
+  Future<void> postMakanan({
+    required String link,
+    required String title,
+    required String source,
+    required String date,
+    required String description,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = true;
+    try {
+      final (_, failure) = await _repository.postMakanan(
+        link: link,
+        title: title,
+        source: source,
+        date: date,
+        description: description,
+      );
+
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(makananViewModel);
+        onSuccess();
+      }
+    } finally {
+      state = false;
+    }
+  }
+}
+
+final makananUpdaterProvider = NotifierProvider<MakananUpdater, bool>(
+  () => MakananUpdater(),
 );

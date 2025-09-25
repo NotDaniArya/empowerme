@@ -57,10 +57,10 @@ class ObatRemoteDataSourceImpl implements ObatRemoteDataSource {
           "title": title,
           "source": source,
           "date": date,
-          "published_at": 'empty',
+          "published_at": 'pendamping',
           "snippet": snippet,
-          "favicon": 'empty',
-          "thumbnail": 'empty',
+          "favicon": 'pendamping',
+          "thumbnail": 'pendamping',
         },
       );
     } on DioException catch (e) {

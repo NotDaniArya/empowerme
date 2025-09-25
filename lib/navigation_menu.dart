@@ -15,10 +15,9 @@ class NavigationMenu extends StatefulWidget {
 }
 
 class _NavigationMenuState extends State<NavigationMenu> {
-  int _selectedIndex = 0; // State untuk melacak tab yang aktif
+  int _selectedIndex = 0;
 
   static final List<Widget> _listMenu = [
-    // const HomeScreen(),
     const HomeScreen(),
     const EdukasiScreen(),
     const KomunitasScreen(),
@@ -35,24 +34,18 @@ class _NavigationMenuState extends State<NavigationMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      extendBody: true, // Membuat body bisa berada di belakang navbar
+      extendBody: true,
       body: _listMenu[_selectedIndex],
 
-      // 3. Gunakan BottomAppBar, bukan BottomNavigationBar
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white, // Anda bisa atur warna bar di sini
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
-                // Atur warna dan transparansi bayangan
                 color: Colors.black.withOpacity(0.18),
-                // Atur tingkat blur
                 blurRadius: 20,
-                // Atur seberapa menyebar bayangannya
                 spreadRadius: 5,
-                // KUNCI UTAMA: Atur posisi bayangan (x, y)
-                // Nilai y negatif berarti bayangan akan bergeser ke atas
                 offset: const Offset(0, -3),
               ),
             ],
@@ -65,7 +58,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                // Item Navigasi di Kiri
                 _buildNavItem(
                   icon: FontAwesomeIcons.home,
                   label: 'Home',
@@ -77,7 +69,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
                   index: 1,
                 ),
 
-                // Item Navigasi di Kanan
                 _buildNavItem(
                   icon: FontAwesomeIcons.peopleGroup,
                   label: 'Komunitas',
@@ -108,7 +99,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
                 );
               },
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16), // Bentuk sedikit kotak
+                borderRadius: BorderRadius.circular(16),
               ),
               backgroundColor: TColors.primaryColor,
               child: const Icon(Icons.add, color: Colors.white),
@@ -117,7 +108,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
     );
   }
 
-  // Helper widget untuk membuat setiap item navigasi agar kode tidak berulang
   Widget _buildNavItem({
     required IconData icon,
     required String label,

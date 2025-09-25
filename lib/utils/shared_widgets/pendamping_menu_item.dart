@@ -21,7 +21,7 @@ class PendampingMenuItem extends StatelessWidget {
       child: ListTile(
         leading: FaIcon(
           iconData,
-          size: 20,
+          size: 17,
           color: Theme.of(context).colorScheme.onSurface,
         ),
         title: Text(

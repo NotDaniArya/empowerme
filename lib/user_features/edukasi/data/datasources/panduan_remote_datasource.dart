@@ -57,10 +57,10 @@ class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
         data: {
           "title": title,
           "description": description,
-          "authors": ['empty'],
+          "authors": ['pendamping'],
           "publisher": publishers,
-          "thumbnail": 'empty',
-          "webReaderLink": 'empty',
+          "thumbnail": 'pendamping',
+          "webReaderLink": 'pendamping',
           "publishedDate": publishedDate,
           "infoLink": infoLink,
         },

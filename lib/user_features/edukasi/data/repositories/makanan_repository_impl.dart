@@ -19,4 +19,28 @@ class MakananRepositoryImpl implements MakananRepository {
       return (null, Failure(e.toString()));
     }
   }
+
+  @override
+  Future<(void, Failure?)> postMakanan({
+    required String link,
+    required String title,
+    required String source,
+    required String date,
+    required String description,
+  }) async {
+    try {
+      await remoteDataSource.postMakanan(
+        link: link,
+        title: title,
+        source: source,
+        date: date,
+        description: description,
+      );
+      return (null, null);
+    } on Failure catch (f) {
+      return (null, f);
+    } catch (e) {
+      return (null, Failure(e.toString()));
+    }
+  }
 }

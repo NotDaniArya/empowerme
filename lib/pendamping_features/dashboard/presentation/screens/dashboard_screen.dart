@@ -61,10 +61,9 @@ class DashboardScreen extends ConsumerWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
-          // --- PERUBAHAN DARI GridView KE Wrap ---
           Wrap(
-            spacing: 16, // Jarak horizontal antar kartu
-            runSpacing: 16, // Jarak vertikal antar baris kartu
+            spacing: 16,
+            runSpacing: 16,
             children: [
               _DashboardCard(
                 icon: FontAwesomeIcons.userGroup,
@@ -74,7 +73,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               _DashboardCard(
                 icon: FontAwesomeIcons.calendarCheck,
-                title: 'Jadwal Terapi Selanjutnya', // Judul lebih panjang
+                title: 'Jadwal Terapi Selanjutnya',
                 value: dashboard.scheduledTherapyCount.toString(),
                 color: Colors.green.shade700,
               ),
@@ -90,7 +89,6 @@ class DashboardScreen extends ConsumerWidget {
                 value: dashboard.missedTherapyCount.toString(),
                 color: Colors.red.shade700,
               ),
-              // Kartu ini akan memakan lebar penuh jika diperlukan
               _DashboardCard(
                 icon: FontAwesomeIcons.capsules,
                 title: 'Jadwal Ambil Obat yang Sudah Lewat',
@@ -169,14 +167,12 @@ class _DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menghitung lebar kartu agar pas untuk 2 kolom
     final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth =
-        (screenWidth - (16 * 3)) / 2; // (Lebar layar - (padding * 3)) / 2 kolom
+    final cardWidth = (screenWidth - (16 * 3)) / 2;
 
     return Container(
       width: cardWidth,
-      constraints: const BoxConstraints(minHeight: 150), // Tinggi minimum kartu
+      constraints: const BoxConstraints(minHeight: 150),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [color.withOpacity(0.8), color],
@@ -213,13 +209,11 @@ class _DashboardCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              // --- PERUBAHAN PADA JUDUL ---
               Text(
                 title,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white.withOpacity(0.9),
                 ),
-                // Tidak ada batasan baris, teks akan otomatis wrap
               ),
             ],
           ),

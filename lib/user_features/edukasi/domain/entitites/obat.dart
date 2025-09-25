@@ -21,7 +21,7 @@ class Obat extends Equatable {
 
     try {
       final dateTime = DateTime.parse(date);
-      return DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(dateTime);
+      return DateFormat('d MMMM yyyy', 'id_ID').format(dateTime);
     } catch (e) {
       return date;
     }
