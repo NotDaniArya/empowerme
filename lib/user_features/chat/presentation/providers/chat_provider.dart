@@ -37,7 +37,6 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
   );
 });
 
-// Service untuk mengelola koneksi WebSocket
 final chatServiceProvider = Provider((ref) {
   final chatRepository = ref.watch(chatRepositoryProvider);
   final authState = ref.watch(authNotifierProvider);
@@ -49,7 +48,6 @@ final chatServiceProvider = Provider((ref) {
   return chatRepository;
 });
 
-// ViewModel untuk daftar kontak yang adaptif
 class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   @override
   AsyncValue<List<ChatContact>> build() {
@@ -152,10 +150,8 @@ final chatListProvider =
       () => ChatListViewModel(),
     );
 
-// Provider untuk query pencarian
 final chatSearchQueryProvider = StateProvider<String>((ref) => '');
 
-// ViewModel untuk pesan dalam satu chat
 class ChatMessagesViewModel
     extends FamilyNotifier<AsyncValue<List<ChatMessage>>, String> {
   StreamSubscription? _subscription;
