@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_empowerme/pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import 'package:new_empowerme/user_features/home/presentation/providers/user_jadwal_pasien_provider.dart';
 
+import '../../../../pendamping_features/jadwal_pasien/domain/entities/jadwal_pasien.dart';
 import '../../../../utils/constant/colors.dart';
 import '../../../../utils/constant/sizes.dart';
+import '../../domain/entities/user_jadwal_pasien.dart';
 
 class HistoryJadwalScreen extends ConsumerWidget {
   const HistoryJadwalScreen({
@@ -16,6 +17,32 @@ class HistoryJadwalScreen extends ConsumerWidget {
   final TipeJadwal tipeJadwal;
   final String id;
 
+  Color _getStatusColor(String status) {
+    switch (status.toUpperCase()) {
+      case 'SELANJUTNYA':
+        return Colors.green.shade600;
+      case 'TERLEWATKAN':
+        return Colors.orange.shade700;
+      case 'DIBATALKAN':
+        return Colors.red.shade700;
+      default:
+        return Colors.blueAccent.shade200;
+    }
+  }
+
+  int _getSortOrder(String status) {
+    switch (status.toUpperCase()) {
+      case 'SELANJUTNYA':
+        return 0;
+      case 'TERLEWATKAN':
+        return 1;
+      case 'DIBATALKAN':
+        return 2;
+      default:
+        return 3;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -23,235 +50,189 @@ class HistoryJadwalScreen extends ConsumerWidget {
         ? ref.watch(userJadwalTerapiViewModel(id))
         : ref.watch(userJadwalAmbilObatViewModel(id));
 
-    if (userJadwalState.isLoading) {
-      return const Scaffold(
-        backgroundColor: TColors.backgroundColor,
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (userJadwalState.error != null) {
-      return Scaffold(
-        backgroundColor: TColors.backgroundColor,
-        appBar: AppBar(
-          backgroundColor: TColors.primaryColor,
-          foregroundColor: Colors.white,
-          title: tipeJadwal == TipeJadwal.terapi
-              ? Text(
-                  'Riwayat Jadwal Terapi',
-                  style: textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : Text(
-                  'Riwayat Jadwal Ambil Obat',
-                  style: textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Terjadi kesalahan: ${userJadwalState.error}',
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: TColors.primaryColor,
-                  ),
-                  onPressed: () {
-                    tipeJadwal == TipeJadwal.terapi
-                        ? ref.invalidate(userJadwalTerapiViewModel)
-                        : ref.invalidate(userJadwalAmbilObatViewModel);
-                  },
-                  child: const Text(
-                    'Refresh',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (userJadwalState.jadwalPasien == null ||
-        userJadwalState.jadwalPasien!.isEmpty) {
-      return Scaffold(
-        backgroundColor: TColors.backgroundColor,
-        appBar: AppBar(
-          backgroundColor: TColors.primaryColor,
-          foregroundColor: Colors.white,
-          title: tipeJadwal == TipeJadwal.terapi
-              ? Text(
-                  'Riwayat Jadwal Terapi',
-                  style: textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : Text(
-                  'Riwayat Jadwal Ambil Obat',
-                  style: textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Tidak ada jadwal pasien yang ditemukan.',
-                style: textTheme.titleMedium,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              ElevatedButton(
-                onPressed: () {
-                  tipeJadwal == TipeJadwal.terapi
-                      ? ref.invalidate(userJadwalTerapiViewModel)
-                      : ref.invalidate(userJadwalAmbilObatViewModel);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TColors.primaryColor,
-                ),
-                child: const Text(
-                  'Refresh',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    final String title = tipeJadwal == TipeJadwal.terapi
+        ? 'Riwayat Jadwal Terapi'
+        : 'Riwayat Jadwal Ambil Obat';
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: TColors.primaryColor,
         foregroundColor: Colors.white,
-        title: tipeJadwal == TipeJadwal.terapi
-            ? Text(
-                'Riwayat Jadwal Terapi',
-                style: textTheme.titleMedium!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : Text(
-                'Riwayat Jadwal Ambil Obat',
-                style: textTheme.titleMedium!.copyWith(
+        title: Text(
+          title,
+          style: textTheme.titleMedium!.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SafeArea(child: _buildContent(context, ref, userJadwalState)),
+    );
+  }
+
+  Widget _buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    UserJadwalPasienState state,
+  ) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.error != null) {
+      return _buildErrorState(context, ref, state.error!);
+    }
+
+    final jadwalList = state.jadwalPasien;
+
+    if (jadwalList == null || jadwalList.isEmpty) {
+      return _buildEmptyState(context, ref);
+    }
+
+    final sortedList = List<UserJadwalPasien>.from(jadwalList);
+    sortedList.sort((a, b) {
+      final orderA = _getSortOrder(a.status);
+      final orderB = _getSortOrder(b.status);
+      return orderA.compareTo(orderB);
+    });
+
+    return RefreshIndicator(
+      onRefresh: () async => ref.invalidate(
+        tipeJadwal == TipeJadwal.terapi
+            ? userJadwalTerapiViewModel(id)
+            : userJadwalAmbilObatViewModel(id),
+      ),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+        itemCount: sortedList.length,
+        itemBuilder: (context, index) {
+          final jadwal = sortedList[index];
+          return _buildJadwalCard(context, jadwal, Theme.of(context).textTheme);
+        },
+      ),
+    );
+  }
+
+  Widget _buildJadwalCard(
+    BuildContext context,
+    UserJadwalPasien jadwal,
+    TextTheme textTheme,
+  ) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: TSizes.mediumSpace),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Chip(
+              label: Text(
+                jadwal.status[0].toUpperCase() +
+                    jadwal.status.substring(1).toLowerCase(),
+                style: textTheme.labelMedium!.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-      ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          displacement: 10,
-          onRefresh: () async {
-            tipeJadwal == TipeJadwal.terapi
-                ? ref.invalidate(userJadwalTerapiViewModel)
-                : ref.invalidate(userJadwalAmbilObatViewModel);
-          },
-          child: ListView.builder(
-            itemCount: userJadwalState.jadwalPasien!.length,
-            itemBuilder: (context, index) {
-              final jadwal = userJadwalState.jadwalPasien![index];
-
-              return Card(
-                elevation: 2,
-                margin: const EdgeInsets.only(bottom: TSizes.mediumSpace),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+              backgroundColor: _getStatusColor(jadwal.status),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+            ),
+            const Divider(height: 24),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Chip(
-                        label: Text(
-                          jadwal.status[0].toUpperCase() +
-                              jadwal.status.substring(1).toLowerCase(),
-                          style: textTheme.labelMedium!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        backgroundColor: TColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.calendar_today,
+                        text: jadwal.date,
                       ),
-                      const Divider(height: 24),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 12),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.calendar_today,
-                                  text: jadwal.date,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.access_time,
-                                  text: '${jadwal.time} WITA',
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.location_on,
-                                  text: jadwal.location,
-                                ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow(
-                                  context,
-                                  icon: Icons.person,
-                                  text: 'Bertemu dengan ${jadwal.meetWith}',
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          tipeJadwal == TipeJadwal.terapi
-                              ? Image.asset(
-                                  'assets/icons/jadwal_terapi.png',
-                                  height: 100,
-                                  width: 100,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  'assets/icons/jadwal_obat.png',
-                                  height: 100,
-                                  width: 100,
-                                  fit: BoxFit.fitWidth,
-                                ),
-                        ],
+                      const SizedBox(height: 8),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.access_time,
+                        text: '${jadwal.time} WITA',
+                      ),
+                      const SizedBox(height: 8),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.location_on,
+                        text: jadwal.location,
+                      ),
+                      const SizedBox(height: 8),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.person,
+                        text: 'Bertemu dengan ${jadwal.meetWith}',
                       ),
                     ],
                   ),
                 ),
-              );
-            },
-          ),
+                const SizedBox(width: 16),
+                Image.asset(
+                  tipeJadwal == TipeJadwal.terapi
+                      ? 'assets/icons/jadwal_terapi.png'
+                      : 'assets/icons/jadwal_obat.png',
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, WidgetRef ref, String error) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Terjadi kesalahan: $error', textAlign: TextAlign.center),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            ElevatedButton(
+              onPressed: () => ref.invalidate(
+                tipeJadwal == TipeJadwal.terapi
+                    ? userJadwalTerapiViewModel(id)
+                    : userJadwalAmbilObatViewModel(id),
+              ),
+              child: const Text('Refresh'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Tidak ada jadwal yang ditemukan.',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: TSizes.spaceBtwItems),
+          ElevatedButton(
+            onPressed: () => ref.invalidate(
+              tipeJadwal == TipeJadwal.terapi
+                  ? userJadwalTerapiViewModel(id)
+                  : userJadwalAmbilObatViewModel(id),
+            ),
+            child: const Text('Refresh'),
+          ),
+        ],
       ),
     );
   }

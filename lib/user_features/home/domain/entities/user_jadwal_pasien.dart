@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-enum TipeJadwal { terapi, ambilObat }
-
 class UserJadwalPasien extends Equatable {
   final String idUser;
   final String email;
