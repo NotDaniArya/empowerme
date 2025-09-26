@@ -74,57 +74,54 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       foregroundColor: TColors.primaryColor,
       backgroundColor: Colors.white,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              ClipOval(
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        '${TTexts.baseUrl}/images/${state.profile!.picture}',
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => Center(
-                          child: CircularProgressIndicator(
-                            value: downloadProgress.progress,
-                            strokeWidth: 2.5,
-                            color: TColors.primaryColor.withOpacity(0.5),
-                          ),
-                        ),
-                    // Widget yang ditampilkan jika terjadi error
-                    errorWidget: (context, url, error) => const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: TColors.backgroundColor,
-                      child: Icon(Icons.person, color: TColors.primaryColor),
+          ClipOval(
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CachedNetworkImage(
+                imageUrl: '${TTexts.baseUrl}/images/${state.profile!.picture}',
+                fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        strokeWidth: 2.5,
+                        color: TColors.primaryColor.withOpacity(0.5),
+                      ),
                     ),
-                  ),
+                // Widget yang ditampilkan jika terjadi error
+                errorWidget: (context, url, error) => const CircleAvatar(
+                  radius: 20,
+                  backgroundColor: TColors.backgroundColor,
+                  child: Icon(Icons.person, color: TColors.primaryColor),
                 ),
               ),
-              const SizedBox(width: TSizes.mediumSpace),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Halo,',
-                    style: textTheme.titleMedium!.copyWith(
-                      color: TColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+          ),
+          const SizedBox(width: TSizes.mediumSpace),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Halo,',
+                  style: textTheme.titleMedium!.copyWith(
+                    color: TColors.primaryColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    state.profile!.name,
-                    style: textTheme.titleSmall!.copyWith(
-                      color: TColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  state.profile!.name,
+                  style: textTheme.titleSmall!.copyWith(
+                    color: TColors.primaryColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-            ],
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
           ),
         ],
       ),
