@@ -37,51 +37,49 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
   );
 });
 
+// Service untuk mengelola koneksi WebSocket
 final chatServiceProvider = Provider((ref) {
   final chatRepository = ref.watch(chatRepositoryProvider);
   final authState = ref.watch(authNotifierProvider);
   final userId = authState.valueOrNull?.id;
-
   if (userId != null) {
     chatRepository.connect(userId);
   }
-
-  ref.onDispose(() {
-    chatRepository.disconnect();
-  });
-
+  ref.onDispose(() => chatRepository.disconnect());
   return chatRepository;
 });
 
+// ViewModel untuk daftar kontak yang adaptif
 class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
   @override
   AsyncValue<List<ChatContact>> build() {
     ref.watch(chatServiceProvider);
-    final userRole =
-        ref.watch(authNotifierProvider).valueOrNull?.role ?? UserRole.unknown;
-    _fetchContactsByRole(userRole);
+    ref.listen(authNotifierProvider, (_, __) => _fetchContacts());
+    ref.listen(profileViewModel, (_, __) => _fetchContacts());
+    _fetchContacts();
     return const AsyncValue.loading();
   }
 
-  Future<void> _fetchContactsByRole(UserRole role) async {
+  Future<void> _fetchContacts() async {
+    final userRole =
+        ref.read(authNotifierProvider).valueOrNull?.role ?? UserRole.unknown;
+    final profile = ref.read(profileViewModel).profile;
+
     state = const AsyncValue.loading();
     final repo = ref.read(chatRepositoryProvider);
-    final profileState = ref.read(profileViewModel);
 
-    switch (role) {
+    switch (userRole) {
       case UserRole.pasien:
         var (contacts, failure) = await repo.getPasienChatContacts();
-        if (profileState.profile?.status == 'PENGGUNA LAMA') {
+        if (profile?.status == 'PENGGUNA LAMA') {
           contacts = contacts?.where((c) => c.id != '000006').toList();
         }
         _updateState(contacts, failure);
         break;
-
       case UserRole.pendamping:
         final (contacts, failure) = await repo.getSortedPatientList();
         _updateState(contacts, failure);
         break;
-
       case UserRole.konselor:
         final (pasienList, failure) = await ref
             .read(pasienRepositoryProvider)
@@ -90,7 +88,6 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
           _updateState(null, failure);
           return;
         }
-
         final filteredPasien = pasienList
             ?.where((p) => p.status == 'PENGGUNA BARU')
             .toList();
@@ -99,7 +96,6 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
         );
         _updateState(contacts, null);
         break;
-
       default:
         state = const AsyncValue.data([]);
     }
@@ -114,7 +110,6 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
     final unreadData = await ref
         .read(chatLocalDataSourceProvider)
         .getAllUnreadCounts();
-
     final contactList = pasienList.map((pasien) {
       return ChatContact(
         id: pasien.id,
@@ -122,7 +117,6 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
         unreadCount: unreadData[pasien.id] ?? 0,
       );
     }).toList();
-
     contactList.sort((a, b) {
       final activityA = activityData[a.id] ?? 0;
       final activityB = activityData[b.id] ?? 0;
@@ -133,7 +127,6 @@ class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
 
   Future<void> markAsRead(String contactId) async {
     await ref.read(chatRepositoryProvider).clearUnreadCount(contactId);
-
     state = state.whenData((contacts) {
       return [
         for (final contact in contacts)
@@ -159,8 +152,10 @@ final chatListProvider =
       () => ChatListViewModel(),
     );
 
+// Provider untuk query pencarian
 final chatSearchQueryProvider = StateProvider<String>((ref) => '');
 
+// ViewModel untuk pesan dalam satu chat
 class ChatMessagesViewModel
     extends FamilyNotifier<AsyncValue<List<ChatMessage>>, String> {
   StreamSubscription? _subscription;
@@ -179,22 +174,14 @@ class ChatMessagesViewModel
 
   Future<void> _fetchInitialMessages() async {
     state = const AsyncValue.loading();
+    await _repo.syncMessageHistory(arg);
     final (localMessages, localFailure) = await _repo.getLocalMessageHistory(
       arg,
     );
-
-    if (localMessages != null && localMessages.isNotEmpty) {
-      state = AsyncValue.data(localMessages);
-    } else if (localFailure != null) {
+    if (localFailure != null) {
       state = AsyncValue.error(localFailure, StackTrace.current);
-    }
-
-    final (syncedMessages, remoteFailure) = await _repo.syncMessageHistory(arg);
-
-    if (syncedMessages != null) {
-      state = AsyncValue.data(syncedMessages);
-    } else if (remoteFailure != null && state.value == null) {
-      state = AsyncValue.error(remoteFailure, StackTrace.current);
+    } else {
+      state = AsyncValue.data(localMessages ?? []);
     }
   }
 
@@ -215,7 +202,6 @@ class ChatMessagesViewModel
 
   Future<void> sendMessage(String text) async {
     if (_currentUserId == null) return;
-
     final message = ChatMessage(
       messageId: const Uuid().v4(),
       from: _currentUserId!,
@@ -226,9 +212,12 @@ class ChatMessagesViewModel
     );
     final currentMessages = state.valueOrNull ?? [];
     state = AsyncValue.data([...currentMessages, message]);
-
     await _repo.sendMessage(message);
     ref.invalidate(chatListProvider);
+  }
+
+  Future<void> refreshMessages() async {
+    await _fetchInitialMessages();
   }
 }
 

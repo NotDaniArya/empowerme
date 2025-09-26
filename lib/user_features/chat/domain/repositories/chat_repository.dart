@@ -12,11 +12,11 @@ abstract class ChatRepository {
 
   Future<(void, Failure?)> sendMessage(ChatMessage message);
 
+  Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(String contactId);
+
   Future<(List<ChatMessage>?, Failure?)> getLocalMessageHistory(
     String contactId,
   );
-
-  Future<(List<ChatMessage>?, Failure?)> syncMessageHistory(String contactId);
 
   Future<(List<ChatContact>?, Failure?)> getPasienChatContacts();
 
