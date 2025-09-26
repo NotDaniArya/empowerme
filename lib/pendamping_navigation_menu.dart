@@ -10,42 +10,51 @@ import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/scr
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/screens/tambah_jadwal_screen.dart';
 import 'package:new_empowerme/user_features/profile/presentation/profile_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/shared_providers/pendamping_navigation_provider.dart';
+import 'package:new_empowerme/utils/shared_widgets/pendamping_drawer.dart';
 
-class PendampingNavigationMenu extends ConsumerStatefulWidget {
+class PendampingNavigationMenu extends ConsumerWidget {
   const PendampingNavigationMenu({super.key});
 
-  @override
-  ConsumerState<PendampingNavigationMenu> createState() =>
-      _PendampingNavigationMenuState();
-}
-
-class _PendampingNavigationMenuState
-    extends ConsumerState<PendampingNavigationMenu> {
-  int _selectedIndex = 0;
-
-  static final List<Widget> _listMenu = [
+  // Daftar layar yang akan ditampilkan di dalam body
+  static final List<Widget> _screens = [
     const DashboardScreen(),
     const JadwalPasienScreen(),
     const DaftarPasienScreen(),
     const ProfileScreen(),
   ];
 
-  void _onSelectedMenu(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // Daftar judul untuk setiap layar, agar AppBar dinamis
+  static const List<String> _pageTitles = [
+    'Dashboard',
+    'Jadwal Pasien',
+    'Daftar Pasien',
+    'Profil',
+  ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Dapatkan indeks yang sedang aktif dari provider
+    final selectedIndex = ref.watch(navigationIndexProvider);
+    // Dapatkan juga indeks tab dari layar jadwal untuk logika FAB
     final activeJadwalTabIndex = ref.watch(jadwalTabProvider);
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,
-      extendBody: true,
-      body: _listMenu[_selectedIndex],
+      extendBody: true, // Membuat body bisa berada di belakang navbar
+      // AppBar sekarang terpusat di sini dan judulnya dinamis
 
-      floatingActionButton: _buildFab(context, activeJadwalTabIndex),
+      // Drawer hanya akan muncul jika pengguna berada di layar Dashboard (indeks 0)
+      drawer: selectedIndex == 0 ? const PendampingDrawer() : null,
+
+      body: _screens[selectedIndex],
+
+      // FloatingActionButton dikelola di sini secara terpusat
+      floatingActionButton: _buildFab(
+        context,
+        selectedIndex,
+        activeJadwalTabIndex,
+      ),
 
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -53,38 +62,44 @@ class _PendampingNavigationMenuState
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.18),
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 20,
-                spreadRadius: 5,
+                spreadRadius: 2,
                 offset: const Offset(0, -3),
               ),
             ],
           ),
           child: BottomAppBar(
             color: Colors.white,
-
             clipBehavior: Clip.antiAlias,
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _buildNavItem(
+                  context: context,
+                  ref: ref,
                   icon: Icons.dashboard,
                   label: 'Dashboard',
                   index: 0,
                 ),
                 _buildNavItem(
+                  context: context,
+                  ref: ref,
                   icon: FontAwesomeIcons.calendarDays,
                   label: 'Jadwal Pasien',
                   index: 1,
                 ),
-
                 _buildNavItem(
+                  context: context,
+                  ref: ref,
                   icon: FontAwesomeIcons.addressBook,
                   label: 'Daftar Pasien',
                   index: 2,
                 ),
                 _buildNavItem(
+                  context: context,
+                  ref: ref,
                   icon: FontAwesomeIcons.solidUser,
                   label: 'Profile',
                   index: 3,
@@ -97,17 +112,20 @@ class _PendampingNavigationMenuState
     );
   }
 
+  /// Helper widget untuk membuat setiap item navigasi.
   Widget _buildNavItem({
+    required BuildContext context,
+    required WidgetRef ref,
     required IconData icon,
     required String label,
     required int index,
   }) {
-    final isSelected = _selectedIndex == index;
+    final isSelected = ref.watch(navigationIndexProvider) == index;
     final color = isSelected ? TColors.primaryColor : Colors.grey;
     final textTheme = Theme.of(context).textTheme;
 
     return InkWell(
-      onTap: () => _onSelectedMenu(index),
+      onTap: () => ref.read(navigationIndexProvider.notifier).state = index,
       borderRadius: BorderRadius.circular(20),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
@@ -129,8 +147,14 @@ class _PendampingNavigationMenuState
     );
   }
 
-  Widget? _buildFab(BuildContext context, int activeJadwalTabIndex) {
-    if (_selectedIndex == 1) {
+  /// Helper widget untuk membangun FAB secara kondisional.
+  Widget? _buildFab(
+    BuildContext context,
+    int selectedIndex,
+    int activeJadwalTabIndex,
+  ) {
+    // KONDISI 1: Jika di layar Jadwal Pasien (indeks 1)
+    if (selectedIndex == 1) {
       return FloatingActionButton(
         onPressed: () {
           final jadwalType = activeJadwalTabIndex == 0
@@ -148,7 +172,9 @@ class _PendampingNavigationMenuState
         backgroundColor: TColors.primaryColor,
         child: const Icon(Icons.add, color: Colors.white),
       );
-    } else if (_selectedIndex == 2) {
+    }
+    // KONDISI 2: Jika di layar Daftar Pasien (indeks 2)
+    else if (selectedIndex == 2) {
       return FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
@@ -165,6 +191,7 @@ class _PendampingNavigationMenuState
         child: const Icon(Icons.person_add_alt_1, color: Colors.white),
       );
     }
+    // KONDISI LAINNYA: Jangan tampilkan FAB
     return null;
   }
 }

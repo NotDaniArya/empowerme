@@ -6,7 +6,9 @@ import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_widgets/appbar.dart';
 
+import '../../../../utils/shared_providers/pendamping_navigation_provider.dart';
 import '../../../../utils/shared_widgets/pendamping_drawer.dart';
+import '../../../jadwal_pasien/presentation/providers/jadwal_tab_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -70,30 +72,57 @@ class DashboardScreen extends ConsumerWidget {
                 title: 'Total Pasien',
                 value: dashboard.totalPatientCount.toString(),
                 color: Colors.blue.shade700,
+                onTap: () {
+                  ref.read(navigationIndexProvider.notifier).state = 2;
+                },
               ),
               _DashboardCard(
                 icon: FontAwesomeIcons.calendarCheck,
                 title: 'Jadwal Terapi Selanjutnya',
                 value: dashboard.scheduledTherapyCount.toString(),
                 color: Colors.green.shade700,
+                onTap: () {
+                  ref.read(jadwalCategoryFilterProvider.notifier).state =
+                      'next';
+                  ref.read(jadwalTabProvider.notifier).state = 0;
+                  ref.read(navigationIndexProvider.notifier).state = 1;
+                },
               ),
               _DashboardCard(
                 icon: FontAwesomeIcons.pills,
                 title: 'Jadwal Ambil Obat Selanjutnya',
                 value: dashboard.scheduledMedicationCount.toString(),
                 color: Colors.orange.shade700,
+                onTap: () {
+                  ref.read(jadwalCategoryFilterProvider.notifier).state =
+                      'next';
+                  ref.read(jadwalTabProvider.notifier).state = 1;
+                  ref.read(navigationIndexProvider.notifier).state = 1;
+                },
               ),
               _DashboardCard(
                 icon: FontAwesomeIcons.calendarXmark,
                 title: 'Jadwal Terapi yang Sudah Lewat',
                 value: dashboard.missedTherapyCount.toString(),
                 color: Colors.red.shade700,
+                onTap: () {
+                  ref.read(jadwalCategoryFilterProvider.notifier).state =
+                      'has_passed';
+                  ref.read(jadwalTabProvider.notifier).state = 0;
+                  ref.read(navigationIndexProvider.notifier).state = 1;
+                },
               ),
               _DashboardCard(
                 icon: FontAwesomeIcons.capsules,
                 title: 'Jadwal Ambil Obat yang Sudah Lewat',
                 value: dashboard.missedMedicationCount.toString(),
                 color: Colors.purple.shade700,
+                onTap: () {
+                  ref.read(jadwalCategoryFilterProvider.notifier).state =
+                      'has_passed';
+                  ref.read(jadwalTabProvider.notifier).state = 1;
+                  ref.read(navigationIndexProvider.notifier).state = 1;
+                },
               ),
             ],
           ),
@@ -158,66 +187,72 @@ class _DashboardCard extends StatelessWidget {
     required this.title,
     required this.value,
     required this.color,
+    required this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String value;
   final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = (screenWidth - (16 * 3)) / 2;
 
-    return Container(
-      width: cardWidth,
-      constraints: const BoxConstraints(minHeight: 150),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color.withOpacity(0.8), color],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: cardWidth,
+        constraints: const BoxConstraints(minHeight: 150),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.8), color],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Colors.white.withOpacity(0.2),
-            child: FaIcon(icon, color: Colors.white, size: 20),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircleAvatar(
+              radius: 22,
+              backgroundColor: Colors.white.withOpacity(0.2),
+              child: FaIcon(icon, color: Colors.white, size: 20),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                const SizedBox(height: 4),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

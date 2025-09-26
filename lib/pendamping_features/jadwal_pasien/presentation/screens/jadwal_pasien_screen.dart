@@ -41,6 +41,11 @@ class _JadwalPasienScreenState extends ConsumerState<JadwalPasienScreen>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final targetTabIndex = ref.watch(jadwalTabProvider);
+
+    if (_tabController.index != targetTabIndex) {
+      _tabController.animateTo(targetTabIndex);
+    }
 
     return Scaffold(
       backgroundColor: TColors.backgroundColor,

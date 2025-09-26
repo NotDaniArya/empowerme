@@ -6,6 +6,7 @@ import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/scr
 import 'package:new_empowerme/utils/constant/colors.dart';
 
 import '../../../../utils/constant/sizes.dart';
+import '../../../../utils/shared_providers/pendamping_navigation_provider.dart';
 import '../providers/jadwal_pasien_provider.dart';
 
 class ListJadwalTerapiPasien extends ConsumerStatefulWidget {
@@ -35,7 +36,15 @@ class _ListJadwalTerapiPasienState
   void initState() {
     super.initState();
     _categories = _categoryMap.keys.toList();
-    _selectedCategory = _categories.first;
+    final initialFilterKey = ref.read(jadwalCategoryFilterProvider);
+    _selectedCategory = _categoryMap.keys.firstWhere(
+      (key) => _categoryMap[key] == initialFilterKey,
+      orElse: () => _categories.first,
+    );
+
+    Future.microtask(
+      () => ref.read(jadwalCategoryFilterProvider.notifier).state = 'all',
+    );
   }
 
   @override
