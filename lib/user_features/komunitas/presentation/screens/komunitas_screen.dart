@@ -245,7 +245,7 @@ class KomunitasScreen extends ConsumerWidget {
 
                       /*
                       ==========================================
-                      judul threads
+                      isi threads
                       ==========================================
                       */
                       SizedBox(

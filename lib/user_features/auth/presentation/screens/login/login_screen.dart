@@ -85,14 +85,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: TSizes.smallSpace),
-                  SizedBox(
-                    width: 255,
-                    child: Text(
-                      'Login untuk Akses Komunitas Dan Dukungan Anda',
-                      style: textTheme.titleMedium!.copyWith(
-                        color: TColors.secondaryText,
-                      ),
+                  Text(
+                    'Login untuk Akses Komunitas Dan Dukungan Anda',
+                    style: textTheme.titleMedium!.copyWith(
+                      color: TColors.secondaryText,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
                   Form(

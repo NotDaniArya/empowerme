@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:new_empowerme/user_features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:new_empowerme/user_features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:new_empowerme/user_features/auth/domain/repositories/auth_repository.dart';
@@ -76,13 +77,19 @@ class AuthRepositoryImpl extends AuthRepository {
 
       if (token != null && role != null && id != null) {
         final entity = Auth(token: token, role: _parseRole(role), id: id);
-
         return (entity, null);
       } else {
         return (null, null);
       }
+    } on PlatformException catch (e) {
+      await localDataSource.clearAuthData();
+
+      return (null, null);
     } catch (e) {
-      return (null, Failure(e.toString()));
+      return (
+        null,
+        Failure('Terjadi kesalahan tidak terduga: ${e.toString()}'),
+      );
     }
   }
 
