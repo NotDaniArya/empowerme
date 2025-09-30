@@ -138,6 +138,7 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(jadwalPasienUpdaterProvider);
     final textTheme = Theme.of(context).textTheme;
     final isTerapi = widget.jadwalType == TipeJadwal.terapi;
     final title = isTerapi ? 'Jadwal Terapi Baru' : 'Jadwal Ambil Obat Baru';
@@ -271,11 +272,20 @@ class _TambahJadwalScreenState extends ConsumerState<TambahJadwalScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: MyButton(
-                    onPressed: _submit,
-                    text: const Text(
-                      'Simpan Jadwal',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    onPressed: isLoading ? null : _submit,
+                    text: isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Simpan Jadwal',
+                            style: TextStyle(color: Colors.white),
+                          ),
                   ),
                 ),
               ],
@@ -301,7 +311,27 @@ class _PasienListModalContent extends ConsumerWidget {
       ),
       error: (err, stack) => SizedBox(
         height: 300,
-        child: Center(child: Text('Gagal memuat pasien: $err')),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Gagal memuat pasien', textAlign: TextAlign.center),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                ),
+                onPressed: () {
+                  ref.invalidate(allPasienProvider);
+                },
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       data: (pasienList) => SheetCariPasien(allPatients: pasienList),
     );

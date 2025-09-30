@@ -22,6 +22,7 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(jadwalPasienUpdaterProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -111,13 +112,26 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          _updateStatus(ref, context, 'SELESAI');
+                          isLoading
+                              ? null
+                              : _updateStatus(ref, context, 'SELESAI');
                         },
-                        icon: const Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                        ),
-                        label: const Text('Selesai'),
+                        icon: isLoading
+                            ? null
+                            : const Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
+                        label: isLoading
+                            ? const SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('Selesai'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
@@ -128,10 +142,23 @@ class DetailJadwalPasienScreen extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          _updateStatus(ref, context, 'DIBATALKAN');
+                          isLoading
+                              ? null
+                              : _updateStatus(ref, context, 'DIBATALKAN');
                         },
-                        icon: const Icon(Icons.cancel, color: Colors.white),
-                        label: const Text('Batalkan'),
+                        icon: isLoading
+                            ? null
+                            : const Icon(Icons.cancel, color: Colors.white),
+                        label: isLoading
+                            ? const SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('Batalkan'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,

@@ -109,9 +109,11 @@ final jadwalAmbilObatPasienViewModel =
       String
     >(() => JadwalAmbilObatPasienViewModel());
 
-class JadwalPasienUpdater extends Notifier<void> {
+class JadwalPasienUpdater extends Notifier<bool> {
   @override
-  void build() {}
+  bool build() {
+    return false;
+  }
 
   JadwalPasienRepository get _repository =>
       ref.read(jadwalPasienRepositoryProvider);
@@ -125,22 +127,27 @@ class JadwalPasienUpdater extends Notifier<void> {
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.addJadwalTerapi(
-      id: id,
-      date: date,
-      time: time,
-      location: location,
-      meetWith: meetWith,
-    );
+    state = true;
+    try {
+      final (_, failure) = await _repository.addJadwalTerapi(
+        id: id,
+        date: date,
+        time: time,
+        location: location,
+        meetWith: meetWith,
+      );
 
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(jadwalTerapiPasienViewModel);
-      ref.invalidate(dashboardViewModel);
-      ref.invalidate(pasienViewModel);
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(jadwalTerapiPasienViewModel);
+        ref.invalidate(dashboardViewModel);
+        ref.invalidate(pasienViewModel);
 
-      onSuccess();
+        onSuccess();
+      }
+    } finally {
+      state = false;
     }
   }
 
@@ -154,23 +161,28 @@ class JadwalPasienUpdater extends Notifier<void> {
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.addJadwalAmbilObat(
-      id: id,
-      date: date,
-      time: time,
-      location: location,
-      meetWith: meetWith,
-      typeDrug: typeDrug,
-    );
+    state = true;
+    try {
+      final (_, failure) = await _repository.addJadwalAmbilObat(
+        id: id,
+        date: date,
+        time: time,
+        location: location,
+        meetWith: meetWith,
+        typeDrug: typeDrug,
+      );
 
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(jadwalAmbilObatPasienViewModel);
-      ref.invalidate(dashboardViewModel);
-      ref.invalidate(pasienViewModel);
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(jadwalAmbilObatPasienViewModel);
+        ref.invalidate(dashboardViewModel);
+        ref.invalidate(pasienViewModel);
 
-      onSuccess();
+        onSuccess();
+      }
+    } finally {
+      state = false;
     }
   }
 
@@ -180,18 +192,23 @@ class JadwalPasienUpdater extends Notifier<void> {
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.updateStatusTerapi(
-      status: status,
-      idJadwal: idJadwal,
-    );
+    state = true;
+    try {
+      final (_, failure) = await _repository.updateStatusTerapi(
+        status: status,
+        idJadwal: idJadwal,
+      );
 
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(jadwalTerapiPasienViewModel);
-      ref.invalidate(dashboardViewModel);
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(jadwalTerapiPasienViewModel);
+        ref.invalidate(dashboardViewModel);
 
-      onSuccess();
+        onSuccess();
+      }
+    } finally {
+      state = false;
     }
   }
 
@@ -201,22 +218,27 @@ class JadwalPasienUpdater extends Notifier<void> {
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
-    final (_, failure) = await _repository.updateStatusAmbilObat(
-      status: status,
-      idJadwal: idJadwal,
-    );
+    state = true;
+    try {
+      final (_, failure) = await _repository.updateStatusAmbilObat(
+        status: status,
+        idJadwal: idJadwal,
+      );
 
-    if (failure != null) {
-      onError(failure.message);
-    } else {
-      ref.invalidate(jadwalAmbilObatPasienViewModel);
-      ref.invalidate(dashboardViewModel);
+      if (failure != null) {
+        onError(failure.message);
+      } else {
+        ref.invalidate(jadwalAmbilObatPasienViewModel);
+        ref.invalidate(dashboardViewModel);
 
-      onSuccess();
+        onSuccess();
+      }
+    } finally {
+      state = false;
     }
   }
 }
 
-final jadwalPasienUpdaterProvider = NotifierProvider<JadwalPasienUpdater, void>(
+final jadwalPasienUpdaterProvider = NotifierProvider<JadwalPasienUpdater, bool>(
   () => JadwalPasienUpdater(),
 );
