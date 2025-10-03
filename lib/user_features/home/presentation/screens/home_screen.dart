@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/home/presentation/screens/widgets/history_navigation_card.dart';
@@ -36,70 +37,77 @@ class HomeScreen extends ConsumerWidget {
                   );
                 }
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Akses Cepat Jadwal Anda',
-                      style: textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: HistoryNavigationCard(
-                            icon: FontAwesomeIcons.calendarCheck,
-                            title: 'Riwayat Terapi',
-                            subtitle: 'Lihat semua jadwal terapi Anda',
-                            color: Colors.blue.shade700,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HistoryJadwalScreen(
-                                    tipeJadwal: TipeJadwal.terapi,
-                                    id: authData.id,
-                                  ),
-                                ),
-                              );
-                            },
+                        Text(
+                          'Akses Cepat Jadwal Anda',
+                          style: textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: TSizes.spaceBtwItems),
-                        Expanded(
-                          child: HistoryNavigationCard(
-                            icon: FontAwesomeIcons.pills,
-                            title: 'Riwayat Ambil Obat',
-                            subtitle: 'Lihat semua jadwal ambil obat anda',
-                            color: Colors.green.shade700,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HistoryJadwalScreen(
-                                    tipeJadwal: TipeJadwal.ambilObat,
-                                    id: authData.id,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        const SizedBox(height: TSizes.spaceBtwItems),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: HistoryNavigationCard(
+                                icon: FontAwesomeIcons.calendarCheck,
+                                title: 'Riwayat Terapi',
+                                subtitle: 'Lihat semua jadwal terapi Anda',
+                                color: Colors.blue.shade700,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HistoryJadwalScreen(
+                                        tipeJadwal: TipeJadwal.terapi,
+                                        id: authData.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: TSizes.spaceBtwItems),
+                            Expanded(
+                              child: HistoryNavigationCard(
+                                icon: FontAwesomeIcons.pills,
+                                title: 'Riwayat Ambil Obat',
+                                subtitle: 'Lihat semua jadwal ambil obat anda',
+                                color: Colors.green.shade700,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HistoryJadwalScreen(
+                                        tipeJadwal: TipeJadwal.ambilObat,
+                                        id: authData.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections * 1.5),
+                        const SizedBox(height: TSizes.spaceBtwSections * 1.5),
 
-                    Text(
-                      'Informasi Terbaru',
-                      style: textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    const InformationSlider(),
-                  ],
-                );
+                        Text(
+                          'Informasi Terbaru',
+                          style: textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: TSizes.spaceBtwItems),
+                        const InformationSlider(),
+                      ],
+                    )
+                    .animate(delay: 70.ms)
+                    .fade(duration: 600.ms, curve: Curves.easeOut)
+                    .slide(
+                      begin: const Offset(0, 0.2),
+                      duration: 600.ms,
+                      curve: Curves.easeOut,
+                    );
               },
               error: (error, stack) =>
                   Center(child: Text('Terjadi kesalahan: $error')),

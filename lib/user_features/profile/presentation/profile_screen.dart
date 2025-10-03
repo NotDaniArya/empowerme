@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
@@ -113,121 +114,141 @@ class ProfileScreen extends ConsumerWidget {
           vertical: 48,
           horizontal: 24,
         ),
-        child: Column(
-          children: [
-            ClipOval(
-              child: SizedBox(
-                width: 120,
-                height: 120,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      '${TTexts.baseUrl}/images/${state.profile!.picture}',
-                  fit: BoxFit.cover,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                        child: SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: CircularProgressIndicator(
-                            color: TColors.primaryColor.withOpacity(0.5),
-                          ),
+        child:
+            Column(
+                  children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              '${TTexts.baseUrl}/images/${state.profile!.picture}',
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                child: SizedBox(
+                                  width: 120,
+                                  height: 120,
+                                  child: CircularProgressIndicator(
+                                    color: TColors.primaryColor.withOpacity(
+                                      0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                radius: 50,
+                                backgroundColor: TColors.backgroundColor,
+                                child: Icon(
+                                  Icons.person,
+                                  color: TColors.primaryColor,
+                                ),
+                              ),
                         ),
                       ),
-                  errorWidget: (context, url, error) => const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: TColors.backgroundColor,
-                    child: Icon(Icons.person, color: TColors.primaryColor),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            Text(
-              state.profile!.name,
-              textAlign: TextAlign.center,
-              style: textTheme.headlineSmall!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              state.profile!.email,
-              textAlign: TextAlign.center,
-              style: textTheme.bodyMedium!.copyWith(
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    Text(
+                      state.profile!.name,
+                      textAlign: TextAlign.center,
+                      style: textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      state.profile!.email,
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwSections),
 
-            /*
+                    /*
             ==========================================
             Item Profil
             ==========================================
             */
-            Material(
-              color: TColors.secondaryColor,
-              borderRadius: BorderRadiusGeometry.circular(8),
-              clipBehavior: Clip.hardEdge,
-              child: Column(
-                children: [
-                  MenuItem(
-                    title: 'Profile Saya',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditProfileScreen(profile: state.profile!),
-                        ),
-                      );
-                    },
-                    leading: const FaIcon(FontAwesomeIcons.user, size: 20),
-                  ),
-                  const Divider(height: 1, indent: 12, endIndent: 12),
-                  MenuItem(
-                    title: 'Informasi dan Bantuan',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TentangAplikasiScreen(),
-                        ),
-                      );
-                    },
-                    leading: const FaIcon(
-                      FontAwesomeIcons.circleInfo,
-                      size: 20,
+                    Material(
+                      color: TColors.secondaryColor,
+                      borderRadius: BorderRadiusGeometry.circular(8),
+                      clipBehavior: Clip.hardEdge,
+                      child: Column(
+                        children: [
+                          MenuItem(
+                            title: 'Profile Saya',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfileScreen(
+                                    profile: state.profile!,
+                                  ),
+                                ),
+                              );
+                            },
+                            leading: const FaIcon(
+                              FontAwesomeIcons.user,
+                              size: 20,
+                            ),
+                          ),
+                          const Divider(height: 1, indent: 12, endIndent: 12),
+                          MenuItem(
+                            title: 'Informasi dan Bantuan',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TentangAplikasiScreen(),
+                                ),
+                              );
+                            },
+                            leading: const FaIcon(
+                              FontAwesomeIcons.circleInfo,
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwSections),
 
-            /*
+                    /*
             ==========================================
             Button logout
             ==========================================
             */
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => _showLogoutConfirmationDialog(context, ref),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(8),
-                  ),
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () =>
+                            _showLogoutConfirmationDialog(context, ref),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(8),
+                          ),
+                          side: const BorderSide(color: Colors.red),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                .animate(delay: 70.ms)
+                .fade(duration: 600.ms, curve: Curves.easeOut)
+                .slide(
+                  begin: const Offset(0, 0.2),
+                  duration: 600.ms,
+                  curve: Curves.easeOut,
                 ),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

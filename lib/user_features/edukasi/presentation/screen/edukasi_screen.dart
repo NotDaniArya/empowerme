@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/makanan/widgets/list_makanan.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/obat/widgets/list_obat.dart';
 import 'package:new_empowerme/user_features/edukasi/presentation/panduan/widgets/list_panduan.dart';
@@ -50,66 +51,78 @@ class _EdukasiScreenState extends State<EdukasiScreen>
             horizontal: TSizes.scaffoldPadding,
             vertical: TSizes.mediumSpace,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsetsGeometry.symmetric(horizontal: 24),
-                width: double.infinity,
-                /*
+          child:
+              Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsetsGeometry.symmetric(
+                          horizontal: 24,
+                        ),
+                        width: double.infinity,
+                        /*
               ==========================================
               Judul
               ==========================================
               */
-                child: Text(
-                  'Panduan & Edukasi Seputar HIV/AIDS',
-                  textAlign: TextAlign.center,
-                  style: textTheme.titleLarge!.copyWith(
-                    color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: TSizes.mediumSpace),
+                        child: Text(
+                          'Panduan & Edukasi Seputar HIV/AIDS',
+                          textAlign: TextAlign.center,
+                          style: textTheme.titleLarge!.copyWith(
+                            color: TColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.mediumSpace),
 
-              /*
+                      /*
             ==========================================
             Tab Bar 4 menu
             ==========================================
             */
-              TabBar(
-                controller: _tabController,
-                unselectedLabelColor: Colors.black45,
-                indicatorColor: TColors.primaryColor,
-                labelColor: Colors.black,
-                labelPadding: const EdgeInsetsGeometry.symmetric(horizontal: 8),
-                tabs: const [
-                  Tab(text: 'Panduan'),
-                  Tab(text: 'Berita'),
-                  Tab(text: 'Makanan'),
-                  Tab(text: 'Obat'),
-                ],
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+                      TabBar(
+                        controller: _tabController,
+                        unselectedLabelColor: Colors.black45,
+                        indicatorColor: TColors.primaryColor,
+                        labelColor: Colors.black,
+                        labelPadding: const EdgeInsetsGeometry.symmetric(
+                          horizontal: 8,
+                        ),
+                        tabs: const [
+                          Tab(text: 'Panduan'),
+                          Tab(text: 'Berita'),
+                          Tab(text: 'Makanan'),
+                          Tab(text: 'Obat'),
+                        ],
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwSections),
 
-              /*
+                      /*
             ==========================================
             Isi tab bar
             ==========================================
             */
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    const ListPanduan(),
-                    const ListBerita(),
-                    const ListMakanan(),
-                    const ListObat(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            const ListPanduan(),
+                            const ListBerita(),
+                            const ListMakanan(),
+                            const ListObat(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                  .animate(delay: 70.ms)
+                  .fade(duration: 600.ms, curve: Curves.easeOut)
+                  .slide(
+                    begin: const Offset(0, 0.2),
+                    duration: 600.ms,
+                    curve: Curves.easeOut,
+                  ),
         ),
       ),
     );

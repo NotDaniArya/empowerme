@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/auth/presentation/providers/auth_provider.dart';
 import 'package:new_empowerme/user_features/auth/presentation/screens/register/verify_email.dart';
@@ -95,138 +96,150 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               key: _form,
               child: Container(
                 margin: const EdgeInsets.only(bottom: 45),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/icons/logo_app.png', width: 180),
-                    Text(
-                      'Mulai Perjalanan Baru Anda',
-                      style: textTheme.headlineSmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: TColors.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
-                    TInputTextField(
-                      labelText: 'Masukkan Nama Anda',
-                      maxLength: 50,
-                      icon: Icons.person,
-                      minLength: 4,
-                      inputType: TextInputType.name,
-                      onSaved: (value) {
-                        _enteredFullName = value!;
-                      },
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    TInputTextField(
-                      icon: Icons.email_rounded,
-                      labelText: 'Masukkan email anda',
-                      inputType: TextInputType.emailAddress,
-                      onSaved: (value) {
-                        _enteredEmail = value!;
-                      },
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        labelText: 'Masukkan password anda',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        ),
-                        isDense: true,
-                      ),
-                      maxLength: 15,
-                      autocorrect: false,
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.trim().length < 8) {
-                          return 'Panjang input minimal 8 karakter';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    TextFormField(
-                      obscureText: !_isPasswordVisible,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        labelText: 'Kofirmasi password anda',
-                        prefixIcon: const Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        ),
-                        isDense: true,
-                      ),
-                      maxLength: 15,
-                      autocorrect: false,
-                      validator: (value) {
-                        if (value != _passwordController.text) {
-                          return 'Password anda tidak sama';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
-                    SizedBox(
-                      width: double.infinity,
-                      child: MyButton(
-                        text: isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: TColors.primaryColor,
-                                ),
-                              )
-                            : Text(
-                                'Daftar',
-                                style: textTheme.bodyMedium!.copyWith(
-                                  color: Colors.white,
-                                ),
+                child:
+                    Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/icons/logo_app.png', width: 180)
+                                .animate(
+                                  onPlay: (controller) => controller.repeat(),
+                                )
+                                .shimmer(duration: 2.6.seconds),
+                            Text(
+                              'Mulai Perjalanan Baru Anda',
+                              style: textTheme.headlineSmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: TColors.primaryColor,
                               ),
-                        onPressed: isLoading ? null : _submitSignUp,
-                      ),
-                    ),
-                    const SizedBox(height: TSizes.mediumSpace),
-                    const OrDivider(),
-                    const SizedBox(height: TSizes.mediumSpace),
-                    const MyTextButton(
-                      text: Text('Sudah Punya Akun?'),
-                      buttonText: Text('Masuk sekarang'),
-                      route: LoginScreen(),
-                    ),
-                  ],
-                ),
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwSections),
+                            TInputTextField(
+                              labelText: 'Masukkan Nama Anda',
+                              maxLength: 50,
+                              icon: Icons.person,
+                              minLength: 4,
+                              inputType: TextInputType.name,
+                              onSaved: (value) {
+                                _enteredFullName = value!;
+                              },
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            TInputTextField(
+                              icon: Icons.email_rounded,
+                              labelText: 'Masukkan email anda',
+                              inputType: TextInputType.emailAddress,
+                              onSaved: (value) {
+                                _enteredEmail = value!;
+                              },
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                labelText: 'Masukkan password anda',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                prefixIcon: const Icon(Icons.lock),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
+                                isDense: true,
+                              ),
+                              maxLength: 15,
+                              autocorrect: false,
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.trim().length < 8) {
+                                  return 'Panjang input minimal 8 karakter';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            TextFormField(
+                              obscureText: !_isPasswordVisible,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                labelText: 'Kofirmasi password anda',
+                                prefixIcon: const Icon(Icons.lock),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
+                                isDense: true,
+                              ),
+                              maxLength: 15,
+                              autocorrect: false,
+                              validator: (value) {
+                                if (value != _passwordController.text) {
+                                  return 'Password anda tidak sama';
+                                }
+
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwSections),
+                            SizedBox(
+                              width: double.infinity,
+                              child: MyButton(
+                                text: isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: TColors.primaryColor,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Daftar',
+                                        style: textTheme.bodyMedium!.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                onPressed: isLoading ? null : _submitSignUp,
+                              ),
+                            ),
+                            const SizedBox(height: TSizes.mediumSpace),
+                            const OrDivider(),
+                            const SizedBox(height: TSizes.mediumSpace),
+                            const MyTextButton(
+                              text: Text('Sudah Punya Akun?'),
+                              buttonText: Text('Masuk sekarang'),
+                              route: LoginScreen(),
+                            ),
+                          ],
+                        )
+                        .animate(delay: 70.ms)
+                        .fade(duration: 600.ms, curve: Curves.easeOut)
+                        .slide(
+                          begin: const Offset(0, 0.2),
+                          duration: 600.ms,
+                          curve: Curves.easeOut,
+                        ),
               ),
             ),
           ),

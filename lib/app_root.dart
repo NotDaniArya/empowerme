@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
+import 'package:new_empowerme/utils/constant/sizes.dart';
 import 'package:new_empowerme/utils/shared_providers/connectivity_status_provider.dart';
 
 import 'main.dart';
@@ -42,25 +44,24 @@ class OfflineScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.wifi_off_rounded,
-                size: 80,
-                color: TColors.secondaryText,
+              Lottie.asset(
+                'assets/animations/no_connection.json',
+                width: 230,
+                height: 230,
               ),
-              const SizedBox(height: 24),
               Text(
                 'Koneksi Terputus',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 12),
+              // const SizedBox(height: 12),
               const Text(
                 'Anda tidak terhubung ke internet. Mohon periksa koneksi Anda dan coba lagi.',
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: TSizes.spaceBtwItems),
               ElevatedButton.icon(
                 onPressed: () => ref
                     .read(connectivityNotifierProvider.notifier)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
@@ -19,7 +20,9 @@ class SplashScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/icons/logo_app.png', width: 200),
+                Image.asset('assets/icons/logo_app.png', width: 200)
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .shimmer(duration: 1.seconds),
                 Text(
                   'Peduli, Terhubung, Bangkit: Bersama untuk Masa Depan Lebih Baik',
                   textAlign: TextAlign.center,

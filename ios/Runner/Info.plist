@@ -46,11 +46,24 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<!-- Linkify Launch URL -->
+
+	<!-- Launch URL -->
 	<key>LSApplicationQueriesSchemes</key>
-        <array>
-            <string>https</string>
-            <string>http</string>
-        </array>
+    <array>
+        <string>https</string>
+        <string>http</string>
+    </array>
+
+    <!-- image picker -->
+    <key>NSPhotoLibraryUsageDescription</key>
+	<string>EmpowerMe memerlukan akses ke galeri untuk memungkinkan Anda memilih foto profil.</string>
+    <key>NSCameraUsageDescription</key>
+	<string>EmpowerMe memerlukan akses ke kamera untuk memungkinkan Anda mengambil foto profil baru.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to your microphone to record videos with audio.</string>
+
+    <!-- flutter_secure_storage -->
+    <key>NSFaceIDUsageDescription</key>
+    <string>EmpowerMe menggunakan Face ID untuk mengamankan dan mengakses data Anda yang tersimpan di perangkat.</string>
 </dict>
 </plist>
