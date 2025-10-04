@@ -253,8 +253,8 @@ class _DetailKomunitasScreenState extends ConsumerState<DetailKomunitasScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Terjadi kesalahan: ${state.error}',
+              const Text(
+                'Terjadi kesalahan: Gagal memuat detail postingan komunitas',
                 textAlign: TextAlign.center,
               ),
               ElevatedButton(

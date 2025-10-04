@@ -43,9 +43,27 @@ class _InformationSlider extends ConsumerState<InformationSlider> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-          child: Text(
-            'Terjadi kesalahan: ${state.error}',
-            textAlign: TextAlign.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Terjadi kesalahan: Gagal memuat daftar berita',
+                textAlign: TextAlign.center,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(beritaViewModel);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                ),
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -83,19 +101,22 @@ class _InformationSlider extends ConsumerState<InformationSlider> {
                     .map(
                       (beritaItem) => ClipRRect(
                         borderRadius: BorderRadiusGeometry.circular(8),
-                        child: CachedNetworkImage(
-                          // height: 200,
-                          imageUrl: beritaItem.displayImageUrl,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                                child: CircularProgressIndicator(
-                                  value: downloadProgress.progress,
+                        child: Hero(
+                          tag: beritaItem.title,
+                          child: CachedNetworkImage(
+                            // height: 200,
+                            imageUrl: beritaItem.displayImageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                                  child: CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                  ),
                                 ),
-                              ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
                         ),
                       ),
                     )

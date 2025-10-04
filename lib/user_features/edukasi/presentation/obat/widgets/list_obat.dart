@@ -38,8 +38,8 @@ class ListObat extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Terjadi kesalahan: ${state.error}',
+                const Text(
+                  'Terjadi kesalahan: Gagal memuat daftar edukasi obat',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
@@ -123,20 +123,23 @@ class ListObat extends ConsumerWidget {
                 clipBehavior: Clip.hardEdge,
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          'https://res.cloudinary.com/dk0z4ums3/image/upload/v1650279033/attached_image/lopinavir-ritonavir.jpg',
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                            child: CircularProgressIndicator(
-                              value: downloadProgress.progress,
+                    Hero(
+                      tag: obat.title,
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://res.cloudinary.com/dk0z4ums3/image/upload/v1650279033/attached_image/lopinavir-ritonavir.jpg',
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                              ),
                             ),
-                          ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
                     Positioned(
                       bottom: 0,

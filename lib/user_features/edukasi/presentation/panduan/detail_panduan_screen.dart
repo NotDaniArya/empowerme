@@ -27,16 +27,20 @@ class DetailPanduanScreen extends StatelessWidget {
               expandedHeight: 300.0,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                background: CachedNetworkImage(
-                  imageUrl: panduan.displayThumbnail,
-                  fit: BoxFit.fitHeight,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                        child: CircularProgressIndicator(
-                          value: downloadProgress.progress,
+                background: Hero(
+                  tag: panduan.id,
+                  child: CachedNetworkImage(
+                    imageUrl: panduan.displayThumbnail,
+                    fit: BoxFit.fitHeight,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
                         ),
-                      ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
             ),

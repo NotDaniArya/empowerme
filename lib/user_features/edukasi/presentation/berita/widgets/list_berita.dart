@@ -39,8 +39,8 @@ class ListBerita extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Terjadi kesalahan: ${state.error}',
+                const Text(
+                  'Terjadi kesalahan: Gagal memuat berita',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
@@ -124,19 +124,22 @@ class ListBerita extends ConsumerWidget {
                 clipBehavior: Clip.hardEdge,
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: berita.displayImageUrl,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                            child: CircularProgressIndicator(
-                              value: downloadProgress.progress,
+                    Hero(
+                      tag: berita.title,
+                      child: CachedNetworkImage(
+                        imageUrl: berita.displayImageUrl,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                              ),
                             ),
-                          ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
                     Positioned(
                       bottom: 0,

@@ -198,7 +198,10 @@ class HistoryJadwalScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Terjadi kesalahan: $error', textAlign: TextAlign.center),
+            const Text(
+              'Terjadi kesalahan: Gagal memuat riwayat jadwal',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: TSizes.spaceBtwItems),
             ElevatedButton(
               onPressed: () => ref.invalidate(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_ambil_obat_pasien.dart';
 import 'package:new_empowerme/pendamping_features/jadwal_pasien/presentation/widgets/list_jadwal_terapi_pasien.dart';
@@ -57,45 +58,53 @@ class _JadwalPasienScreenState extends ConsumerState<JadwalPasienScreen>
             horizontal: TSizes.scaffoldPadding,
             vertical: TSizes.mediumSpace,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24),
-                width: double.infinity,
-                child: Text(
-                  'Jadwal Terapi & Jadwal Ambil Obat Pasien',
-                  textAlign: TextAlign.center,
-                  style: textTheme.titleLarge!.copyWith(
-                    color: TColors.primaryColor,
-                    fontWeight: FontWeight.bold,
+          child:
+              Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        width: double.infinity,
+                        child: Text(
+                          'Jadwal Terapi & Jadwal Ambil Obat Pasien',
+                          textAlign: TextAlign.center,
+                          style: textTheme.titleLarge!.copyWith(
+                            color: TColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.mediumSpace),
+                      TabBar(
+                        controller: _tabController,
+                        unselectedLabelColor: Colors.black45,
+                        indicatorColor: TColors.primaryColor,
+                        labelColor: Colors.black,
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                        tabs: const [
+                          Tab(text: 'Jadwal Terapi'),
+                          Tab(text: 'Jadwal Ambil Obat'),
+                        ],
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: const [
+                            ListJadwalTerapiPasien(),
+                            ListJadwalAmbilObatPasien(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                  .animate(delay: 70.ms)
+                  .fade(duration: 600.ms, curve: Curves.easeOut)
+                  .slide(
+                    begin: const Offset(0, 0.2),
+                    duration: 600.ms,
+                    curve: Curves.easeOut,
                   ),
-                ),
-              ),
-              const SizedBox(height: TSizes.mediumSpace),
-              TabBar(
-                controller: _tabController,
-                unselectedLabelColor: Colors.black45,
-                indicatorColor: TColors.primaryColor,
-                labelColor: Colors.black,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                tabs: const [
-                  Tab(text: 'Jadwal Terapi'),
-                  Tab(text: 'Jadwal Ambil Obat'),
-                ],
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: const [
-                    ListJadwalTerapiPasien(),
-                    ListJadwalAmbilObatPasien(),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

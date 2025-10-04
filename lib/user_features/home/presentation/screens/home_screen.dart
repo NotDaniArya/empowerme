@@ -109,8 +109,9 @@ class HomeScreen extends ConsumerWidget {
                       curve: Curves.easeOut,
                     );
               },
-              error: (error, stack) =>
-                  Center(child: Text('Terjadi kesalahan: $error')),
+              error: (error, stack) => const Center(
+                child: Text('Terjadi kesalahan: Gagal memuat data pengguna'),
+              ),
               loading: () => const Center(
                 heightFactor: 10,
                 child: CircularProgressIndicator(),

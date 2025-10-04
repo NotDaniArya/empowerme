@@ -54,10 +54,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
             borderRadius: BorderRadiusGeometry.circular(50),
           ),
           clipBehavior: Clip.antiAlias,
-          child: Text(
-            'Terjadi kesalahan: ${state.error}',
-            style: textTheme.labelMedium,
-          ),
+          child: Text('Terjadi kesalahan', style: textTheme.labelMedium),
         ),
         actions: [
           IconButton(

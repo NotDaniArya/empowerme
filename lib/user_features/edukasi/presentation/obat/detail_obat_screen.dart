@@ -27,18 +27,22 @@ class DetailObatScreen extends StatelessWidget {
               expandedHeight: 300.0,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                background: CachedNetworkImage(
-                  imageUrl:
-                      'https://res.cloudinary.com/dk0z4ums3/image/upload/v1650279033/attached_image/lopinavir-ritonavir.jpg',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                        child: CircularProgressIndicator(
-                          value: downloadProgress.progress,
+                background: Hero(
+                  tag: obat.title,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://res.cloudinary.com/dk0z4ums3/image/upload/v1650279033/attached_image/lopinavir-ritonavir.jpg',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
                         ),
-                      ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
             ),

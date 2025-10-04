@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_empowerme/pendamping_features/dashboard/presentation/providers/dashboard_provider.dart';
@@ -48,87 +49,103 @@ class DashboardScreen extends ConsumerWidget {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Ringkasan Hari Ini',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Berikut adalah data terbaru pasien Anda.',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            children: [
-              _DashboardCard(
-                icon: FontAwesomeIcons.userGroup,
-                title: 'Total Pasien',
-                value: dashboard.totalPatientCount.toString(),
-                color: Colors.blue.shade700,
-                onTap: () {
-                  ref.read(navigationIndexProvider.notifier).state = 2;
-                },
+      child:
+          Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ringkasan Hari Ini',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Berikut adalah data terbaru pasien Anda.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 24),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      _DashboardCard(
+                        icon: FontAwesomeIcons.userGroup,
+                        title: 'Total Pasien',
+                        value: dashboard.totalPatientCount.toString(),
+                        color: Colors.blue.shade700,
+                        onTap: () {
+                          ref.read(navigationIndexProvider.notifier).state = 2;
+                        },
+                      ),
+                      _DashboardCard(
+                        icon: FontAwesomeIcons.calendarCheck,
+                        title: 'Jadwal Terapi Selanjutnya',
+                        value: dashboard.scheduledTherapyCount.toString(),
+                        color: Colors.green.shade700,
+                        onTap: () {
+                          ref
+                                  .read(jadwalCategoryFilterProvider.notifier)
+                                  .state =
+                              'next';
+                          ref.read(jadwalTabProvider.notifier).state = 0;
+                          ref.read(navigationIndexProvider.notifier).state = 1;
+                        },
+                      ),
+                      _DashboardCard(
+                        icon: FontAwesomeIcons.pills,
+                        title: 'Jadwal Ambil Obat Selanjutnya',
+                        value: dashboard.scheduledMedicationCount.toString(),
+                        color: Colors.orange.shade700,
+                        onTap: () {
+                          ref
+                                  .read(jadwalCategoryFilterProvider.notifier)
+                                  .state =
+                              'next';
+                          ref.read(jadwalTabProvider.notifier).state = 1;
+                          ref.read(navigationIndexProvider.notifier).state = 1;
+                        },
+                      ),
+                      _DashboardCard(
+                        icon: FontAwesomeIcons.calendarXmark,
+                        title: 'Jadwal Terapi yang Sudah Lewat',
+                        value: dashboard.missedTherapyCount.toString(),
+                        color: Colors.red.shade700,
+                        onTap: () {
+                          ref
+                                  .read(jadwalCategoryFilterProvider.notifier)
+                                  .state =
+                              'has_passed';
+                          ref.read(jadwalTabProvider.notifier).state = 0;
+                          ref.read(navigationIndexProvider.notifier).state = 1;
+                        },
+                      ),
+                      _DashboardCard(
+                        icon: FontAwesomeIcons.capsules,
+                        title: 'Jadwal Ambil Obat yang Sudah Lewat',
+                        value: dashboard.missedMedicationCount.toString(),
+                        color: Colors.purple.shade700,
+                        onTap: () {
+                          ref
+                                  .read(jadwalCategoryFilterProvider.notifier)
+                                  .state =
+                              'has_passed';
+                          ref.read(jadwalTabProvider.notifier).state = 1;
+                          ref.read(navigationIndexProvider.notifier).state = 1;
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: TSizes.scaffoldPadding * 4),
+                ],
+              )
+              .animate(delay: 70.ms)
+              .fade(duration: 600.ms, curve: Curves.easeOut)
+              .slide(
+                begin: const Offset(0, 0.2),
+                duration: 600.ms,
+                curve: Curves.easeOut,
               ),
-              _DashboardCard(
-                icon: FontAwesomeIcons.calendarCheck,
-                title: 'Jadwal Terapi Selanjutnya',
-                value: dashboard.scheduledTherapyCount.toString(),
-                color: Colors.green.shade700,
-                onTap: () {
-                  ref.read(jadwalCategoryFilterProvider.notifier).state =
-                      'next';
-                  ref.read(jadwalTabProvider.notifier).state = 0;
-                  ref.read(navigationIndexProvider.notifier).state = 1;
-                },
-              ),
-              _DashboardCard(
-                icon: FontAwesomeIcons.pills,
-                title: 'Jadwal Ambil Obat Selanjutnya',
-                value: dashboard.scheduledMedicationCount.toString(),
-                color: Colors.orange.shade700,
-                onTap: () {
-                  ref.read(jadwalCategoryFilterProvider.notifier).state =
-                      'next';
-                  ref.read(jadwalTabProvider.notifier).state = 1;
-                  ref.read(navigationIndexProvider.notifier).state = 1;
-                },
-              ),
-              _DashboardCard(
-                icon: FontAwesomeIcons.calendarXmark,
-                title: 'Jadwal Terapi yang Sudah Lewat',
-                value: dashboard.missedTherapyCount.toString(),
-                color: Colors.red.shade700,
-                onTap: () {
-                  ref.read(jadwalCategoryFilterProvider.notifier).state =
-                      'has_passed';
-                  ref.read(jadwalTabProvider.notifier).state = 0;
-                  ref.read(navigationIndexProvider.notifier).state = 1;
-                },
-              ),
-              _DashboardCard(
-                icon: FontAwesomeIcons.capsules,
-                title: 'Jadwal Ambil Obat yang Sudah Lewat',
-                value: dashboard.missedMedicationCount.toString(),
-                color: Colors.purple.shade700,
-                onTap: () {
-                  ref.read(jadwalCategoryFilterProvider.notifier).state =
-                      'has_passed';
-                  ref.read(jadwalTabProvider.notifier).state = 1;
-                  ref.read(navigationIndexProvider.notifier).state = 1;
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: TSizes.scaffoldPadding * 4),
-        ],
-      ),
     );
   }
 

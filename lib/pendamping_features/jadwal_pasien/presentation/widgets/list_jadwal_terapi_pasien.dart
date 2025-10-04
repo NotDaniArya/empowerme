@@ -121,8 +121,8 @@ class _ListJadwalTerapiPasienState
           padding: const EdgeInsets.all(TSizes.scaffoldPadding),
           child: Column(
             children: [
-              Text(
-                'Terjadi kesalahan: ${state.error}',
+              const Text(
+                'Terjadi kesalahan: Gagal memuat data jadwal terapi',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),

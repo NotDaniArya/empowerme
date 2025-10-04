@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/pendamping_features/daftar_pasien/presentation/screens/detail_pasien_screen.dart';
 import 'package:new_empowerme/utils/constant/colors.dart';
@@ -44,32 +45,40 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
       backgroundColor: TColors.backgroundColor,
       appBar: const MyAppBar(),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(TSizes.scaffoldPadding),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Cari nama pasien...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-            ),
+        child:
+            Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Cari nama pasien...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                      ),
+                    ),
 
-            Expanded(child: _buildBody(context, pasienState)),
-          ],
-        ),
+                    Expanded(child: _buildBody(context, pasienState)),
+                  ],
+                )
+                .animate(delay: 70.ms)
+                .fade(duration: 600.ms, curve: Curves.easeOut)
+                .slide(
+                  begin: const Offset(0, 0.2),
+                  duration: 600.ms,
+                  curve: Curves.easeOut,
+                ),
       ),
     );
   }
@@ -82,7 +91,33 @@ class _DaftarPasienScreen extends ConsumerState<DaftarPasienScreen> {
     }
 
     if (state.error != null) {
-      return Center(child: Text('Terjadi kesalahan: ${state.error}'));
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Terjadi kesalahan: Terdapat masalah ketika mengambil data pasien',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColors.primaryColor,
+                ),
+                onPressed: () {
+                  ref.invalidate(pasienViewModel);
+                },
+                child: const Text(
+                  'Refresh',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     if (state.pasien == null || state.pasien!.isEmpty) {

@@ -45,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Terjadi kesalahan: ${state.error}',
+                  'Terjadi kesalahan: Gagal memuat profil pengguna',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),

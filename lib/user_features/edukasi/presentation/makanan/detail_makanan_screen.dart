@@ -27,18 +27,22 @@ class DetailMakananScreen extends StatelessWidget {
               expandedHeight: 300.0,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                background: CachedNetworkImage(
-                  imageUrl:
-                      'https://cdn.rri.co.id/berita/Sendawar/o/1733451900362-WhatsApp_Image_2024-12-06_at_10.24.32/3jzb89gkvbolk71.jpeg',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                        child: CircularProgressIndicator(
-                          value: downloadProgress.progress,
+                background: Hero(
+                  tag: makanan.title,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://cdn.rri.co.id/berita/Sendawar/o/1733451900362-WhatsApp_Image_2024-12-06_at_10.24.32/3jzb89gkvbolk71.jpeg',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
                         ),
-                      ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
             ),

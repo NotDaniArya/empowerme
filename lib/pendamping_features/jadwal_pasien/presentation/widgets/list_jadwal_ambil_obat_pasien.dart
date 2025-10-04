@@ -118,11 +118,11 @@ class _ListJadwalAmbilObatPasienState
     }
 
     if (state.error != null) {
-      return Center(
+      return const Center(
         child: Padding(
-          padding: const EdgeInsets.all(TSizes.scaffoldPadding),
+          padding: EdgeInsets.all(TSizes.scaffoldPadding),
           child: Text(
-            'Terjadi kesalahan: ${state.error}',
+            'Terjadi kesalahan: Gagal memuat data jadwal ambil obat',
             textAlign: TextAlign.center,
           ),
         ),

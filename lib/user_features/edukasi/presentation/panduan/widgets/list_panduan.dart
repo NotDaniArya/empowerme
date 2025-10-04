@@ -39,8 +39,8 @@ class ListPanduan extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Terjadi kesalahan: ${state.error}',
+                const Text(
+                  'Terjadi kesalahan: Gagal memuat daftar edukasi panduan',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
@@ -103,8 +103,6 @@ class ListPanduan extends ConsumerWidget {
         itemCount: state.panduan!.length,
         itemBuilder: (context, index) {
           final panduan = state.panduan![index];
-          print('gambar asli: ${panduan.thumbnail}');
-          print('gambar format: ${panduan.displayThumbnail}');
           return Card(
             elevation: 5,
             color: TColors.secondaryColor,
@@ -123,19 +121,22 @@ class ListPanduan extends ConsumerWidget {
               },
               child: Row(
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: panduan.displayThumbnail,
-                    height: 150,
-                    width: 120,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => Center(
-                          child: CircularProgressIndicator(
-                            value: downloadProgress.progress,
+                  Hero(
+                    tag: panduan.id,
+                    child: CachedNetworkImage(
+                      imageUrl: panduan.displayThumbnail,
+                      height: 150,
+                      width: 120,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                            child: CircularProgressIndicator(
+                              value: downloadProgress.progress,
+                            ),
                           ),
-                        ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
                   Expanded(
                     child: Container(
