@@ -98,8 +98,17 @@ class _CreatePanduanSheetState extends ConsumerState<CreatePanduanSheet> {
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 16),
               Text('Unggah Edukasi Panduan', style: textTheme.titleMedium),
               const SizedBox(height: TSizes.spaceBtwSections),
               // Input Konten
