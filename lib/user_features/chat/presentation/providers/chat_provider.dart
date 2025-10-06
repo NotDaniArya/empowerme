@@ -49,13 +49,53 @@ final chatServiceProvider = Provider((ref) {
 });
 
 class ChatListViewModel extends Notifier<AsyncValue<List<ChatContact>>> {
+  StreamSubscription? _messageSubscription;
+
   @override
   AsyncValue<List<ChatContact>> build() {
-    ref.watch(chatServiceProvider);
-    ref.listen(authNotifierProvider, (_, __) => _fetchContacts());
-    ref.listen(profileViewModel, (_, __) => _fetchContacts());
+    final chatRepo = ref.watch(chatServiceProvider);
+
+    _listenForIncomingMessages(chatRepo);
+
     _fetchContacts();
+
+    ref.onDispose(() => _messageSubscription?.cancel());
+
     return const AsyncValue.loading();
+  }
+
+  void _listenForIncomingMessages(ChatRepository repo) {
+    _messageSubscription?.cancel();
+    _messageSubscription = repo.incomingMessages.listen((newMessage) {
+      _onNewMessage(newMessage);
+    });
+  }
+
+  void _onNewMessage(ChatMessage message) {
+    final currentState = state.valueOrNull;
+    if (currentState == null) return;
+
+    final contactId = message.from;
+    final contactIndex = currentState.indexWhere((c) => c.id == contactId);
+
+    if (contactIndex != -1) {
+      final contactToUpdate = currentState[contactIndex];
+      final updatedContact = contactToUpdate.copyWith(
+        unreadCount: contactToUpdate.unreadCount + 1,
+      );
+
+      final newList = List<ChatContact>.from(currentState);
+      newList[contactIndex] = updatedContact;
+
+      newList.sort(
+        (a, b) =>
+            (b.id == contactId ? 1 : 0).compareTo(a.id == contactId ? 1 : 0),
+      );
+
+      state = AsyncValue.data(newList);
+    } else {
+      _fetchContacts();
+    }
   }
 
   Future<void> _fetchContacts() async {
