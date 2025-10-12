@@ -1,5 +1,7 @@
+import 'package:new_empowerme/utils/constant/private_text.dart';
+
 class TTexts {
-  static const baseUrl = 'https://www.empowermeid.com';
+  static const baseUrl = PrivateText.server;
 
   static List<String> badWords = [
     'ajg',
