@@ -27,7 +27,9 @@ class Panduan extends Equatable {
     // placeholder jika tidak ada gambar
     const String placeholder =
         'https://cdn-icons-png.freepik.com/512/1705/1705312.png';
-    if (thumbnail.isNotEmpty && thumbnail != 'empty') {
+    if (thumbnail.isNotEmpty &&
+        thumbnail != 'empty' &&
+        thumbnail != 'pendamping') {
       return thumbnail;
     }
     return placeholder;

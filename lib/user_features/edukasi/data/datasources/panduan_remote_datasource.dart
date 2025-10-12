@@ -53,7 +53,7 @@ class PanduanRemoteDataSourceImpl implements PanduanRemoteDataSource {
   }) async {
     try {
       await dio.post(
-        '${TTexts.baseUrl}/guide/saved',
+        '${TTexts.baseUrl}/guide',
         data: {
           "title": title,
           "description": description,

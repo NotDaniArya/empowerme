@@ -23,7 +23,9 @@ class Berita extends Equatable {
     // placeholder jika tidak ada gambar
     const String placeholder =
         'https://obssr.od.nih.gov/sites/obssr/files/2025-05/red-ribbon-stethoscope.jpg';
-    if (urlToImage.isNotEmpty && urlToImage != 'empty') {
+    if (urlToImage.isNotEmpty &&
+        urlToImage != 'empty' &&
+        urlToImage != 'pendamping') {
       return urlToImage;
     }
     return placeholder;
