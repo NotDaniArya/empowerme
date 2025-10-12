@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_empowerme/user_features/komunitas/presentation/providers/komunitas_provider.dart';
 import 'package:new_empowerme/utils/constant/sizes.dart';
+import 'package:new_empowerme/utils/constant/texts.dart';
 import 'package:new_empowerme/utils/shared_widgets/button.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../../utils/helper_functions/helper.dart';
@@ -19,6 +21,7 @@ class CreatePostSheet extends ConsumerStatefulWidget {
 class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
+  final filterPostingan = ProfanityFilter.filterAdditionally(TTexts.badWords);
   bool _isLoading = false;
 
   @override
@@ -90,6 +93,10 @@ class _CreatePostSheetState extends ConsumerState<CreatePostSheet> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Cerita tidak boleh kosong.';
+                  }
+
+                  if (filterPostingan.hasProfanity(value)) {
+                    return 'Mengandung kata-kata yang tidak pantas';
                   }
                   return null;
                 },
